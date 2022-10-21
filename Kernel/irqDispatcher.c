@@ -2,8 +2,6 @@
 #include <lib.h>
 #include <videoDriver.h>
 
-
-
 void irqDispatcher(uint64_t irq) {
     switch (irq) {
         case 0:
@@ -25,8 +23,8 @@ void int_21(){
     if (a < 128 && a > 0){
         clearScreen();
         Color white = {0xff, 0x00, 0x00};
-        printChar(0,0,getKey(a),4,white);
-        printString(0,0,"\n",4,white);
+        printChar(0,0,getKey(a),2,white);
+        printString(0,0,"\n",2,white);
     }
 }
 

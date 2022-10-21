@@ -7,10 +7,7 @@ static uint32_t uintToBase(uint64_t value, uint8_t* buffer, uint32_t base);
 static uint8_t buffer[64] = { '0' };
 
 
-
 static struct vbe_mode_info_structure* screenData = (void*)0x5C00;
-
-
 
 
 void printSquare(uint16_t x, uint16_t y, uint16_t l, Color color){

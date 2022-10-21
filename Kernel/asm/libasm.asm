@@ -16,7 +16,6 @@ cpuVendor:
 	mov rax, 0
 	cpuid
 
-
 	mov [rdi], ebx
 	mov [rdi + 4], edx
 	mov [rdi + 8], ecx
@@ -32,54 +31,41 @@ cpuVendor:
 	ret
 
 
-
-
-;getTime:
-;         cli
-;         mov rax, rdi
-;         out 0x70,al
-;         in al,0x71
-;         sti
-;         ;mov rax,al
-;
-;leave
-;ret
-
-
 getSeconds:
-cli
-mov al, 0x00
-out 70h, al
-in al, 71h
-sti
-ret
+	cli
+	mov al, 0x00
+	out 70h, al
+	in al, 71h
+	sti
+	ret
 
 
 getMinutes:
-cli
-mov al, 0x02
-out 70h, al
-in al, 71h
-sti
-ret
+	cli
+	mov al, 0x02
+	out 70h, al
+	in al, 71h
+	sti
+	ret
 
 
 getHours:
-cli
-mov al, 0x04
-out 70h, al
-in al, 71h
-sti
-ret
+	cli
+	mov al, 0x04
+	out 70h, al
+	in al, 71h
+	sti
+	ret
+
 
 getTime:
-mov rax, rdi
-cli
-out 70h, al
-mov rax, 0
-in al, 71h
-sti
-ret
+	mov rax, rdi
+	cli
+	out 70h, al
+	mov rax, 0
+	in al, 71h
+	sti
+	ret
 
 keyPressed:
     mov rax, 0

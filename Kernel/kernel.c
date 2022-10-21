@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <videoDriver.h>
+#include <idtLoader.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -37,8 +38,6 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-    char buffer[10];
-
 
     void * moduleAddresses[] = {
         sampleCodeModuleAddress,
@@ -60,18 +59,14 @@ int main()
     colorScreen(backColor);
 
     Color penColor = {0x7F, 0x7F, 0x7F};
-    Color red= {0x00, 0xff , 0xff};
 
     uint8_t string[] = "WELCOME TO TrollOS";
 
-    printString(0,0,string,3,penColor);
+    printString(0,0,string,2,penColor);
 
     while(1){
 
     }
-
-
-
 
     return 0;
 }

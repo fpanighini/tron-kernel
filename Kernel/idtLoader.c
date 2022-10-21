@@ -2,6 +2,7 @@
 #include <idtLoader.h>
 #include <defs.h>
 #include <interrupts.h>
+#include <syscallManager.h>
 
 #pragma pack(push)
 #pragma pack (1)
@@ -34,6 +35,8 @@ void load_idt() {
     _cli();
     setup_IDT_entry (0x20, (uint64_t) &_irq00Handler);
     setup_IDT_entry (0x21, (uint64_t) &_irq01Handler);
+    
+    setup_IDT_entry (0x80, (uint64_t) &syscallHandler);
     // Interrupción de timer tick habilitada
     picMasterMask(0xFC);
     picSlaveMask(0xFF);
