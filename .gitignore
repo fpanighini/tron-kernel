@@ -79,4 +79,6 @@ fabric.properties
 
 *.o
 
+.*.swp
+
 *. Kernel/*.o

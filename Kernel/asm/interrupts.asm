@@ -14,8 +14,13 @@ GLOBAL _irq05Handler
 
 GLOBAL _exception0Handler
 
+GLOBAL syscallINTHandler
+GLOBAL testInt
+
+
 EXTERN irqDispatcher
 ; EXTERN exceptionDispatcher
+EXTERN syscallDispatcher
 
 SECTION .text
 
@@ -141,6 +146,18 @@ _irq05Handler:
 ;Zero Division Exception
 ; _exception0Handler:
 ; 	exceptionHandler 0
+
+
+testInt:
+    mov rax, 1
+    int 0x80
+    ret
+
+syscallINTHandler:
+    mov rcx, r10
+    mov r9, rax
+    call syscallDispatcher
+    iretq
 
 haltcpu:
 	cli

@@ -51,6 +51,7 @@ void * initializeKernelBinary()
     return getStackBase();
 }
 
+void testInt(void);
 
 int main()
 {	
@@ -63,6 +64,10 @@ int main()
     uint8_t string[] = "WELCOME TO TrollOS";
 
     printString(0,0,string,2,penColor);
+
+    clearScreen();
+
+    testInt();
 
     while(1){
 
