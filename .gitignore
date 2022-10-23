@@ -82,3 +82,6 @@ fabric.properties
 .*.swp
 
 *. Kernel/*.o
+
+.vscode
+.bash_history
