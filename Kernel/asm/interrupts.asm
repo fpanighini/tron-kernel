@@ -19,7 +19,7 @@ GLOBAL testInt
 
 
 EXTERN irqDispatcher
-; EXTERN exceptionDispatcher
+EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
 SECTION .text
@@ -76,15 +76,15 @@ SECTION .text
 
 
 
-;%macro exceptionHandler 1
-;	pushState
-;
-;	mov rdi, %1 ; pasaje de parametro
-;	call exceptionDispatcher
-;
-;	popState
-;	iretq
-;%endmacro
+%macro exceptionHandler 1
+	pushState
+
+	mov rdi, %1 ; pasaje de parametro
+	call exceptionDispatcher
+
+	popState
+	iretq
+%endmacro
 
 
 _hlt:
@@ -143,10 +143,13 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 
-;Zero Division Exception
-; _exception0Handler:
-; 	exceptionHandler 0
+; Zero Division Exception
+ _exception0Handler:
+ 	exceptionHandler 0
 
+; Invalid Opcode Exception
+ _exception6Handler:
+ 	exceptionHandler 6
 
 testInt:
     mov rax, 1

@@ -9,6 +9,9 @@ typedef struct {
 	uint8_t r;
 }Color;
 
+
+static Color penColor = {0xFF, 0xFF, 0xFF};
+
 // OSDev
 struct vbe_mode_info_structure {
     uint16_t attributes;        // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.

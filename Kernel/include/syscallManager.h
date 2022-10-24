@@ -18,10 +18,10 @@
 static void syscallHandler();
 static uint64_t sys_write();
 static uint64_t sys_read();
-static uint64_t sys_time();
-static uint64_t sys_date();
-static uint64_t sys_clearScreen();
-static uint64_t sys_drawLine();
+static uint64_t sys_time();             // Tiempo hh:mm:ss
+static uint64_t sys_date();             // dd/mm/aa
+static uint64_t sys_paintScreen();      // 
+static uint64_t sys_drawRectangle();
 static uint64_t sys_bell();
 
 #endif

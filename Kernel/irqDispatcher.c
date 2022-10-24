@@ -19,6 +19,7 @@ void int_20() {
 }
 
 void int_21(){
+    // saveKey(); // => Function en keyboardDriver.c que guarde en buf la tecla
     char a = keyPressed();
     if (a < 128 && a > 0){
         clearScreen();

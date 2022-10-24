@@ -1,7 +1,6 @@
 #include <syscallManager.h>
 #include <videoDriver.h>
 
-Color penColor = {0x7F, 0x7F, 0x7F};
 
 
 static uint64_t sys_write() {
