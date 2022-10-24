@@ -13,6 +13,7 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
 GLOBAL _exception0Handler
+GLOBAL _exception6Handler
 
 GLOBAL syscallINTHandler
 GLOBAL testInt

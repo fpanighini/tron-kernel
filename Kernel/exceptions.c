@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <exceptions.h>
 
-void loadmain(void);
+void loadMain(void);
 
-void exceptionDispatcher(uint_64 e){
+void exceptionDispatcher(uint64_t e){
     switch (e) {
         case 0:
             divideZeroException();
@@ -22,7 +22,7 @@ void divideZeroException(){
     while(1){
         // Esperar un input de keyboard
     }
-    loadmain();
+    loadMain();
 }
 
 void invalidOpcodeException(){
@@ -31,7 +31,7 @@ void invalidOpcodeException(){
     while(1){
         // Esperar un input de keyboard
     }
-    loadmain();
+    loadMain();
 }
 
 

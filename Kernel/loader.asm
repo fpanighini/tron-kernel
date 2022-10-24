@@ -4,7 +4,7 @@ extern initializeKernelBinary
 EXTERN getStackBase
 
 
-loadmain:
+loadMain:
         call getStackBase
 loader:
 	call initializeKernelBinary	; Set up the kernel binary, and get thet stack address

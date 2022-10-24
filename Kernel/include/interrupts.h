@@ -5,10 +5,10 @@
  *      Author: anizzomc
  */
 
-#ifndef INTERRUPS_H_
-#define INTERRUPS_H_
+#ifndef INTERRUPTS_H_
+#define INTERRUPTS_H_
 
-#include <idtLoader.h>
+// #include <idtLoader.h>  //Porque??
 
 void _irq00Handler(void);
 void _irq01Handler(void);
@@ -35,4 +35,4 @@ void syscallINTHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, u
 //Termina la ejecución de la cpu.
 void haltcpu(void);
 
-#endif /* INTERRUPS_H_ */
+#endif /* INTERRUPTS_H_ */
