@@ -87,3 +87,5 @@ fabric.properties
 .bash_history
 
 runDocker.sh
+
+Image/x64BareBonesImage.qcow2

@@ -23,5 +23,7 @@ uint64_t sys_date();             // dd/mm/aa
 uint64_t sys_paintScreen();      // 
 uint64_t sys_drawRectangle();
 uint64_t sys_bell();
+uint64_t sys_widthScr();
+ui
 
 #endif
