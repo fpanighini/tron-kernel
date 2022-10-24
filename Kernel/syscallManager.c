@@ -1,5 +1,6 @@
 #include <syscallManager.h>
 #include <videoDriver.h>
+#include <stdint.h>
 
 uint64_t sys_write() {
     printString(0,0, (uint8_t *)"sys_write\n", 2, white);
