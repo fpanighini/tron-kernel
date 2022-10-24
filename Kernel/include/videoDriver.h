@@ -58,8 +58,6 @@ void* getPixel(uint16_t x, uint16_t y);
 
 void fillrect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color);
 
-char getKey(int id);
-
 void colorScreen(Color color);
 
 void clearScreen();
@@ -69,8 +67,6 @@ void printSquare(uint16_t x, uint16_t y, uint16_t l, Color color);
 void printChar(uint16_t x, uint16_t y, uint8_t c, uint16_t size, Color color);
 
 void printString(uint16_t x, uint16_t y, uint8_t * string, uint16_t size, Color color);
-
-char getKey(int id);
 
 void printHex(uint64_t value);
 
