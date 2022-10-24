@@ -15,13 +15,13 @@
     Lists of irq's
     Check return type.
 */
-static void syscallHandler();
-static uint64_t sys_write();
-static uint64_t sys_read();
-static uint64_t sys_time();             // Tiempo hh:mm:ss
-static uint64_t sys_date();             // dd/mm/aa
-static uint64_t sys_paintScreen();      // 
-static uint64_t sys_drawRectangle();
-static uint64_t sys_bell();
+void syscallHandler();
+uint64_t sys_write();
+uint64_t sys_read();
+uint64_t sys_time();             // Tiempo hh:mm:ss
+uint64_t sys_date();             // dd/mm/aa
+uint64_t sys_paintScreen();      // 
+uint64_t sys_drawRectangle();
+uint64_t sys_bell();
 
 #endif

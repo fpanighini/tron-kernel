@@ -1,6 +1,11 @@
 #include <videoDriver.h>
 #include <font.h>
 
+Color green = {0x1F, 0xED, 0x11};
+Color gray = {0x90, 0x90, 0x90};
+Color black = {0x00, 0x00, 0x00};
+Color white = {0xFF, 0xFF, 0xFF};
+
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
 
 static uint8_t buffer[64] = {'0'};
@@ -121,16 +126,16 @@ void putpixel(unsigned char *screen, int x, int y, int color)
 
 void printHex(uint64_t value)
 {
-    printBase(value, 16);
+    printBase(value, (uint32_t) 16);
 }
 
 void printDec(uint64_t value)
 {
-    printBase(value, 10);
+    printBase(value, (uint32_t) 10);
 }
 void printBin(uint64_t value)
 {
-    printBase(value, 2);
+    printBase(value, (uint32_t) 2);
 }
 
 void printBase(uint64_t value, uint32_t base)

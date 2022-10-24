@@ -10,7 +10,10 @@ typedef struct {
 }Color;
 
 
-static Color penColor = {0xFF, 0xFF, 0xFF};
+extern Color white;
+extern Color green;
+extern Color gray;
+extern Color black;
 
 // OSDev
 struct vbe_mode_info_structure {
@@ -68,6 +71,14 @@ void printChar(uint16_t x, uint16_t y, uint8_t c, uint16_t size, Color color);
 void printString(uint16_t x, uint16_t y, uint8_t * string, uint16_t size, Color color);
 
 char getKey(int id);
+
+void printHex(uint64_t value);
+
+void printDec(uint64_t value);
+
+void printBin(uint64_t value);
+
+void printBase(uint64_t value, uint32_t base);
 
 #endif
 

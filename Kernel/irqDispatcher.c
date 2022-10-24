@@ -23,9 +23,8 @@ void int_21(){
     char a = keyPressed();
     if (a < 128 && a > 0){
         clearScreen();
-        Color white = {0xff, 0x00, 0x00};
         printChar(0,0,getKey(a),2,white);
-        printString(0,0,"\n",2,white);
+        printString(0,0,(uint8_t *)"\n",2,white);
     }
 }
 
