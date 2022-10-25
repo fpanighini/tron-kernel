@@ -76,5 +76,9 @@ void printBin(uint64_t value);
 
 void printBase(uint64_t value, uint32_t base);
 
+uint64_t getHeight();
+
+uint64_t getWidth();
+
 #endif
 

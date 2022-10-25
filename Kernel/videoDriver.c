@@ -177,3 +177,10 @@ static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
     return digits;
 }
 
+uint64_t getHeight() {
+    return screenData->height;
+}
+
+uint64_t getWidth() {
+    return screenData->width;
+}
