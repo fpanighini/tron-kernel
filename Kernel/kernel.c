@@ -63,33 +63,39 @@ int main()
     char newLine[] = "\n"; // only works with one
     char str[] = "new line\n";
 
-    sys_write(string, 1, white);
-    sys_write(newLine, 1, black);
+    sys_write(string, white);
+    sys_write(newLine, black);
     sys_paintScreen();
-    sys_write(str, 1, white);
-    sys_write(string, 1, white);
-    sys_write(newLine, 1, black);
+    sys_write(str, white);
+    sys_write(string, white);
+    sys_write(newLine, black);
     testInt(); // overlap -> solution increment heigh or reduce font size
     sys_paintScreen();
     uint8_t timeBuffer[100];
     getTimeFormat(timeBuffer);
-    sys_write((char *)timeBuffer, 1, green);
-    sys_write(newLine, 1, black);
+    sys_write((char *)timeBuffer, green);
+    sys_write(newLine, black);
     uint8_t dateBuffer[100];
     getDateFormat(dateBuffer);
-    sys_write((char *)dateBuffer, 1, green);
-    sys_write(newLine, 1, black);
-    sys_drawRectangle(3, 180, 20, white);
-    sys_paintScreen();
+    sys_write((char *)dateBuffer, green);
+    sys_write(newLine, black);
+    sys_setFontSize(2);
     int width = sys_widthScr(); 
     char h[3], w[3];
     itoa(width, w);
-    sys_write(w, 1, green);
-    sys_write(newLine, 1, black);
+    sys_write(w, green);
+    sys_write(newLine, black);
     int height = sys_heightScr();
     itoa(height, h);
-    sys_write(h, 1, gray);
-
+    sys_write(h, gray);
+    sys_setFontSize(1);
+    sys_drawRectangle(0, 0, 1051970, 768, black);
+    sys_write("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n", white);
+    sys_write(string, white);
+    sys_write(newLine, white);
+    sys_write("sdahcvsadkvjvdskkjñvnlnkfvwblkfhnfojhadbsnvlinjvhnldyhanliuvjbahlvkunjdyfhnlkjdfhblkgvjdnhvaubshvlkudubnasdkfjhailgvdfavdfhvpishvpoisbuenivbepofugpiuhnepognarpibgernhipobnheiupearnhiupaenhialgjy", green);
+    sys_write(newLine, white);
+    sys_write("$>\n", green);
 
     while (1)
     {

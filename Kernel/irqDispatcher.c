@@ -27,8 +27,8 @@ void int_21(){
             return ;
         }
         clearScreen();
-        printChar(0,0,a,2,white);
-        printString(0,0,(uint8_t *)"\n",2,white);
+        printChar(0,0,a,white);
+        printString(0,0,(uint8_t *)"\n",white);
     }
 }
 
