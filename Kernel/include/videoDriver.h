@@ -2,7 +2,6 @@
 #define _VIDEO_DRIVER_H_
 
 #include <stdint.h>
-
 typedef struct {
 	uint8_t b;
 	uint8_t g;
@@ -13,6 +12,8 @@ extern Color white;
 extern Color green;
 extern Color gray;
 extern Color black;
+extern Color blue;
+extern Color red;
 
 void setFontSize(uint32_t size);
 
@@ -38,9 +39,8 @@ void printBin(uint64_t value);
 
 void printBase(uint64_t value, uint32_t base);
 
-uint64_t getHeight();
+uint16_t getHeight();
 
-uint64_t getWidth();
+uint16_t getWidth();
 
 #endif
-

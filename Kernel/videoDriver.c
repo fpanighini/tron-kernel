@@ -2,10 +2,12 @@
 #include <font.h>
 #include <lib.h>
 
-Color green = {0x1F, 0xED, 0x11};
-Color gray = {0x90, 0x90, 0x90};
 Color black = {0x00, 0x00, 0x00};
 Color white = {0xFF, 0xFF, 0xFF};
+Color green = {0x1F, 0xED, 0x11};
+Color gray = {0x90, 0x90, 0x90};
+Color blue = {0xFF, 0x00, 0x00};
+Color red = {0x00, 0x00, 0xFF};
 
 // OSDev
 struct vbe_mode_info_structure {
@@ -115,19 +117,6 @@ void printString(uint16_t x, uint16_t y, uint8_t *string, Color color)
     }
 }
 
-void scroll(uint16_t fontSize)
-{
-    uint32_t increment = FONT_HEIGHT * fontSize * screenData->width;
-    for (int i = 0; i < screenData->width; i++)
-    {
-        for (int j = 0; j < (screenData->height - increment); j += increment)
-        {
-            Color *to = getPixel(i, j);
-            to[i + j] = white;
-        }
-    }
-}
-
 void fillrect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color)
 {
     if (x >= screenData->width || y >= screenData->height)
@@ -204,7 +193,6 @@ static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
     uint8_t *p1, *p2;
     uint32_t digits = 0;
 
-    // Calculate characters for each digit
     do
     {
         uint32_t remainder = value % base;
@@ -212,10 +200,8 @@ static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
         digits++;
     } while (value /= base);
 
-    // Terminate string in buffer.
     *p = 0;
 
-    // Reverse string in buffer.
     p1 = buffer;
     p2 = p - 1;
     while (p1 < p2)
@@ -230,12 +216,12 @@ static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
     return digits;
 }
 
-uint64_t getHeight()
+uint16_t getHeight()
 {
     return screenData->height;
 }
 
-uint64_t getWidth()
+uint16_t getWidth()
 {
     return screenData->width;
 }

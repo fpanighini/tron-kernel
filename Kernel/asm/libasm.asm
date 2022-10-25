@@ -6,6 +6,7 @@ GLOBAL getHours
 GLOBAL getDay
 GLOBAL getMonth
 GLOBAL getYear
+GLOBAL ringBell
 
 section .text
 	
@@ -112,6 +113,13 @@ keyPressed:
     in al, 60h
     ret
 
+ringBell:
+    mov ah, 02h         ; character output
+    mov dl, 07h         ; bell code
+    int 21h             ; call MS-DOS
+    mov ax, 4C00h       ; exit
+    int 21h             ; return to MS-DOS
+    ret
 
 ;vbe_get_info_block:
 ;        mov ax, 0x4F00				; get VBE BIOS info

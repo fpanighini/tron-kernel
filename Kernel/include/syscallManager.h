@@ -20,7 +20,7 @@ uint64_t sys_write(char *string, Color color);
 uint64_t sys_read();
 uint64_t sys_time();             // Tiempo hh:mm:ss
 uint64_t sys_date();             // dd/mm/aa
-uint64_t sys_paintScreen();      // 
+uint64_t sys_paintScreen();      // clean screen
 uint64_t sys_drawRectangle(int x, int y, int width, int height, Color color);
 uint64_t sys_bell();
 uint64_t sys_widthScr();

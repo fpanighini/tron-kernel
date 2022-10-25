@@ -94,3 +94,5 @@ Image/x64BareBonesImage.vmdk
 Image/packedKernel.bin
 
 object/
+
+compile.sh
