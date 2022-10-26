@@ -106,7 +106,7 @@ int main()
 
     // sys_bell();
 
-    //clearScreen();
+    clearScreen();
 
     char str1[10];
     sys_read(0,&str1,10);

@@ -24,10 +24,10 @@ uint64_t sys_read(uint8_t fd, char * buf, uint16_t count) {
     readBuf();
     while (i < count - 1){
         if (!keyRead()){
-            // sys_write(buf,red);
             buf[i] = readBuf();
             if (buf[i] == '\n' || buf[i] == 0){
-                return ++i;
+                buf[i] = 0;
+                return i;
             }
             i++;
         }
