@@ -22,13 +22,13 @@ void int_20() {
 void int_21(){
     saveKey();
     if (!keyRead()){
-        char a = readBuf();
-        if (a == -1){
-            return ;
-        }
-        clearScreen();
-        printChar(0,0,a,white);
-        printString(0,0,(uint8_t *)"\n",white);
+        //char a = readBuf();
+        // if (a == -1){
+        //     return ;
+        // }
+        //clearScreen();
+        //printChar(0,0,a,white);
+        //printStringAt(0,0,(uint8_t *)"\n",white);
     }
 }
 

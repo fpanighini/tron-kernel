@@ -95,9 +95,24 @@ int main()
     sys_write(newLine, white);
     sys_write("sdahcvsadkvjvdskkjñvnlnkfvwblkfhnfojhadbsnvlinjvhnldyhanliuvjbahlvkunjdyfhnlkjdfhblkgvjdnhvaubshvlkudubnasdkfjhailgvdfavdfhvpishvpoisbuenivbepofugpiuhnepognarpibgernhipobnheiupearnhiupaenhialgjy", blue);
     sys_write(newLine, white);
-    sys_write("$>\n", green);
-    sys_write(newLine, white);
-    sys_bell();
+    clearScreen();
+    sys_write("$>", green);
+     //sys_write(newLine, white);
+
+
+    sys_write("hla como estas\n", white);
+
+    sys_write("como estas\n", white);
+
+    // sys_bell();
+
+    //clearScreen();
+
+    char str1[10];
+    sys_read(0,&str1,10);
+
+    sys_write(str1, red);
+
 
     while (1)
     {

@@ -13,7 +13,11 @@ typedef struct buf {
 bufT buf = {0,0};
 
 void saveKey(){
-    buf.key = keyPressed();
+    uint8_t c = keyPressed();
+    if (c > 128){
+        return ;
+    }
+    buf.key = c;
     buf.read = 0;
 }
 

@@ -9,6 +9,9 @@ Color gray = {0x90, 0x90, 0x90};
 Color blue = {0xFF, 0x00, 0x00};
 Color red = {0x00, 0x00, 0xFF};
 
+uint32_t fontSize = 1;
+uint32_t posX = 0;
+
 // OSDev
 struct vbe_mode_info_structure {
     uint16_t attributes;        // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -48,7 +51,6 @@ struct vbe_mode_info_structure {
     uint8_t reserved1[206];
 } __attribute__ ((packed));
 
-uint32_t fontSize = 1;
 
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
 
@@ -85,7 +87,13 @@ void printChar(uint16_t x, uint16_t y, uint8_t c, Color color)
     }
 }
 
-void printString(uint16_t x, uint16_t y, uint8_t *string, Color color)
+
+void printString(uint8_t * string, Color color){
+    printStringAt(posX,screenData->y_char,string,color);
+
+}
+
+void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
 {
     int i = 0;
     int j = 0;
@@ -95,8 +103,10 @@ void printString(uint16_t x, uint16_t y, uint8_t *string, Color color)
     {
         if (((x + fontSize * (i * FONT_WIDTH + FONT_WIDTH)) > screenData->width) || c == newLine)
         {
+            // Hay que ver como hacemos esto:
+            x = 0;              // Si dejamos esta linea, cada vez que se hace un newline va a volver al 0 de pantalla (no va a haber indentacion)
             i = 0;
-            if ((screenData->y_char + 0x01) * FONT_HEIGHT * fontSize >= screenData->height)
+            if ((y + 0x02) * FONT_HEIGHT * fontSize >= screenData->height)
             {
                 void *dst = (void *)((uint64_t)screenData->framebuffer);
                 void *src = (void *)(dst + sizeof(Color) * fontSize * FONT_HEIGHT * (uint64_t)screenData->width);
@@ -106,15 +116,17 @@ void printString(uint16_t x, uint16_t y, uint8_t *string, Color color)
             }
             else
             {
-                screenData->y_char += 1;
+                y += 1;
             }
         }
-        printChar(x + FONT_WIDTH * i * fontSize, screenData->y_char * FONT_HEIGHT * fontSize, c, color);
         if (c != newLine)
         {
+            printChar(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT * fontSize, c, color);
             i++;
         }
     }
+    posX = x + i * FONT_WIDTH * fontSize;
+    screenData->y_char = y;
 }
 
 void fillrect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, Color color)
@@ -162,6 +174,7 @@ void colorScreen(Color color)
 void clearScreen()
 {
     screenData->y_char = 0x00;
+    posX = 0;
     Color black = {0x00, 0x00, 0x00};
     colorScreen(black);
 }
@@ -184,7 +197,7 @@ void printBase(uint64_t value, uint32_t base)
 {
     uintToBase(value, buffer, base);
     Color white = {0xff, 0xff, 0xff};
-    printString(0, 0, buffer, white);
+    printStringAt(0, 0, buffer, white);
 }
 
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)

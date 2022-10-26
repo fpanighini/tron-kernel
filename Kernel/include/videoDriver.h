@@ -29,7 +29,9 @@ void printSquare(uint16_t x, uint16_t y, uint16_t l, Color color);
 
 void printChar(uint16_t x, uint16_t y, uint8_t c, Color color);
 
-void printString(uint16_t x, uint16_t y, uint8_t * string, Color color);
+void printStringAt(uint16_t x, uint8_t y, uint8_t * string, Color color);
+
+void printString(uint8_t * string, Color color);
 
 void printHex(uint64_t value);
 
