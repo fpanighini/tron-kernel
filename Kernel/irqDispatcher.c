@@ -23,7 +23,7 @@ void int_20() {
 void int_21(){
     saveKey();
         //sys_write("key pressed\n",red);
-    if (!keyRead()){
+//    if (!keyRead()){
         //char a = readBuf();
         // if (a == -1){
         //     return ;
@@ -31,7 +31,7 @@ void int_21(){
         //clearScreen();
         //printChar(0,0,a,white);
         //printStringAt(0,0,(uint8_t *)"\n",white);
-    }
+  //  }
 }
 
 

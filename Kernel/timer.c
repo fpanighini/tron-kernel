@@ -36,3 +36,10 @@ void wait(int t){
 }
 
 
+int milliseconds_elapsed() {
+	return 100 * (ticks / 18);
+}
+
+
+
+

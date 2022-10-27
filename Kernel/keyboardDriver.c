@@ -1,13 +1,20 @@
+// BORRAR:
+#include <videoDriver.h>
+
 #include <stdint.h>
 #include <keyboardDriver.h>
+#include <interrupts.h>
+
+#define BUF_SIZE 55
 
 extern uint8_t keyPressed(void);
 
 uint8_t getKey(uint8_t id);
 
 typedef struct buf {
-    uint8_t key;
-    uint8_t read;
+    uint8_t keys[BUF_SIZE];
+    //uint8_t read;
+    uint8_t count;
 } bufT;
 
 bufT buf = {0,0};
@@ -17,18 +24,34 @@ void saveKey(){
     if (c > 128){
         return ;
     }
-    buf.key = c;
-    buf.read = 0;
+    buf.keys[buf.count++] = getKey(c);
+    //buf.keys[buf.count] = 0;
+    //printString(buf.keys,blue);
 }
 
-uint8_t readBuf(){
-    buf.read = 1;
-    return getKey(buf.key);
+uint32_t readBuf(char * str, uint32_t count){
+    _cli();
+    int i = 0;
+    while (i < buf.count && i < count){
+        str[i] = buf.keys[i];
+        i++;
+    }
+    clearKeyboardBuffer();
+    _sti();
+    return i;
 }
 
-uint8_t keyRead(){
-    return buf.read;
+void clearKeyboardBuffer(){
+    buf.count = 0;
 }
+
+uint8_t getCount(){
+    return buf.count;
+}
+
+// uint8_t keyRead(){
+//     return buf.read;
+// }
 
 uint8_t getKey(uint8_t id)
 {

@@ -5,9 +5,11 @@
 
 void saveKey();
 
-uint8_t readBuf();
+uint32_t keyRead(char * str, uint32_t count);
 
-uint8_t keyRead();
+void clearKeyboardBuffer();
+
+uint8_t getCount();
 
 #endif
 

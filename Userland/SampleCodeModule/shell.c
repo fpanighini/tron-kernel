@@ -24,12 +24,14 @@ void bufferRead(char ** buf){
     char c[] = " ";
     int i = 0;
     (*buf)[i] = 0;
+    printLine(c);
     while(c[0] != 0){
         sys_read(0, (char *) &c, 2);
         if (c[0] == BACKSPACE){
-            if (i > 2){
+            if (i > 0){
                 i--;
                 buf[i] = 0;
+                printLine(c);
             }
         } else {
             (*buf)[i++] = c[0];

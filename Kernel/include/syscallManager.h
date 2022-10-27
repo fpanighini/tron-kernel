@@ -17,7 +17,7 @@
 */
 void syscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax);
 uint64_t sys_write(char *string, Color color);
-uint64_t sys_read(uint8_t fd, char * buf, uint16_t count);
+uint64_t sys_read(uint8_t fd, char * buf, uint32_t count);
 uint64_t sys_time();             // Tiempo hh:mm:ss
 uint64_t sys_date();             // dd/mm/aa
 uint64_t sys_clearScreen();      // clean screen
@@ -26,6 +26,6 @@ uint64_t sys_bell();
 uint64_t sys_widthScr();
 uint64_t sys_heightScr();
 uint64_t sys_setFontSize(uint32_t size); //put in syshandler
-uint64_t sys_wait(uint16_t ticks);
+uint64_t sys_wait(uint32_t millis);
 
 #endif

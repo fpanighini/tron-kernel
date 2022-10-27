@@ -17,22 +17,24 @@ uint64_t sys_write(char *string, Color color) {
     return 0;
 }
 
-uint64_t sys_read(uint8_t fd, char * buf, uint16_t count) {
-    // printString("sys_read\n", white);
+uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
+    //printString("sys_read\n", white);
     if (fd != 0){
         return 0;
     }
     int i = 0;
-    readBuf();
+    clearKeyboardBuffer();
     while (i < count - 1){
-        sys_wait(1);
-        if (!keyRead()){
-            buf[i] = readBuf();
-            if (buf[i] == '\n' || buf[i] == 0){
-                buf[i] = 0;
+        sys_wait(100);
+        // printString("paso 1 segundo",red);
+        //_hlt();
+        if (getCount()){
+            i += readBuf(buf + i, count - i - 1);
+            clearKeyboardBuffer();
+            if (buf[i-1] == '\n' || buf[i-1] == 0){
+                buf[i-1] = 0;
                 return i;
             }
-            i++;
         }
     }
     buf[i] = 0;
@@ -81,8 +83,11 @@ uint64_t sys_writeAtX(uint16_t x, char *string, Color color) {
     return 0;
 }
 
-uint64_t sys_wait(uint16_t ticks){
-    wait(ticks);
+uint64_t sys_wait(uint32_t millis){
+    int initial = milliseconds_elapsed();
+    while (milliseconds_elapsed() - initial < millis){
+        _hlt();
+    }
     return 0;
 }
 

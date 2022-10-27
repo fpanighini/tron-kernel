@@ -15,6 +15,6 @@ uint64_t getTime();
 
 uint64_t getDate();
 
-void wait(uint16_t ticks);
+int milliseconds_elapsed();
 
 #endif
