@@ -8,7 +8,7 @@ typedef struct {
 	unsigned char r;
 }Color;
 
-
+//Delete color's def. in KERNEL SPACE -> color.c
 static Color black = {0x00, 0x00, 0x00};
 static Color white = {0xFF, 0xFF, 0xFF};
 static Color green = {0x1F, 0xED, 0x11};

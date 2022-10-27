@@ -12,10 +12,11 @@ void printLine(char * str);
 void shell(){
     // sys_clearScreen();
     char str[100];
+    char *string = str;
     int out = 1;
     while(out){
-        bufferRead(&str);
-        out = readBuffer(str);
+        bufferRead(&string);
+        out = readBuffer(string);
     }
 }
 
@@ -24,7 +25,7 @@ void bufferRead(char ** buf){
     int i = 0;
     (*buf)[i] = 0;
     while(c[0] != 0){
-        sys_read(0, &c, 2);
+        sys_read(0, (char *) &c, 2);
         if (c[0] == BACKSPACE){
             if (i > 2){
                 i--;

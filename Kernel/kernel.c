@@ -87,31 +87,30 @@ int main()
     itoa(height, h);
     sys_write(h, gray);
     sys_setFontSize(1);
-    sys_drawRectangle(0, 0, 1051970, 768, black);
     sys_write("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n", white);
+    sys_write("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n", white);
     sys_write(string, red);
     sys_write(newLine, white);
     sys_write("sdahcvsadkvjvdskkjñvnlnkfvwblkfhnfojhadbsnvlinjvhnldyhanliuvjbahlvkunjdyfhnlkjdfhblkgvjdnhvaubshvlkudubnasdkfjhailgvdfavdfhvpishvpoisbuenivbepofugpiuhnepognarpibgernhipobnheiupearnhiupaenhialgjy", blue);
     sys_write(newLine, white);
     clearScreen();
-    sys_write("$>", green);
-    //sys_write(newLine, white);
-
+    sys_write("$ ", green);
+    sys_write(newLine, white);
 
     sys_write("hla como estas\n", white);
 
     sys_write("como estas\n", white);
 
-    // sys_bell();
+    //sys_bell();
 
     clearScreen();
 
     char str1[10];
-    sys_read(0,&str1,10);
+    sys_read(0, (char *) &str1, 10);
 
     sys_write(str1, green);
 
-    sys_read(0,&str1,10);
+    sys_read(0, (char *) &str1, 10);
 
     sys_write(str1, green);
     int a = 0;

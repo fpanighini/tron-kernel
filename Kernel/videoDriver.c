@@ -73,9 +73,9 @@ void printChar(uint16_t x, uint16_t y, uint8_t c, Color color)
     char l;
     int count = 0;
 
-    for (int i = 0; i < FONT_HEIGHT * fontSize; i += fontSize)
+    for (int i = 0; i < FONT_HEIGHT * fontSize && count < 32; i += fontSize, count+=2)
     {
-        l = font[FONT_HEIGHT * charId + count++];
+        l = font[FONT_HEIGHT * charId + count];
         for (int j = 0; j < FONT_WIDTH * fontSize; j += fontSize)
         {
             if ((l & 0x01) == 0x01)
@@ -104,18 +104,18 @@ void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
     uint8_t newLine = 10;
     while ((c = string[j++]) != 0)
     {
-        if (((x + fontSize * (i * FONT_WIDTH + FONT_WIDTH)) > screenData->width) || c == newLine)
+        if (((x + fontSize * (i * FONT_WIDTH + (FONT_WIDTH/2))) > screenData->width) || c == newLine)
         {
             // Hay que ver como hacemos esto:
             x = 0;              // Si dejamos esta linea, cada vez que se hace un newline va a volver al 0 de pantalla (no va a haber indentacion)
             i = 0;
-            if ((y + 0x02) * FONT_HEIGHT * fontSize >= screenData->height)
+            if ((y + 0x02) * (FONT_HEIGHT/2) * fontSize >= screenData->height)
             {
                 void *dst = (void *)((uint64_t)screenData->framebuffer);
-                void *src = (void *)(dst + sizeof(Color) * fontSize * FONT_HEIGHT * (uint64_t)screenData->width);
-                uint64_t length = sizeof(Color) * fontSize * ((uint64_t)screenData->width * (screenData->height - FONT_HEIGHT));
+                void *src = (void *)(dst + sizeof(Color) * fontSize * (FONT_HEIGHT/2) * (uint64_t)screenData->width);
+                uint64_t length = sizeof(Color) * fontSize * ((uint64_t)screenData->width * (screenData->height - (FONT_HEIGHT/2)));
                 memcpy(dst,src,length);
-                memset(dst + length, 0, sizeof(Color) * fontSize * (uint64_t) screenData->width * FONT_HEIGHT);
+                memset(dst + length, 0, sizeof(Color) * fontSize * (uint64_t) screenData->width * (FONT_HEIGHT/2));
             }
             else
             {
@@ -124,7 +124,7 @@ void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
         }
         if (c != newLine)
         {
-            printChar(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT * fontSize, c, color);
+            printChar(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT/2 * fontSize, c, color);
             i++;
         }
     }
