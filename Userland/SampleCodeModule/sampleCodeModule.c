@@ -29,6 +29,10 @@ int main() {
     sys_read(0, string,2);
 
     sys_write(string, red);
+    sys_write("\n",red);
+    sys_write("hola\bhola\n\n",red);
+
+
     shell();
     while(1){
 

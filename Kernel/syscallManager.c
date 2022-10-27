@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <timer.h>
 
+#define WAIT_TIME 10
+
 void ringBell();
 
 uint64_t sys_setFontSize(uint32_t size) {
@@ -25,7 +27,6 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
     int i = 0;
     clearKeyboardBuffer();
     while (i < count - 1){
-        sys_wait(100);
         // printString("paso 1 segundo",red);
         //_hlt();
         if (getCount()){
@@ -36,6 +37,7 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
                 return i;
             }
         }
+        sys_wait(WAIT_TIME);
     }
     buf[i] = 0;
     return i;

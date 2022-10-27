@@ -1,8 +1,9 @@
 #include <syscalls.h>
 #include <color.h>
 
-#define COMMAND_CHAR "$>"
+#define COMMAND_CHAR "$> "
 #define BACKSPACE '\b'
+#define MAX_KBD_BUF 55
 
 void shell();
 void bufferRead(char ** buf);
@@ -21,17 +22,17 @@ void shell(){
 }
 
 void bufferRead(char ** buf){
-    char c[] = " ";
+    char c[2];
     int i = 0;
+    int count = 0;
     (*buf)[i] = 0;
-    printLine(c);
-    while(c[0] != 0){
+    sys_writeAtX(0, COMMAND_CHAR, green);
+    while(c[0] != '\n'){
         sys_read(0, (char *) &c, 2);
         if (c[0] == BACKSPACE){
             if (i > 0){
-                i--;
-                buf[i] = 0;
-                printLine(c);
+                buf[i--] = 0;
+                sys_write("\b",white);
             }
         } else {
             (*buf)[i++] = c[0];

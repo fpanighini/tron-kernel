@@ -105,14 +105,14 @@ int main()
 
     clearScreen();
 
-    char str1[10];
-    sys_read(0, (char *) &str1, 10);
+    // char str1[10];
+    // sys_read(0, (char *) &str1, 10);
 
-    sys_write(str1, green);
+    // sys_write(str1, green);
 
-    sys_read(0, (char *) &str1, 10);
+    // sys_read(0, (char *) &str1, 10);
 
-    sys_write(str1, green);
+    // sys_write(str1, green);
     int a = 0;
 
     a = ((EntryPoint) sampleCodeModuleAddress)();

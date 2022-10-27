@@ -175,7 +175,6 @@ syscallINTHandler:
 
     jmp .end
 
-
 .write:
     call sys_write
     jmp .end
@@ -191,8 +190,6 @@ syscallINTHandler:
 .wait:
     call sys_wait
     jmp .end
-
-
 
     ; call syscallDispatcher
 .end:

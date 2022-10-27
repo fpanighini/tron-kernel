@@ -2,6 +2,10 @@
 #include <font.h>
 #include <lib.h>
 
+#define NEWLINE '\n'
+#define BACKSPACE '\b'
+
+
 Color black = {0x00, 0x00, 0x00};
 Color white = {0xFF, 0xFF, 0xFF};
 Color green = {0x1F, 0xED, 0x11};
@@ -101,10 +105,9 @@ void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
     int i = 0;
     int j = 0;
     uint8_t c;
-    uint8_t newLine = 10;
     while ((c = string[j++]) != 0)
     {
-        if (((x + fontSize * (i * FONT_WIDTH + (FONT_WIDTH/2))) > screenData->width) || c == newLine)
+        if (((x + fontSize * (i * FONT_WIDTH + (FONT_WIDTH/2))) > screenData->width) || c == NEWLINE)
         {
             // Hay que ver como hacemos esto:
             x = 0;              // Si dejamos esta linea, cada vez que se hace un newline va a volver al 0 de pantalla (no va a haber indentacion)
@@ -122,7 +125,11 @@ void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
                 y += 1;
             }
         }
-        if (c != newLine)
+        if (c == BACKSPACE){
+            i--;
+            fillrect(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT/2 * fontSize, x + 1 + FONT_WIDTH * i * fontSize, (y + 1) * FONT_HEIGHT/2 * fontSize, black);
+        }
+        else if (c != NEWLINE)
         {
             printChar(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT/2 * fontSize, c, color);
             i++;

@@ -1,8 +1,9 @@
 GLOBAL sys_read
 GLOBAL sys_write
-GLOBAL sys_writeAtX
+GLOBAL sys_writeAtX    ; <- Borrar
 GLOBAL sys_clearScreen
 GLOBAL sys_wait
+GLOBAL sys_writeAt
 
 ; syscall 0
 sys_write:
