@@ -16,8 +16,6 @@ GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
 GLOBAL syscallINTHandler
-GLOBAL testInt
-
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -152,15 +150,13 @@ _irq05Handler:
  _exception6Handler:
  	exceptionHandler 6
 
-testInt:
-    mov rax, 1
-    int 0x80
-    ret
-
 syscallINTHandler:
+    pushState
     mov rcx, r10
     mov r9, rax
+    sti
     call syscallDispatcher
+    popState
     iretq
 
 haltcpu:

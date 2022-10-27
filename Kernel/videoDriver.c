@@ -90,7 +90,6 @@ void printChar(uint16_t x, uint16_t y, uint8_t c, Color color)
 
 void printString(uint8_t * string, Color color){
     printStringAt(posX,screenData->y_char,string,color);
-
 }
 
 void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
@@ -197,7 +196,7 @@ void printBase(uint64_t value, uint32_t base)
 {
     uintToBase(value, buffer, base);
     Color white = {0xff, 0xff, 0xff};
-    printStringAt(0, 0, buffer, white);
+    printString(buffer, white);
 }
 
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)

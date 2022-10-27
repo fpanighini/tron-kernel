@@ -12,11 +12,13 @@ uint64_t sys_setFontSize(uint32_t size) {
 }
 
 uint64_t sys_write(char *string, Color color) {
+    // printString("sys_write\n", color);
     printString((uint8_t *)string, color);
     return 0;
 }
 
 uint64_t sys_read(uint8_t fd, char * buf, uint16_t count) {
+    // printString("sys_read\n", white);
     if (fd != 0){
         return 0;
     }
@@ -75,10 +77,12 @@ uint64_t sys_heightScr() {
 
 uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {sys_write, sys_read, sys_time ,sys_date , sys_paintScreen , sys_drawRectangle , sys_bell, sys_heightScr, sys_widthScr, sys_setFontSize};
 
-uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t r7, uint64_t r6, uint64_t rax) {
-    printStringAt(0,0, (uint8_t *)"sys_handler\n", white);
-    if ((rax < sizeof(syscall_handlers)/sizeof(syscall_handlers[1])) && syscall_handlers[rax] != 0x00)
+uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
+    // printDec(rax);
+    if ((rax < sizeof(syscall_handlers)/sizeof(syscall_handlers[0])) && syscall_handlers[rax] != 0x00){
+        // printString((uint8_t *)"sys_handler\n", white);
         return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
+    }
     return 0;
 }
 

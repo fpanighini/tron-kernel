@@ -114,6 +114,7 @@ keyPressed:
     ret
 
 ringBell:
+ret
 
 ;vbe_get_info_block:
 ;        mov ax, 0x4F00				; get VBE BIOS info

@@ -30,8 +30,8 @@ void clearBSS(void *bssAddress, uint64_t bssSize)
 void *getStackBase()
 {
     return (void *)((uint64_t)&endOfKernel + PageSize * 8 // The size of the stack itself, 32KiB
-                    - sizeof(uint64_t)                    // Begin at the top of the stack
-    );
+            - sizeof(uint64_t)                    // Begin at the top of the stack
+            );
 }
 
 void *initializeKernelBinary()
@@ -48,7 +48,6 @@ void *initializeKernelBinary()
     return getStackBase();
 }
 
-void testInt(void); // -> interrupts.asm
 
 void getTimeFormat(uint8_t *buffer);
 int itoa(int number, char *s);
@@ -69,7 +68,6 @@ int main()
     sys_write(str, white);
     sys_write(string, white);
     sys_write(newLine, black);
-    testInt(); // overlap -> solution increment heigh or reduce font size
     sys_paintScreen();
     uint8_t timeBuffer[100];
     getTimeFormat(timeBuffer);
@@ -97,7 +95,7 @@ int main()
     sys_write(newLine, white);
     clearScreen();
     sys_write("$>", green);
-     //sys_write(newLine, white);
+    //sys_write(newLine, white);
 
 
     sys_write("hla como estas\n", white);
@@ -111,9 +109,21 @@ int main()
     char str1[10];
     sys_read(0,&str1,10);
 
-    sys_write(str1, red);
+    sys_write(str1, green);
 
+    sys_read(0,&str1,10);
 
+    sys_write(str1, green);
+    int a = 0;
+
+    a = ((EntryPoint) sampleCodeModuleAddress)();
+
+    if (a == 1){
+        sys_write("Hola", red);
+    }
+    else {
+        sys_write("chaus", red);
+    }
     while (1)
     {
     }

@@ -16,11 +16,13 @@ void irqDispatcher(uint64_t irq) {
 }
 
 void int_20() {
+    printString("tic\n",red);
     timer_handler();
 }
 
 void int_21(){
     saveKey();
+        //sys_write("key pressed\n",red);
     if (!keyRead()){
         //char a = readBuf();
         // if (a == -1){
