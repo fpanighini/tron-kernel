@@ -37,7 +37,8 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
                 return i;
             }
         }
-        sys_wait(WAIT_TIME);
+        // sys_wait(WAIT_TIME);
+        _hlt();
     }
     buf[i] = 0;
     return i;

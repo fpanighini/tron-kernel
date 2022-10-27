@@ -18,16 +18,18 @@ void shell(){
     while(out){
         bufferRead(&string);
         out = readBuffer(string);
+
+        sys_write("\n",white);
     }
 }
 
 void bufferRead(char ** buf){
-    char c[2];
+    char c[2] = {1,0};
     int i = 0;
     int count = 0;
     (*buf)[i] = 0;
-    sys_writeAtX(0, COMMAND_CHAR, green);
-    while(c[0] != '\n'){
+    sys_write(COMMAND_CHAR, green);
+    while(c[0] != 0){
         sys_read(0, (char *) &c, 2);
         if (c[0] == BACKSPACE){
             if (i > 0){
