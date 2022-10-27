@@ -25,6 +25,7 @@ uint64_t sys_read(uint8_t fd, char * buf, uint16_t count) {
     int i = 0;
     readBuf();
     while (i < count - 1){
+        sys_wait(1);
         if (!keyRead()){
             buf[i] = readBuf();
             if (buf[i] == '\n' || buf[i] == 0){
@@ -48,7 +49,7 @@ uint64_t sys_date() {
     return getDate();
 }
 
-uint64_t sys_paintScreen() {
+uint64_t sys_clearScreen() {
     clearScreen();
     return 0;
 }
@@ -75,14 +76,24 @@ uint64_t sys_heightScr() {
     return getHeight(); 
 }
 
-uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {sys_write, sys_read, sys_time ,sys_date , sys_paintScreen , sys_drawRectangle , sys_bell, sys_heightScr, sys_widthScr, sys_setFontSize};
-
-uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
-    // printDec(rax);
-    if ((rax < sizeof(syscall_handlers)/sizeof(syscall_handlers[0])) && syscall_handlers[rax] != 0x00){
-        // printString((uint8_t *)"sys_handler\n", white);
-        return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
-    }
+uint64_t sys_writeAtX(uint16_t x, char *string, Color color) {
+    printStringAtX(x, (uint8_t *)string, color);
     return 0;
 }
+
+uint64_t sys_wait(uint16_t ticks){
+    wait(ticks);
+    return 0;
+}
+
+// uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {sys_write, sys_read, sys_time ,sys_date , sys_paintScreen , sys_drawRectangle , sys_bell, sys_heightScr, sys_widthScr, sys_setFontSize};
+// 
+// uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
+//     // printDec(rax);
+//     if ((rax < sizeof(syscall_handlers)/sizeof(syscall_handlers[0])) && syscall_handlers[rax] != 0x00){
+//         // printString((uint8_t *)"sys_handler\n", white);
+//         return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
+//     }
+//     return 0;
+// }
 

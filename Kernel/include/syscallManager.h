@@ -20,11 +20,12 @@ uint64_t sys_write(char *string, Color color);
 uint64_t sys_read(uint8_t fd, char * buf, uint16_t count);
 uint64_t sys_time();             // Tiempo hh:mm:ss
 uint64_t sys_date();             // dd/mm/aa
-uint64_t sys_paintScreen();      // clean screen
+uint64_t sys_clearScreen();      // clean screen
 uint64_t sys_drawRectangle(int x, int y, int width, int height, Color color);
 uint64_t sys_bell();
 uint64_t sys_widthScr();
 uint64_t sys_heightScr();
 uint64_t sys_setFontSize(uint32_t size); //put in syshandler
+uint64_t sys_wait(uint16_t ticks);
 
 #endif

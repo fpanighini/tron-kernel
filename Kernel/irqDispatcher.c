@@ -16,7 +16,7 @@ void irqDispatcher(uint64_t irq) {
 }
 
 void int_20() {
-    printString("tic\n",red);
+    //printString("tic\n",red);
     timer_handler();
 }
 

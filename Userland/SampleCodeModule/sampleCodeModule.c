@@ -1,23 +1,9 @@
 /* sampleCodeModule.c */
+#include <syscalls.h>
+#include <color.h>
 
+void shell(void);
 
-typedef struct {
-	unsigned char b;
-	unsigned char g;
-	unsigned char r;
-}Color;
-
-
-Color black = {0x00, 0x00, 0x00};
-Color white = {0xFF, 0xFF, 0xFF};
-Color green = {0x1F, 0xED, 0x11};
-Color gray = {0x90, 0x90, 0x90};
-Color blue = {0xFF, 0x00, 0x00};
-Color red = {0x00, 0x00, 0xFF};
-
-
-long sys_read(unsigned char fd, char * s, unsigned int count);
-long sys_write(char * s, Color c);
 char * v = (char*)0xB8000 + 79 * 2;
 
 // static int var1 = 0;
@@ -34,16 +20,16 @@ int main() {
     //    return 0xDEADC0DE;
     //
     //
-    // sys_write("\n[Userland]\n", green);
+    sys_write("\n[Userland]\n", green);
 
 
-    // char str[10];
-    // char * string = str;
+    char str[10];
+    char * string = str;
 
-    // sys_read(0, string,10);
+    sys_read(0, string,2);
 
-    // sys_write(string, red);
-    //
+    sys_write(string, red);
+    shell();
     while(1){
 
     }

@@ -92,6 +92,10 @@ void printString(uint8_t * string, Color color){
     printStringAt(posX,screenData->y_char,string,color);
 }
 
+void printStringAtX(uint16_t x, uint8_t * string, Color color){
+    printStringAt(x, screenData->y_char,string,color);
+}
+
 void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
 {
     int i = 0;

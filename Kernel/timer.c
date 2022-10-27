@@ -30,4 +30,9 @@ uint64_t getDate() {
 	return getDay() | ((uint64_t)getMonth() << 8) | ((uint64_t)getYear() << 16);
 }
 
+void wait(int t){
+    int initial = ticks;
+    while (ticks - initial < t);
+}
+
 

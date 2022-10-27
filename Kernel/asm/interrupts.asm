@@ -21,6 +21,12 @@ EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
+EXTERN sys_write
+EXTERN sys_read
+EXTERN sys_writeAtX
+EXTERN sys_clearScreen
+EXTERN sys_wait
+
 SECTION .text
 
 %macro pushState 0
@@ -152,10 +158,44 @@ _irq05Handler:
 
 syscallINTHandler:
     pushState
+    cli
     mov rcx, r10
     mov r9, rax
     sti
-    call syscallDispatcher
+    cmp rax, 0x00
+    je .write
+    cmp rax, 0x01
+    je .read
+    cmp rax, 0x02
+    je .writeAtX
+    cmp rax, 0x03
+    je .clearScreen
+    cmp rax, 0x04
+    je .wait
+
+    jmp .end
+
+
+.write:
+    call sys_write
+    jmp .end
+.read:
+    call sys_read
+    jmp .end
+.writeAtX:
+    call sys_writeAtX
+    jmp .end
+.clearScreen:
+    call sys_clearScreen
+    jmp .end
+.wait:
+    call sys_wait
+    jmp .end
+
+
+
+    ; call syscallDispatcher
+.end:
     popState
     iretq
 

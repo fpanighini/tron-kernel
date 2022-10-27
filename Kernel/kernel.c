@@ -64,11 +64,11 @@ int main()
 
     sys_write(string, white);
     sys_write(newLine, black);
-    sys_paintScreen();
+    sys_clearScreen();
     sys_write(str, white);
     sys_write(string, white);
     sys_write(newLine, black);
-    sys_paintScreen();
+    sys_clearScreen();
     uint8_t timeBuffer[100];
     getTimeFormat(timeBuffer);
     sys_write((char *)timeBuffer, green);
