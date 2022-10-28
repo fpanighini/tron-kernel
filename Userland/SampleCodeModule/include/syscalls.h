@@ -7,5 +7,7 @@ long sys_write(char * s, Color c);
 long sys_writeAtX(int x, char * s, Color c);
 long sys_clearScreen();
 long sys_wait(int ticks);
+long sys_time();
+long sys_date();
 
 #endif

@@ -45,12 +45,16 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
 }
 
 uint64_t sys_time() {
-    printStringAt(0,0, (uint8_t *)"Time ->\n", white);
+    //printStringAt(0,0, (uint8_t *)"Time ->\n", white);
+    printDec(getTime());
+    printString("\n", black);
     return getTime();
 }
 
 uint64_t sys_date() {
-    printStringAt(0,0, (uint8_t *)"Date -> \n", white);
+    //printStringAt(0,0, (uint8_t *)"Date -> \n", white);
+    printDec(getDate());
+    printString("\n", black);
     return getDate();
 }
 

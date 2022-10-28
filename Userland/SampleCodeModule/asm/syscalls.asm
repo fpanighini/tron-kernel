@@ -4,6 +4,8 @@ GLOBAL sys_writeAtX    ; <- Borrar
 GLOBAL sys_clearScreen
 GLOBAL sys_wait
 GLOBAL sys_writeAt
+GLOBAL sys_time
+GLOBAL sys_date
 
 ; syscall 0
 sys_write:
@@ -35,4 +37,15 @@ sys_wait:
     int 0x80
     ret
 
+; syscall 5
+sys_time:
+    mov rax, 0x05
+    int 0x80
+    ret
+
+; syscall 6
+sys_date:
+    mov rax, 0x06
+    int 0x80
+    ret
 
