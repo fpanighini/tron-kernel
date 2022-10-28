@@ -17,7 +17,7 @@ typedef struct buf {
     uint8_t count;
 } bufT;
 
-bufT buf = {0,0};
+bufT buf = {{0},0};
 
 void saveKey(){
     uint8_t c = keyPressed();
@@ -48,10 +48,6 @@ void clearKeyboardBuffer(){
 uint8_t getCount(){
     return buf.count;
 }
-
-// uint8_t keyRead(){
-//     return buf.read;
-// }
 
 uint8_t getKey(uint8_t id)
 {

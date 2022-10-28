@@ -1,51 +1,78 @@
 GLOBAL sys_read
 GLOBAL sys_write
-GLOBAL sys_writeAtX    ; <- Borrar
+GLOBAL sys_writeAt
 GLOBAL sys_clearScreen
 GLOBAL sys_wait
 GLOBAL sys_writeAt
 GLOBAL sys_time
 GLOBAL sys_date
+GLOBAL sys_getScreenHeight
+GLOBAL sys_getScreenWidth
+GLOBAL sys_timedRead
+GLOBAL sys_drawRectangle
 
-; syscall 0
+; syscall 0x00
 sys_write:
     mov rax, 0x00
     int 0x80
     ret
 
-; syscall 1
+; syscall 0x01
 sys_read:
     mov rax, 0x01
     int 0x80
     ret
 
-; syscall 2
+; syscall 0x02
 sys_writeAt:
     mov rax, 0x02
     int 0x80
     ret
 
-; syscall 3
+; syscall 0x03
 sys_clearScreen:
     mov rax, 0x03
     int 0x80
     ret
 
-; syscall 4
+; syscall 0x04
 sys_wait:
     mov rax, 0x04
     int 0x80
     ret
 
-; syscall 5
+; syscall 0x05
 sys_time:
     mov rax, 0x05
     int 0x80
     ret
 
-; syscall 6
+; syscall 0x06
 sys_date:
     mov rax, 0x06
     int 0x80
     ret
 
+; syscall 0x07
+sys_getScreenHeight:
+    mov rax, 0x07
+    int 0x80
+    ret
+
+; syscall 0x08
+sys_getScreenWidth:
+    mov rax, 0x08
+    int 0x80
+    ret
+
+; syscall 0x09
+sys_timedRead:
+    mov rax, 0x09
+    int 0x80
+    ret
+
+; syscall 0x0A
+sys_drawRectangle:
+    mov rax, 0x0A
+    int 0x80
+    ret

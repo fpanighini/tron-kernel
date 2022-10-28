@@ -28,6 +28,12 @@ EXTERN sys_clearScreen
 EXTERN sys_wait
 EXTERN sys_time
 EXTERN sys_date
+EXTERN sys_heightScr
+EXTERN sys_widthScr
+EXTERN sys_timedRead
+EXTERN sys_drawRectangle
+
+
 
 SECTION .text
 
@@ -184,6 +190,18 @@ syscallINTHandler:
 
     cmp rax, 0x06
     je .date
+	
+	cmp rax, 0x07
+	je .getScreenHeight
+
+	cmp rax, 0x08
+	je .getScreenWidth
+
+	cmp rax, 0x09
+	je .timedRead
+
+	cmp rax, 0x0A
+	je .drawRectangle
 
     jmp .end
 
@@ -215,7 +233,22 @@ syscallINTHandler:
 	call sys_date
 	jmp .end
 
-    ; call syscallDispatcher
+.getScreenHeight:
+	call sys_heightScr
+	jmp .end
+
+.getScreenWidth:
+	call sys_widthScr
+	jmp .end
+
+.timedRead:
+	call sys_timedRead
+	jmp .end
+
+.drawRectangle:
+	call sys_drawRectangle
+	jmp .end
+
 .end:
     iretq
 

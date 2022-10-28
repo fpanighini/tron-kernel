@@ -5,7 +5,7 @@
 
 void saveKey();
 
-uint32_t keyRead(char * str, uint32_t count);
+uint32_t readBuf(char * str, uint32_t count);
 
 void clearKeyboardBuffer();
 
