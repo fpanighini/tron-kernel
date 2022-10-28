@@ -82,27 +82,48 @@ getHours:
 
 getDay:
 	cli
-	mov al, 0x07
-	out 70h, al
-	in al, 71h
-	sti
-	ret
+    mov al, 0x0B
+    out 70h, al
+    in al, 71h
+    or al, 4
+    out 71h, al
+
+    mov al, 0x07
+    out 70h, al
+    in al, 71h
+    sti
+
+    ret
 
 getMonth:
 	cli
-	mov al, 0x08
-	out 70h, al
-	in al, 71h
-	sti
-	ret
+    mov al, 0x0B
+    out 70h, al
+    in al, 71h
+    or al, 4
+    out 71h, al
+
+    mov al, 0x08
+    out 70h, al
+    in al, 71h
+    sti
+
+    ret
 
 getYear:
 	cli
-	mov al, 0x09
-	out 70h, al
-	in al, 71h
-	sti
-	ret
+    mov al, 0x0B
+    out 70h, al
+    in al, 71h
+    or al, 4
+    out 71h, al
+
+    mov al, 0x09
+    out 70h, al
+    in al, 71h
+    sti
+    
+    ret
 
 keyPressed:
     mov rax, 0

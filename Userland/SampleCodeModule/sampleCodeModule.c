@@ -1,7 +1,7 @@
 /* sampleCodeModule.c */
 #include <syscalls.h>
 #include <color.h>
-#include <time.h>
+#include <timer.h>
 
 void shell(void);
 
@@ -12,15 +12,6 @@ char *v = (char *)0xB8000 + 79 * 2;
 
 int main()
 {
-    ////All the following code may be removed
-    //*v = 'X';
-    //*(v+1) = 0x74;
-
-    ////Test if BSS is properly set up
-    // if (var1 == 0 && var2 == 0)
-    //     return 0xDEADC0DE;
-    //
-    //
     // sys_write("\n[Userland]\n", green);
 
     // char str[10];
@@ -28,13 +19,7 @@ int main()
 
     // sys_read(0, string,2);
 
-    // sys_write(string, red);
-    // sys_write("\n",red);
-    // sys_write("hola\bhola\n\n",red);
-    sys_clearScreen();
-    getCurrentDate();
-
-    // shell();
+    shell();
     while (1)
     {
         sys_wait(1);

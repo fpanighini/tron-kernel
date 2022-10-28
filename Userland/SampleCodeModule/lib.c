@@ -121,7 +121,7 @@ char *strncpy(char *dest, const char *src, int n)
  * @param str 
  * @return int 
  */
-long atoi(long number, char *str) {
+long itoa(long number, char *str) {
     int digits = 1;
 	for (long n=number/10; n != 0; digits++, n /= 10);
 

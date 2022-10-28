@@ -1,7 +1,7 @@
-#ifndef _TIME_H_
-#define _TIME_H_
+#ifndef _TIMER_H_
+#define _TIMER_H_
 
-void getCurrentDate();
+void getDateAndTime(char*buff);
 void getTimeFormat(char *buff);
 void getDateFormat(char *buff);
 

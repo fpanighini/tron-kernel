@@ -46,19 +46,18 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
 
 uint64_t sys_time() {
     //printStringAt(0,0, (uint8_t *)"Time ->\n", white);
-    printString("Time Kernel:\n", red);
-    printDec(getTime());
-    printString("\n", black);
-    
-    printString("End KErnel\n",red);
+    //printString("Time Kernel:\n", red);
+    //printDec(getTime());
+    //printString("\n", black);
+    //printString("End KErnel\n",red);
     return getTime();
 }
 
 uint64_t sys_date() {
     //printStringAt(0,0, (uint8_t *)"Date -> \n", white);
-    printString("Date KErnel:\n",red);
-    printDec(getDate());
-    printString("\nend KErnel date\n", red);
+    //printString("Date KErnel:\n",red);
+    //printDec(getDate());
+    //printString("\nend KErnel date\n", red);
     return getDate();
 }
 

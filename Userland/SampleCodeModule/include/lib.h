@@ -8,6 +8,6 @@ char * strcat(char *dest, const char *src);
 char * strncat(char *dest, const char *src, int n);
 char * strcpy(char * dest, const char *src);
 char * strncpy(char * dest, const char *src, int n);
-long atoi(long number, char *str);
+long itoa(long number, char *str);
 
 #endif
