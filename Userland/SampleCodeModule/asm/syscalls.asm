@@ -20,7 +20,7 @@ sys_read:
     ret
 
 ; syscall 2
-sys_writeAtX:
+sys_writeAt:
     mov rax, 0x02
     int 0x80
     ret

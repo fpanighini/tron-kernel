@@ -23,7 +23,7 @@ EXTERN syscallDispatcher
 
 EXTERN sys_write
 EXTERN sys_read
-EXTERN sys_writeAtX
+EXTERN sys_writeAt
 EXTERN sys_clearScreen
 EXTERN sys_wait
 EXTERN sys_time
@@ -171,7 +171,7 @@ syscallINTHandler:
     je .read
 
     cmp rax, 0x02
-    je .writeAtX
+    je .writeAt
 
     cmp rax, 0x03
     je .clearScreen
@@ -195,8 +195,8 @@ syscallINTHandler:
     call sys_read
     jmp .end
 
-.writeAtX:
-    call sys_writeAtX
+.writeAt:
+    call sys_writeAt
     jmp .end
 	
 .clearScreen:

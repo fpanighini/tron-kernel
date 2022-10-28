@@ -88,8 +88,8 @@ uint64_t sys_heightScr() {
     return getHeight(); 
 }
 
-uint64_t sys_writeAtX(uint16_t x, char *string, Color color) {
-    printStringAtX(x, (uint8_t *)string, color);
+uint64_t sys_writeAt(uint32_t x, uint32_t y, char *string, Color color) {
+    printStringAt(x, y, (uint8_t *)string, color);
     return 0;
 }
 
