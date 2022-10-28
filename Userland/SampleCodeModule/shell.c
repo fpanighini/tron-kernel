@@ -42,15 +42,15 @@ void shell()
 
 void bufferRead(char **buf)
 {
-    char c[2] = {1, 0};
+    int c = 1;
     int i = 0;
     (*buf)[i] = 0;
     sys_write(COMMAND_CHAR, green);
-                sys_write(CURSOR, white);
-    while (c[0] != 0)
+    sys_write(CURSOR, white);
+    while (c != 0)
     {
-        sys_read(0, (char *)&c, 2);
-        if (c[0] == BACKSPACE)
+        c = getChar();
+        if (c == BACKSPACE)
         {
             if (i > 0)
             {
@@ -63,7 +63,7 @@ void bufferRead(char **buf)
         }
         else
         {
-            (*buf)[i++] = c[0];
+            (*buf)[i++] = c;
             (*buf)[i] = 0;
 
             sys_write("\b", white);

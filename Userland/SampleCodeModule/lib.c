@@ -1,4 +1,6 @@
 #include <lib.h>
+#include <syscalls.h>
+#include <color.h>
 /**
  * @brief
  *  Compares two strings.
@@ -139,4 +141,10 @@ long itoa(long number, char *str) {
 	}
 	
 	return digits;
+}
+
+int getChar(){
+    char c[2] = {1, 0};
+    sys_read(0, (char *)&c, 2);
+    return c[0];
 }
