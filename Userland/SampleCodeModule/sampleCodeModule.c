@@ -18,21 +18,7 @@ int main()
     // char * string = str;
 
     // sys_read(0, string,2);
-
-<<<<<<< HEAD
-    shell();
-    while (1)
-    {
-        sys_wait(1);
-    }
-=======
-    // sys_write(string, red);
-    // sys_write("\n",red);
-    // sys_write("hola\bhola\n\n",red);
     sys_clearScreen();
-
     shell();
->>>>>>> 53bde04 (Shell interpreter implemented)
-
     return 100;
 }
