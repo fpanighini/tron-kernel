@@ -159,7 +159,6 @@ _irq05Handler:
  	exceptionHandler 6
 
 syscallINTHandler:
-    pushState
     cli
     mov rcx, r10
     mov r9, rax
@@ -180,11 +179,11 @@ syscallINTHandler:
     cmp rax, 0x04
     je .wait
 
-	cmp rax, 0x05
-	je .time
+    cmp rax, 0x05
+    je .time
 
-	cmp rax, 0x06
-	je .date
+    cmp rax, 0x06
+    je .date
 
     jmp .end
 
@@ -218,7 +217,6 @@ syscallINTHandler:
 
     ; call syscallDispatcher
 .end:
-    popState
     iretq
 
 haltcpu:

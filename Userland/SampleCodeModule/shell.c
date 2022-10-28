@@ -23,6 +23,8 @@ void shell()
         out = readBuffer(string);
 
         sys_write("\n", white);
+        sys_write(string,blue);
+        sys_write("\n",white);
     }
 }
 

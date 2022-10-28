@@ -16,8 +16,8 @@ void getCurrentDate()
     getDateFormat(date);
     getTimeFormat(time);
 
-    //sys_write("Date: ", green);
-    //sys_write(date, white);
+    sys_write("Date: ", green);
+    sys_write(date, white);
     //sys_write(" ", black);
     //sys_write("Time: ", green);
     //sys_write(time, white);
@@ -27,7 +27,7 @@ void getCurrentDate()
 void getTimeFormat(char *buffer)
 {
     char *p = (char *)buffer;
-    int time = sys_time();
+    long time = sys_time();
     char test[20];
     atoi(time, test);
     sys_write(test, white);

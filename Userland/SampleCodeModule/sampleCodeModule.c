@@ -37,6 +37,7 @@ int main()
     // shell();
     while (1)
     {
+        sys_wait(1);
     }
 
     return 100;

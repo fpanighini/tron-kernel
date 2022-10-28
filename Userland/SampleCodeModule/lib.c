@@ -123,7 +123,7 @@ char *strncpy(char *dest, const char *src, int n)
  */
 long atoi(long number, char *str) {
     int digits = 1;
-	for (int n=number/10; n != 0; digits++, n /= 10);
+	for (long n=number/10; n != 0; digits++, n /= 10);
 
     if(digits == 1) {
         str[0] = '0';
@@ -132,7 +132,7 @@ long atoi(long number, char *str) {
         return digits;
     }
 	
-	str[digits] = 0;    
+	str[digits] = 0;
 	for (int i=digits-1; i>=0; i--) {
 		str[i] = (number % 10) + '0';
 		number /= 10;
