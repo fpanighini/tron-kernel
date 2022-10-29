@@ -18,7 +18,9 @@ void exceptionDispatcher(uint64_t e){
 }
 
 void endException(uint8_t * errorString){
-    printStringAt(0,0, (uint8_t *) errorString, white );
+    colorScreen(blue);
+    printStringAt(0,0, (uint8_t *) errorString, red);
+    printString("\nYOU WILL BE RETURNED TO TROLL SHELL IN FIVE SECONDS",green);
     sys_wait(5000);
     loadMain();
 }
