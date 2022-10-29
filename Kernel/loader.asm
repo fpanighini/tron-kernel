@@ -1,6 +1,8 @@
-global loader
-extern main
-extern initializeKernelBinary
+GLOBAL loader
+EXTERN main
+EXTERN initializeKernelBinary
+GLOBAL loadMain
+
 EXTERN getStackBase
 
 

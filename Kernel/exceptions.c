@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <exceptions.h>
 
-void loadMain(void);
+void endException(uint8_t * str);
+
 
 void exceptionDispatcher(uint64_t e){
     switch (e) {
@@ -16,22 +17,20 @@ void exceptionDispatcher(uint64_t e){
     return;
 }
 
+void endException(uint8_t * errorString){
+    printStringAt(0,0, (uint8_t *) errorString, white );
+    sys_wait(5000);
+    loadMain();
+}
+
 void divideZeroException(){
     clearScreen();
-    printStringAt(0,0,(uint8_t *) ERROR0, white );
-    while(1){
-        // Esperar un input de keyboard
-    }
-    loadMain();
+    endException(ERROR0);
 }
 
 void invalidOpcodeException(){
     clearScreen();
-    printStringAt(0,0, (uint8_t *) ERROR6, white );
-    while(1){
-        // Esperar un input de keyboard
-    }
-    loadMain();
+    endException(ERROR6);
 }
 
 

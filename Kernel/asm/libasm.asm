@@ -96,7 +96,7 @@ getDay:
     ret
 
 getMonth:
-	cli
+    cli
     mov al, 0x0B
     out 70h, al
     in al, 71h
