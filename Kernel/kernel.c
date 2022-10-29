@@ -65,11 +65,11 @@ int main()
 
     a = ((EntryPoint) sampleCodeModuleAddress)();
 
-    if (a == 1){
-        sys_write("Hola", red);
-    }
-    else {
-        sys_write("chaus", red);
-    }
+    //if (a == 1){
+    //    sys_write("Hola", red);
+    //}
+    //else {
+    //    sys_write("chaus", red);
+    //}
     return 0;
 }
