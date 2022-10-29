@@ -22,6 +22,8 @@ int main()
 
     sys_clearScreen();
 
+    shell();
+
 
     //sys_write("\n[USERLAND]",white);
 
@@ -46,7 +48,7 @@ int main()
 
 
     //return 1;
-    char *test = "abcdefghijklmnopqrstuvwxyz";
+    //char *test = "abcdefghijklmnopqrstuvwxyz";
     //for (;*test; test++) {
     //    putChar(*test);
     //}
@@ -54,7 +56,7 @@ int main()
     //int test = 1;
     //printf("%s\n", test);
     //printf("%s", test);
-    putStringColor(test, green);
+    // putStringColor(test, green);
     
     //sys_write("\n", black);
     //shell();

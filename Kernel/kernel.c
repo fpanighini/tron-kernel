@@ -55,13 +55,13 @@ int main()
 
     int a = 0;
 
-    printStringAt(0,0,"oo",white);
-    sys_writeAt(10,10,"TrollOSsssssssssssssssssssssss", red);
+    //printStringAt(0,0,"oo",white);
+    //sys_writeAt(10,10,"TrollOSsssssssssssssssssssssss", red);
 
-    printStringAt(100,15, "TrollOlllllS", green);
+    //printStringAt(100,15, "TrollOlllllS", green);
 
 
-    printStringAt(0,0,"xx",white);
+    //printStringAt(0,0,"xx",white);
 
     a = ((EntryPoint) sampleCodeModuleAddress)();
 

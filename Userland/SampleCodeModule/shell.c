@@ -16,6 +16,8 @@
 #define EXIT_COMMAND "exit"
 #define TRON_COMMAND "tron"
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
+#define DIVIDE_BY_ZERO "div-zero"
+#define INVALID_OP "invalid-op"
 
 
 #define HELP_MESSAGE "HELP"
@@ -28,6 +30,10 @@ int readBuffer(char *buf);
 void printLine(char *str);
 void helpCommand(void);
 void printNewline(void);
+void testDivideByZeroExcpetion();
+void testInvalidOpException();
+
+extern invalidOpcode();
 
 void shell()
 {
@@ -63,7 +69,7 @@ void bufferRead(char **buf)
                 sys_write(CURSOR, white);
             }
         }
-        else
+        else if (c >= ' ')
         {
             (*buf)[i++] = c;
             (*buf)[i] = 0;
@@ -94,6 +100,14 @@ int readBuffer(char *buf)
         sys_clearScreen();
         return 1;
     }
+    else if (!strcmp(buf, DIVIDE_BY_ZERO)){
+        testDivideByZeroExcpetion();
+        return 0;
+    }
+    else if (!strcmp(buf, INVALID_OP)){
+        testInvalidOpException();
+        return 0;
+    }
     else if (!strcmp(buf, EXIT_COMMAND)){
         return 0;
     }
@@ -116,4 +130,13 @@ void helpCommand(){
 
 void printNewline(){
     sys_write(NEWLINE,white);
+}
+
+void testDivideByZeroExcpetion(){
+    int i = 1/0;
+}
+
+
+void testInvalidOpException(){
+    invalidOpcode();
 }
