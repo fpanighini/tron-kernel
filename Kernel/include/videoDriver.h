@@ -14,6 +14,7 @@ extern Color gray;
 extern Color black;
 extern Color blue;
 extern Color red;
+extern Color magenta;
 
 void setFontSize(uint32_t size);
 
@@ -30,8 +31,6 @@ void printSquare(uint16_t x, uint16_t y, uint16_t l, Color color);
 void printChar(uint16_t x, uint16_t y, uint8_t c, Color color);
 
 void printStringAt(uint16_t x, uint8_t y, uint8_t * string, Color color);
-
-void printStringAtX(uint16_t x, uint8_t * string, Color color);
 
 void printString(uint8_t * string, Color color);
 

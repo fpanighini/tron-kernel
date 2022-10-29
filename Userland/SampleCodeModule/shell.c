@@ -2,6 +2,7 @@
 #include <color.h>
 #include <time.h>
 #include <lib.h>
+#include <tron.h>
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
@@ -13,6 +14,7 @@
 #define HELP_COMMAND "help"
 #define CLEAR_COMMAND "clear"
 #define EXIT_COMMAND "exit"
+#define TRON_COMMAND "tron"
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
 
 
@@ -83,6 +85,12 @@ int readBuffer(char *buf)
         return 1;
     }
     else if (!strcmp(buf, CLEAR_COMMAND)){
+        sys_clearScreen();
+        return 1;
+    }
+    else if (!strcmp(buf, TRON_COMMAND)){
+        sys_clearScreen();
+        mainTron();
         sys_clearScreen();
         return 1;
     }

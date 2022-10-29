@@ -41,7 +41,7 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
         if (read && (buf[i-1] == '\n' || buf[i-1] == 0)){
             buf[i-1] = 0;
             return i;
-        }        
+        }
         _hlt();
     }
     buf[i] = 0;
@@ -49,7 +49,6 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
 }
 
 uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis) {
-    //printString("sys_read\n", white);
     if (fd != 0){
         return 0;
     }
@@ -58,12 +57,14 @@ uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis) 
     clearKeyboardBuffer();
     buf[0] = 0;
     int initial = milliseconds_elapsed();
-    while (i < count - 1 && (milliseconds_elapsed() - initial < millis) ){
+    //sys_wait(millis);
+    while ((i < count - 1) && ((milliseconds_elapsed() - initial) < millis)){
         read = getKbdBuffer(buf, count, &i);
         if (read && (buf[i-1] == '\n' || buf[i-1] == 0)){
             buf[i-1] = 0;
             return i;
-        }        
+        }
+        _hlt();
     }
     buf[i] = 0;
     return i;
@@ -114,6 +115,7 @@ uint64_t sys_heightScr() {
 }
 
 uint64_t sys_writeAt(uint16_t x, uint16_t y, char *string, Color color) {
+    printStringAt(0, 0, "Hello World\n",red);
     printStringAt(x, y, (uint8_t *)string, color);
     return 0;
 }

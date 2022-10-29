@@ -5,6 +5,9 @@
 #include <syscalls.h>
 #include <lib.h>
 
+#define MAX_WIDTH 1024
+#define MAX_HEIGHT 768
+
 #define	UP 0
 #define DOWN 1
 #define LEFT 2
@@ -46,7 +49,7 @@ typedef struct {
  /**
   * 	Logic board
   */ 
- int** board;
+ char *** board;
 
 } Canvas;
 

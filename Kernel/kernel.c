@@ -51,8 +51,17 @@ int main()
 {
     load_idt();
     colorScreen(black);
+    sys_clearScreen();
 
     int a = 0;
+
+    printStringAt(0,0,"oo",white);
+    sys_writeAt(10,10,"TrollOSsssssssssssssssssssssss", red);
+
+    printStringAt(100,15, "TrollOlllllS", green);
+
+
+    printStringAt(0,0,"xx",white);
 
     a = ((EntryPoint) sampleCodeModuleAddress)();
 
@@ -62,9 +71,5 @@ int main()
     else {
         sys_write("chaus", red);
     }
-    while (1)
-    {
-    }
-
     return 0;
 }

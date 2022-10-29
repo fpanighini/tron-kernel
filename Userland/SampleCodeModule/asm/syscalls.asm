@@ -3,7 +3,6 @@ GLOBAL sys_write
 GLOBAL sys_writeAt
 GLOBAL sys_clearScreen
 GLOBAL sys_wait
-GLOBAL sys_writeAt
 GLOBAL sys_time
 GLOBAL sys_date
 GLOBAL sys_getScreenHeight
@@ -26,6 +25,7 @@ sys_read:
 ; syscall 0x02
 sys_writeAt:
     mov rax, 0x02
+    mov r10, rcx
     int 0x80
     ret
 
@@ -68,11 +68,14 @@ sys_getScreenWidth:
 ; syscall 0x09
 sys_timedRead:
     mov rax, 0x09
+    mov r10, rcx
     int 0x80
     ret
 
 ; syscall 0x0A
 sys_drawRectangle:
     mov rax, 0x0A
+    mov r10, rcx
     int 0x80
     ret
+

@@ -15,6 +15,6 @@ uint64_t getTime();
 
 uint64_t getDate();
 
-int milliseconds_elapsed();
+long milliseconds_elapsed();
 
 #endif

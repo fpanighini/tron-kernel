@@ -190,18 +190,18 @@ syscallINTHandler:
 
     cmp rax, 0x06
     je .date
-	
-	cmp rax, 0x07
-	je .getScreenHeight
 
-	cmp rax, 0x08
-	je .getScreenWidth
+    cmp rax, 0x07
+    je .getScreenHeight
 
-	cmp rax, 0x09
-	je .timedRead
+    cmp rax, 0x08
+    je .getScreenWidth
 
-	cmp rax, 0x0A
-	je .drawRectangle
+    cmp rax, 0x09
+    je .timedRead
+
+    cmp rax, 0x0A
+    je .drawRectangle
 
     jmp .end
 

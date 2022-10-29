@@ -19,7 +19,7 @@ int ticks_elapsed() {
 }
 
 int seconds_elapsed() {
-	return ticks / 18;
+	return ((double) ticks / 18);
 }
 
 uint64_t getTime() {
@@ -36,8 +36,8 @@ void wait(int t){
 }
 
 
-int milliseconds_elapsed() {
-	return 100 * (ticks / 18);
+long milliseconds_elapsed() {
+	return 1000 * ((double) ticks / 18);
 }
 
 

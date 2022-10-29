@@ -2,9 +2,9 @@
 #define _COLOR_H_
 
 typedef struct {
-	unsigned char b;
-	unsigned char g;
-	unsigned char r;
+	char b;
+	char g;
+	char r;
 }Color;
 
 //Delete color's def. in KERNEL SPACE -> color.c
