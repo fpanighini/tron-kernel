@@ -53,7 +53,8 @@ int main()
 
     //int test = 1;
     //printf("%s\n", test);
-    printf("%s", test);
+    //printf("%s", test);
+    putStringColor(test, green);
     
     //sys_write("\n", black);
     //shell();

@@ -1,6 +1,5 @@
 #include <lib.h>
 #include <syscalls.h>
-#include <color.h>
 
 /**
  * @brief
@@ -373,6 +372,16 @@ void printf(const char *fmt, ...)
 		fmt++;
 	}
 }
+
+int putColorChar(int car, Color c)
+{
+	char str[2];
+	str[0] = car;
+	str[1] = '\0';
+	sys_write((char *)str, c);
+	return str[0];
+}
+
 /**
  * @brief
  *  Print char.
@@ -381,11 +390,15 @@ void printf(const char *fmt, ...)
  */
 int putChar(int c)
 {
-	char str[2];
-	str[0] = c;
-	str[1] = '\0';
-	sys_write((char *)str, white);
-	return str[0];
+	return putColorChar(c, white);
+}
+
+void putStringColor(char *str, Color c) {
+	while (*str)
+	{
+		putColorChar(*str, c);
+		str++;
+	}
 }
 
 void puts(char *str)

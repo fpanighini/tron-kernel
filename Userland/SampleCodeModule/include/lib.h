@@ -2,6 +2,7 @@
 #define _LIB_H_
 
 #include <stdint.h>
+#include <color.h>
 
 typedef uint8_t bool;
 
@@ -20,7 +21,9 @@ char * strncpy(char * dest, const char *src, int n);
 long itoa(long number, char *str);
 int getChar(void);
 void printf(const char *fmt, ...);
+int putColorChar(int car, Color c);
 int putChar(int c);
+void putStringColor(char *str, Color c);
 void puts(char *fmt);
 int scanf(const char *fmt, ...);
 
