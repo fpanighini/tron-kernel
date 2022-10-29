@@ -77,7 +77,6 @@ void printChar(uint16_t x, uint16_t y, uint8_t c, Color color)
     int charId = c - FIRST_CHAR;
     char l;
     int count = 0;
-
     for (int i = 0; i < FONT_HEIGHT * fontSize && count < 32; i += fontSize, count+=2)
     {
         l = font[FONT_HEIGHT * charId + count];

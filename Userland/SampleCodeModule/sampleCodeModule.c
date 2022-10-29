@@ -2,6 +2,7 @@
 #include <syscalls.h>
 #include <color.h>
 #include <timer.h>
+#include <lib.h>
 
 // BORRAR:
 #include <tron.h>
@@ -20,6 +21,7 @@ int main()
     // sys_write("\n[Userland]\n", green);
 
     sys_clearScreen();
+<<<<<<< HEAD
 
 
     sys_write("\n[USERLAND]",white);
@@ -45,4 +47,17 @@ int main()
 
 
     return 1;
+=======
+    char *test = "abcdefghijklmnopqrstuvwxyz \n 1234567890 \n";
+    //for (;*test; test++) {
+    //    putChar(*test);
+    //}
+
+    //int test = 1;
+    printf("%s\n", test);
+    
+    //sys_write("\n", black);
+    //shell();
+    return 100;
+>>>>>>> 130af6e (stdlib in progress)
 }

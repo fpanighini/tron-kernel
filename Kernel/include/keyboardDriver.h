@@ -11,6 +11,8 @@ void clearKeyboardBuffer();
 
 uint8_t getCount();
 
+uint32_t readBuf(char * str, uint32_t count);
+
 #endif
 
 

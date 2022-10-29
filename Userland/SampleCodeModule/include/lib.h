@@ -11,5 +11,8 @@ char * strcpy(char * dest, const char *src);
 char * strncpy(char * dest, const char *src, int n);
 long itoa(long number, char *str);
 int getChar(void);
+int printf(const char *fmt, ...);
+int putChar(int c);
+int scanf(const char *fmt, ...);
 
 #endif

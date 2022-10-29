@@ -52,6 +52,7 @@ sys_date:
     mov rax, 0x06
     int 0x80
     ret
+<<<<<<< HEAD
 
 ; syscall 0x07
 sys_getScreenHeight:
@@ -79,3 +80,5 @@ sys_drawRectangle:
     int 0x80
     ret
 
+=======
+>>>>>>> 130af6e (stdlib in progress)
