@@ -23,7 +23,7 @@ int main()
     sys_clearScreen();
 
 
-    sys_write("\n[USERLAND]",white);
+    //sys_write("\n[USERLAND]",white);
 
     //char str[10];
     //char * string = str;
@@ -42,19 +42,20 @@ int main()
 //        sys_write(str, red);
 //    }
 
-    mainTron();
+    //mainTron();
 
 
-    return 1;
-    char *test = "abcdefghijklmnopqrstuvwxyz \n 1234567890 \n";
+    //return 1;
+    char *test = "abcdefghijklmnopqrstuvwxyz";
     //for (;*test; test++) {
     //    putChar(*test);
     //}
 
     //int test = 1;
-    printf("%s\n", test);
+    //printf("%s\n", test);
+    printf("%s", test);
     
     //sys_write("\n", black);
     //shell();
-    return 100;
+    return 1;
 }
