@@ -21,7 +21,6 @@ int main()
     // sys_write("\n[Userland]\n", green);
 
     sys_clearScreen();
-<<<<<<< HEAD
 
 
     sys_write("\n[USERLAND]",white);
@@ -47,7 +46,6 @@ int main()
 
 
     return 1;
-=======
     char *test = "abcdefghijklmnopqrstuvwxyz \n 1234567890 \n";
     //for (;*test; test++) {
     //    putChar(*test);
@@ -59,5 +57,4 @@ int main()
     //sys_write("\n", black);
     //shell();
     return 100;
->>>>>>> 130af6e (stdlib in progress)
 }

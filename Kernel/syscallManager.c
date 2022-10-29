@@ -64,12 +64,9 @@ uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis) 
             buf[i-1] = 0;
             return i;
         }
-<<<<<<< HEAD
         _hlt();
-=======
         // sys_wait(WAIT_TIME);
         //_hlt(); cual es la funcion de este hlt, no estaba ni incluida la bliblioteca de referencia
->>>>>>> 130af6e (stdlib in progress)
     }
     buf[i] = 0;
     return i;
