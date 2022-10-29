@@ -22,7 +22,7 @@
 #define TIME_COMMAND "time"
 #define DATE_TIME_COMMAND "datetime"
 
-
+#define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
 #define HELP_MESSAGE "HELP"
 
 #define NEWLINE "\n"
@@ -47,6 +47,7 @@ void shell()
     while (out)
     {
         bufferRead(&string);
+        printf("\b");
         printNewline();
         out = readBuffer(string);
     }
@@ -105,24 +106,24 @@ int readBuffer(char *buf)
         return 1;
     }
     else if (!strcmp(buf, DATE_COMMAND)){
-        char str[100] = {0};
+        char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getDateFormat(string);
-        printf("%s",string);
+        printf("%s\n",string);
         return 1;
     }
     else if (!strcmp(buf, TIME_COMMAND)){
-        char str[100] = {0};
+        char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getTimeFormat(string);
-        printf("%s",string);
+        printf("%s\n",string);
         return 1;
     }
     else if (!strcmp(buf, DATE_TIME_COMMAND)){
-        char str[100] = {0};
+        char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
-        getDateFormat(string);
-        printf("%s",string);
+        getDateAndTime(string);
+        printf("%s\n",string);
         return 1;
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
