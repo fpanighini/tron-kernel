@@ -321,6 +321,56 @@ void printStringAt(int x, int y, char *str, Color c)
 	sys_writeAt((short)x, (short)y, str, c);
 }
 
+//length problem
+static void scan(const char *fmt, va_list args, int length)
+{
+	int state = 0;
+	while (*fmt)
+	{
+		if (state == 0)
+		{
+			if (*fmt == '%')
+			{
+				state = 1;
+			}
+			else
+			{
+				putChar(*fmt);
+			}
+		}
+		else if (state == 1)
+		{
+			switch (*fmt)
+			{
+			case 'c':
+			{
+				*(va_arg(args, char *)) = getChar();
+				break;
+			}
+			case 's':
+			{
+
+				sys_read(0, va_arg(args, char *), length);
+				break;
+			}
+			case 'i':
+			case 'd':
+			case 'o':
+			case 'x':
+			case 'X':
+			case 'p':
+			{
+				//warning type
+				sys_read(0, va_arg(args, int *), length); 
+				break;
+			}
+			}
+			state = 0;
+		}
+		fmt++;
+	}
+}
+
 /**
  * @brief
  *
@@ -328,7 +378,10 @@ void printStringAt(int x, int y, char *str, Color c)
  * @param ...
  * @return int
  */
-int scanf(const char *fmt, ...)
+void scanf(int lenght, const char *fmt, ...)
 {
-	return 0;
+	va_list args;
+	va_start(args, fmt);
+	scan(fmt, args, lenght);
+	va_end(args);
 }
