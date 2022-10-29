@@ -117,7 +117,6 @@ uint64_t sys_heightScr() {
 }
 
 uint64_t sys_writeAt(uint16_t x, uint16_t y, char *string, Color color) {
-    printStringAt(0, 0, "Hello World\n",red);
     printStringAt(x, y, (uint8_t *)string, color);
     return 0;
 }

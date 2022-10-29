@@ -15,8 +15,10 @@
 
 
 int mainTron() {
-    sys_clearScreen();
-    startGame();
+    do {
+        sys_clearScreen();
+        startGame();
+    }while(getChar());
     // VER restart();
     // quitMain();
     return 0;
@@ -25,8 +27,6 @@ int mainTron() {
 void startGame() {
 
     Canvas canvas;
-    char board[MAX_WIDTH][MAX_HEIGHT];
-    canvas.board = &board;
     Player p1, p2;
     dimensions(&canvas);
 
@@ -42,6 +42,7 @@ void startGame() {
 void playTron(Player *p1, Player *p2, Canvas *canvas) {
     int game = 1, oldKey = -1, newKey = -1, player1Lost = 0, player2Lost = 0;
     int P1X, P1Y, P2X, P2Y;
+
 
     P1X = p1->x;
     P1Y = p1->y;
@@ -175,8 +176,8 @@ void endGame(char* string, Canvas *canvas) {
     int y = (sys_getScreenHeight() - canvas->height)/2;
     int x = (sys_getScreenWidth() - canvas->width)/2;
 
-    drawRectangle(x, y, canvas->width * 0.4, canvas->height * 0.2, white);
-    printAt(x, y, string, black);
+    drawRectangle(0, 0, canvas->width * 0.8, canvas->height * 0.2, white);
+    printAt(0, 0, string, black);
 
     // VER de agregar restart
 }
@@ -190,12 +191,16 @@ void tick(Player *player) {
     switch(player->dir) {
         case UP:
             player->y -= 1;
+            break;
         case DOWN:
             player->y += 1;
+            break;
         case LEFT:
             player->x -= 1;
+            break;
         case RIGHT:
             player->x += 1;
+            break;
     }
 }
 
@@ -219,14 +224,14 @@ void initializeCanvas(Canvas *canvas) {
  */
 void initializePlayers(Player *p1, Player *p2, Canvas *canvas) {
     p1->color = red;
-    p1->x = (int) canvas->width*0.2;
+    p1->x = (int) canvas->width*0.8;
     p1->y = (int) canvas->height*0.5;
-    p1->dir = RIGHT;
+    p1->dir = LEFT;
 
     p2->color = blue;	
-    p2->x = (int) canvas->width*0.8;
+    p2->x = (int) canvas->width*0.2;
     p2->y = (int) canvas->height*0.5;
-    p2->dir = LEFT;
+    p2->dir = RIGHT;
 }
 
 /**
@@ -264,86 +269,102 @@ int input(Player *p1, Player *p2, int *oldKey, int newKey) {
     if (newKey == 'p' || newKey == 'P') {
         pause();
     }
+    if (*oldKey != newKey){
+        *oldKey = newKey;
+        //     switch (*oldKey)
+        //     {
+        //         case LEFT_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"LEFT_KEY", red);
+        //             p1->dir = LEFT;
+        //             break;
+        // 
+        //         case RIGHT_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"RIGHT_KEY", red);
+        //             p1->dir = RIGHT;
+        //             break;
+        // 
+        //         case DOWN_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"DOWN_KEY", red);
+        //             p1->dir = DOWN;
+        //             break;
+        // 
+        //         case UP_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"UP_KEY", red);
+        //             p1->dir = UP;
+        //             break;
+        // 
+        //         case A_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"A_KEY", red);
+        //             p2->dir = LEFT;
+        //             break;
+        // 
+        //         case D_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"D_KEY", red);
+        //             p2->dir = RIGHT;
+        //             break;
+        // 
+        //         case S_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"S_KEY", red);
+        //             p2->dir = DOWN;
+        //             break;
+        // 
+        //         case W_KEY:
+        //             drawRectangle(0,0,100,100,black);
+        //             printAt(0,0,"W_KEY", red);
+        //             p2->dir = UP;
+        //             break;
+        // 
+        //         default:
+        //             break;
 
-    *oldKey = newKey;
-    switch (*oldKey)
-    {
-        case LEFT_KEY:
-            p1->dir = LEFT;
-            break;
+        p1Key = 0;
 
-        case RIGHT_KEY:
-            p1->dir = RIGHT;
-            break;
+        switch(p1->dir) {
+            case UP:
+            case DOWN:
+                if (*oldKey == LEFT_KEY) {
+                    p1->dir = LEFT;
+                    p1Key = 1;
+                } else if (*oldKey == RIGHT_KEY) {
+                    p1->dir = RIGHT;
+                    p1Key = 1;
+                } break;
+            case LEFT:
+            case RIGHT:
+                if(*oldKey == UP_KEY) {
+                    p1->dir = UP;
+                    p1Key = 1;
+                } else if(*oldKey == DOWN_KEY) {
+                    p1->dir = DOWN;
+                    p1Key = 1;
+                } break;
+        }
 
-        case DOWN_KEY:
-            p1->dir = DOWN;
-            break;
-
-        case UP_KEY:
-            p1->dir = UP;
-            break;
-
-        case A_KEY:
-            p2->dir = LEFT;
-            break;
-
-        case D_KEY:
-            p2->dir = RIGHT;
-            break;
-
-        case S_KEY:
-            p2->dir = DOWN;
-            break;
-
-        case W_KEY:
-            p2->dir = UP;
-            break;
-
-        default:
-            break;
-
-            //p1Key = 0;
-
-            //switch(p1->dir) {
-            //    case UP:
-            //    case DOWN:
-            //        if (*oldKey == LEFT_KEY) {
-            //            p1->dir = LEFT;
-            //            p1Key = 1;
-            //        } else if (*oldKey == RIGHT_KEY) {
-            //            p1->dir = RIGHT;
-            //            p1Key = 1;
-            //        } break;
-            //    case LEFT:
-            //    case RIGHT:
-            //        if(*oldKey == UP_KEY) {
-            //            p1->dir = DOWN;
-            //            p1Key = 1;
-            //        } else if(*oldKey == DOWN_KEY) {
-            //            p1->dir = UP;
-            //            p1Key = 1;
-            //        } break;
-            //}
-
-            //if(!p1Key) {
-            //    switch(p2->dir) {
-            //        case UP:
-            //        case DOWN:
-            //            if (*oldKey == A_KEY)
-            //                p2->dir = LEFT;
-            //            else if (*oldKey == D_KEY)
-            //                p2->dir = RIGHT;
-            //            break;
-            //        case LEFT:
-            //        case RIGHT:
-            //            if (*oldKey == W_KEY)
-            //                p2->dir = DOWN;
-            //            else if (*oldKey == S_KEY)
-            //                p2->dir = UP;
-            //            break;
-            //    }
-            //}
+        if(!p1Key) {
+            switch(p2->dir) {
+                case UP:
+                case DOWN:
+                    if (*oldKey == A_KEY)
+                        p2->dir = LEFT;
+                    else if (*oldKey == D_KEY)
+                        p2->dir = RIGHT;
+                    break;
+                case LEFT:
+                case RIGHT:
+                    if (*oldKey == W_KEY)
+                        p2->dir = UP;
+                    else if (*oldKey == S_KEY)
+                        p2->dir = DOWN;
+                    break;
+            }
+        }
     }
     return 0;
 }

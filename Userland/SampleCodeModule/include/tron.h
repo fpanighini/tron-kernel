@@ -49,7 +49,7 @@ typedef struct {
  /**
   * 	Logic board
   */ 
- char *** board;
+ char board[MAX_WIDTH][MAX_HEIGHT];
 
 } Canvas;
 
