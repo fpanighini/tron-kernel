@@ -385,3 +385,7 @@ void scanf(int lenght, const char *fmt, ...)
 	scan(fmt, args, lenght);
 	va_end(args);
 }
+
+void clear() {
+	sys_clearScreen();
+}
