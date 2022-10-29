@@ -49,5 +49,5 @@ int main()
     //mainTron();
 
 
-    return 1;
+    return 0;
 }

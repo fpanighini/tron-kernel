@@ -32,4 +32,7 @@ uint64_t sys_setFontSize(uint32_t size); //put in syshandler
 uint64_t sys_wait(uint32_t millis);
 uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis);
 
+uint64_t sys_screenshot(void);
+uint64_t sys_inforeg(uint64_t * array);
+
 #endif

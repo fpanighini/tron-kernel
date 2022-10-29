@@ -13,5 +13,7 @@ long sys_getScreenHeight();
 long sys_getScreenWidth();
 long sys_timedRead(unsigned char fd, char * s, int count, int millis);
 long sys_drawRectangle(int x, int y, int width, int height, Color color);
+long sys_screenshot();
+long sys_inforeg(long * registers);
 
 #endif

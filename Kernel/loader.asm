@@ -6,11 +6,13 @@ GLOBAL loadMain
 EXTERN getStackBase
 
 
-loadMain:
-        call getStackBase
 loader:
 	call initializeKernelBinary	; Set up the kernel binary, and get thet stack address
-	mov rsp, rax				; Set up the stack with the returned address
+        jmp stack_set
+loadMain:
+        call getStackBase
+stack_set:
+        mov rsp, rax				; Set up the stack with the returned address
 	call main
 hang:
 	cli

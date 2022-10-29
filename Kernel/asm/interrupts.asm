@@ -38,76 +38,76 @@ EXTERN sys_drawRectangle
 SECTION .text
 
 %macro pushState 0
-	push rax
-	push rbx
-	push rcx
-	push rdx
-	push rbp
-	push rdi
-	push rsi
-	push r8
-	push r9
-	push r10
-	push r11
-	push r12
-	push r13
-	push r14
-	push r15
+    push rax
+    push rbx
+    push rcx
+    push rdx
+    push rbp
+    push rdi
+    push rsi
+    push r8
+    push r9
+    push r10
+    push r11
+    push r12
+    push r13
+    push r14
+    push r15
 %endmacro
 
 %macro popState 0
-	pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop r11
-	pop r10
-	pop r9
-	pop r8
-	pop rsi
-	pop rdi
-	pop rbp
-	pop rdx
-	pop rcx
-	pop rbx
-	pop rax
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop r11
+    pop r10
+    pop r9
+    pop r8
+    pop rsi
+    pop rdi
+    pop rbp
+    pop rdx
+    pop rcx
+    pop rbx
+    pop rax
 %endmacro
 
 %macro irqHandlerMaster 1
-	pushState
+    pushState
 
-	mov rdi, %1 ; pasaje de parametro
-	call irqDispatcher
+    mov rdi, %1 ; pasaje de parametro
+    call irqDispatcher
 
-	; signal pic EOI (End of Interrupt)
-	mov al, 20h
-	out 20h, al
+    ; signal pic EOI (End of Interrupt)
+    mov al, 20h
+    out 20h, al
 
-	popState
-	iretq
+    popState
+    iretq
 %endmacro
 
 
 
 %macro exceptionHandler 1
-	pushState
+    pushState
 
-	mov rdi, %1 ; pasaje de parametro
-	call exceptionDispatcher
+    mov rdi, %1 ; pasaje de parametro
+    call exceptionDispatcher
 
-	popState
-	iretq
+    popState
+    iretq
 %endmacro
 
 
 _hlt:
-	sti
-	hlt
-	ret
+    sti
+    hlt
+    ret
 
 _cli:
-	cli
-	ret
+    cli
+    ret
 
 
 _sti:
@@ -115,7 +115,7 @@ _sti:
 	ret
 
 picMasterMask:
-	push rbp
+    push rbp
     mov rbp, rsp
     mov ax, di
     out	21h,al

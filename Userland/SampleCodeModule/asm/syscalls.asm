@@ -9,6 +9,8 @@ GLOBAL sys_getScreenHeight
 GLOBAL sys_getScreenWidth
 GLOBAL sys_timedRead
 GLOBAL sys_drawRectangle
+GLOBAL sys_screenshot
+GLOBAL sys_inforeg
 
 ; syscall 0x00
 sys_write:
@@ -75,6 +77,20 @@ sys_timedRead:
 ; syscall 0x0A
 sys_drawRectangle:
     mov rax, 0x0A
+    mov r10, rcx
+    int 0x80
+    ret
+
+; syscall 0x0B
+sys_screenshot:
+    mov rax, 0x0B
+    mov r10, rcx
+    int 0x80
+    ret
+
+; syscall 0x0C
+sys_inforeg:
+    mov rax, 0x0C
     mov r10, rcx
     int 0x80
     ret

@@ -1,6 +1,6 @@
 #include <syscalls.h>
 #include <color.h>
-#include <time.h>
+#include <timer.h>
 #include <lib.h>
 #include <tron.h>
 
@@ -18,6 +18,9 @@
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
 #define DIVIDE_BY_ZERO "div-zero"
 #define INVALID_OP "invalid-op"
+#define DATE_COMMAND "date"
+#define TIME_COMMAND "time"
+#define DATE_TIME_COMMAND "datetime"
 
 
 #define HELP_MESSAGE "HELP"
@@ -33,7 +36,8 @@ void printNewline(void);
 void testDivideByZeroExcpetion();
 void testInvalidOpException();
 
-extern invalidOpcode();
+extern void invalidOpcode();
+extern void divideZero();
 
 void shell()
 {
@@ -100,6 +104,27 @@ int readBuffer(char *buf)
         sys_clearScreen();
         return 1;
     }
+    else if (!strcmp(buf, DATE_COMMAND)){
+        char str[100] = {0};
+        char * string = str;
+        getDateFormat(string);
+        printf("%s",string);
+        return 1;
+    }
+    else if (!strcmp(buf, TIME_COMMAND)){
+        char str[100] = {0};
+        char * string = str;
+        getTimeFormat(string);
+        printf("%s",string);
+        return 1;
+    }
+    else if (!strcmp(buf, DATE_TIME_COMMAND)){
+        char str[100] = {0};
+        char * string = str;
+        getDateFormat(string);
+        printf("%s",string);
+        return 1;
+    }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
         testDivideByZeroExcpetion();
         return 0;
@@ -109,6 +134,7 @@ int readBuffer(char *buf)
         return 0;
     }
     else if (!strcmp(buf, EXIT_COMMAND)){
+        sys_clearScreen();
         return 0;
     }
     else {
@@ -133,7 +159,7 @@ void printNewline(){
 }
 
 void testDivideByZeroExcpetion(){
-    int i = 1/0;
+    divideZero();
 }
 
 

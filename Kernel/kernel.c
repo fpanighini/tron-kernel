@@ -62,6 +62,7 @@ int main()
 
 
     //printStringAt(0,0,"xx",white);
+    printString("hola",red);
 
     a = ((EntryPoint) sampleCodeModuleAddress)();
 
