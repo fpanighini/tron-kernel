@@ -26,5 +26,6 @@ int putChar(int c);
 void putStringColor(char *str, Color c);
 void puts(char *fmt);
 int scanf(const char *fmt, ...);
+void printStringAt(int x, int y, char *str, Color c);
 
 #endif

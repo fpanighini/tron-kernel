@@ -47,14 +47,15 @@ int main()
 
     //return 1;
     char *test = "abcdefghijklmnopqrstuvwxyz";
+    char test1 = 'a';
     //for (;*test; test++) {
     //    putChar(*test);
     //}
 
     //int test = 1;
     //printf("%s\n", test);
-    //printf("%s", test);
-    putStringColor(test, green);
+    printf("Print %c %s %d %i %% %o %x", test1, test, 33, 33, 33, 17);
+    //putStringColor(test, green);
     
     //sys_write("\n", black);
     //shell();

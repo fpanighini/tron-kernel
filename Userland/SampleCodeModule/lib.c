@@ -1,5 +1,6 @@
 #include <lib.h>
 #include <syscalls.h>
+#include <stdarg.h>
 
 /**
  * @brief
@@ -159,227 +160,121 @@ int getChar()
 	return c[0];
 }
 
-#define PRINTF_NORMAL_STATE 0
-#define PRINTF_STATE_LENGHT 1
-#define PRINTF_STATE_LENGHT_SHORT 2
-#define PRINTF_STATE_LENGHT_LONG 3
-#define PRINTF_STATE_SPEC 4
-
-#define PRINTF_LENGHT_DEFAULT 0
-#define PRINTF_LENGHT_SHORT_SHORT 1
-#define PRINTF_LENGHT_SHORT 2
-#define PRINTF_LENGHT_LONG 3
-#define PRINTF_LENGHT_LONG_LONG 4
-
-static void putc(const char *str)
+static int numToBase(long value, char *buffer, int base)
 {
-	while (*str)
-	{
-		putChar(*str);
-		str++;
-	}
-}
+	char *p = buffer;
+	char *p1, *p2;
+	int digits = 0;
 
-static const char g_hex_chars[] = "0123456789ABCDEF";
-
-static int *print_num(int *argp, int lenght, bool sign, int radix)
-{
-	char buffer[32];
-	unsigned long long number;
-	int number_sign = 1;
-	int pos = 0;
-
-	switch (lenght)
-	{
-	case PRINTF_LENGHT_SHORT_SHORT:
-	case PRINTF_LENGHT_SHORT:
-	case PRINTF_LENGHT_DEFAULT:
-		if (sign)
-		{
-			int n = *argp;
-			if (n < 0)
-			{
-				number = -n;
-				number_sign = -1;
-			}
-			number = (unsigned long long)n;
-		}
-		else
-		{
-			number = *(unsigned int *)argp;
-		}
-		argp++;
-		break;
-	case PRINTF_LENGHT_LONG:
-		if (sign)
-		{
-			long int n = *(long int *)argp;
-			if (n < 0)
-			{
-				number = -n;
-				number_sign = 1;
-			}
-			number = (unsigned long long)n;
-		}
-		else
-		{
-			number = *(unsigned long int *)argp;
-		}
-		argp += 2;
-		break;
-	case PRINTF_LENGHT_LONG_LONG:
-		if (sign)
-		{
-			long long int n = *(long long int *)argp;
-			if (n < 0)
-			{
-				number = -n;
-				number_sign = 1;
-			}
-			number = (unsigned long long)n;
-		}
-		else
-		{
-			number = *(unsigned long long *)argp;
-		}
-		argp += 4;
-		break;
-	}
 	do
 	{
-		int rem = number % radix;
-		buffer[pos++] = g_hex_chars[rem];
-	} while (number > 0);
-	if (sign && number_sign < 0)
-	{
-		buffer[pos++] = '-';
-	}
-	while (--pos >= 0)
-	{
-		putChar(buffer[pos]);
-	}
-	return argp;
-}
+		int remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	} while (value /= base);
 
-void printf(const char *fmt, ...)
+	*p = 0;
+
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
+}
+static void print(const char *fmt, va_list args)
 {
-	int *argp = (int *)&fmt;
-	int state = PRINTF_NORMAL_STATE;
-	int lenght = PRINTF_LENGHT_DEFAULT;
-	int radix = 10;
-	bool sign = false;
-	argp++;
+	int state = 0;
 	while (*fmt)
 	{
-		switch (state)
+		if (state == 0)
 		{
-		case PRINTF_NORMAL_STATE:
-			switch (*fmt)
+			if (*fmt == '%')
 			{
-			case '%':
-				state = PRINTF_STATE_LENGHT;
-				break;
-			default:
+				state = 1;
+			}
+			else
+			{
 				putChar(*fmt);
-				break;
 			}
-			break;
-		case PRINTF_STATE_LENGHT:
-			switch (*fmt)
-			{
-			case 'h':
-				lenght = PRINTF_LENGHT_SHORT;
-				state = PRINTF_STATE_LENGHT_SHORT;
-				break;
-			case 'l':
-				lenght = PRINTF_LENGHT_LONG;
-				state = PRINTF_STATE_LENGHT_LONG;
-				break;
-			default:
-				goto PRINTF_STATE_SPEC_;
-			}
-			break;
-		case PRINTF_LENGHT_SHORT:
-			if (*fmt == 'h')
-			{
-				lenght = PRINTF_LENGHT_SHORT_SHORT;
-				state = PRINTF_STATE_SPEC;
-			}
-			else
-			{
-				goto PRINTF_STATE_SPEC_;
-			}
-			break;
-		case PRINTF_LENGHT_LONG:
-			if (*fmt == 'l')
-			{
-				lenght = PRINTF_LENGHT_LONG_LONG;
-				state = PRINTF_STATE_SPEC;
-			}
-			else
-			{
-				goto PRINTF_STATE_SPEC_;
-			}
-			break;
-		case PRINTF_STATE_SPEC:
-		PRINTF_STATE_SPEC_:
+		}
+		else if (state == 1)
+		{
 			switch (*fmt)
 			{
 			case 'c':
-				putChar(*argp);
-				argp++;
+			{
+				char ch = va_arg(args, int);
+				putChar(ch);
 				break;
+			}
 			case 's':
-				puts("aca estoy");
-				putc(*(char **)argp);
-				argp++;
+			{
+				char *s = va_arg(args, char *);
+				sys_write(s, white);
 				break;
-			case '%':
-				putChar('%');
-				argp++;
-				break;
-			case 'd':
+			}
 			case 'i':
-				radix = 10;
-				sign = true;
-				argp = print_num(argp, lenght, sign, radix);
+			case 'd':
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				numToBase(num, buffer, 10);
+				sys_write(buffer, white);
 				break;
-			case 'u':
-				radix = 10;
-				sign = false;
-				argp = print_num(argp, lenght, sign, radix);
+			}
+			case 'o':
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				numToBase(num, buffer, 8);
+				sys_write(buffer, white);
 				break;
+			}
 			case 'x':
 			case 'X':
 			case 'p':
-				radix = 16;
-				sign = false;
-				argp = print_num(argp, lenght, sign, radix);
-				break;
-			case 'o':
-				radix = 8;
-				sign = false;
-				argp = print_num(argp, lenght, sign, radix);
-				break;
-			default: // ignore invalid
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				putChar('0');
+				putChar('x');
+				numToBase(num, buffer, 8);
+				sys_write(buffer, white);
 				break;
 			}
-			state = PRINTF_NORMAL_STATE;
-			lenght = PRINTF_LENGHT_DEFAULT;
-			radix = 10;
-			sign = false;
+			case '%':
+			{
+				putChar('%');
+				break;
+			}
+			case 'l':
+			{
+				char buffer[27];
+				long num = va_arg(args, long);
+				numToBase(num, buffer, 8);
+				sys_write(buffer, white);
+				break;
+			}
+			}
+			state = 0;
 		}
 		fmt++;
 	}
 }
 
-int putColorChar(int car, Color c)
+void printf(const char *fmt, ...)
 {
-	char str[2];
-	str[0] = car;
-	str[1] = '\0';
-	sys_write((char *)str, c);
-	return str[0];
+	va_list args;
+	va_start(args, fmt);
+	print(fmt, args);
+	va_end(args);
 }
 
 /**
@@ -393,7 +288,17 @@ int putChar(int c)
 	return putColorChar(c, white);
 }
 
-void putStringColor(char *str, Color c) {
+int putColorChar(int car, Color c)
+{
+	char str[2];
+	str[0] = car;
+	str[1] = '\0';
+	sys_write((char *)str, c);
+	return str[0];
+}
+
+void putStringColor(char *str, Color c)
+{
 	while (*str)
 	{
 		putColorChar(*str, c);
@@ -409,6 +314,11 @@ void puts(char *str)
 		str++;
 	}
 	putChar('\n');
+}
+
+void printStringAt(int x, int y, char *str, Color c)
+{
+	sys_writeAt((short)x, (short)y, str, c);
 }
 
 /**
