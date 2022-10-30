@@ -6,6 +6,7 @@
 #include <interrupts.h>
 
 #define BUF_SIZE 55
+#define CTRL 31
 
 extern uint8_t keyPressed(void);
 
@@ -19,14 +20,11 @@ typedef struct buf {
 
 bufT buf = {{0},0};
 
-void saveKey(){
-    uint8_t c = keyPressed();
+void saveKey(uint8_t c){
     if (c > 128){
         return ;
     }
     buf.keys[buf.count++] = getKey(c);
-    //buf.keys[buf.count] = 0;
-    //printString(buf.keys,blue);
 }
 
 uint32_t readBuf(char * str, uint32_t count){
@@ -60,7 +58,7 @@ uint8_t getKey(uint8_t id)
             0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
             '\t', /* <-- Tab */
             'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
-            '^', /* <-- control key */
+            5, /* <-- control key */
             'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', '^', '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '^',
             '*',
             '^',   /* Alt */

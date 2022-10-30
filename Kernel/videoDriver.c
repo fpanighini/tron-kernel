@@ -5,6 +5,9 @@
 #define NEWLINE '\n'
 #define BACKSPACE '\b'
 
+#define MAX_FONTSIZE 5
+#define MIN_FONTSIZE 1
+
 
 Color black = {0x00, 0x00, 0x00};
 Color white = {0xFF, 0xFF, 0xFF};
@@ -192,6 +195,7 @@ void clearScreen()
 void printHex(uint64_t value)
 {
     printBase(value, (uint32_t)16);
+    printString("h",white);
 }
 
 void printDec(uint64_t value)
@@ -201,6 +205,7 @@ void printDec(uint64_t value)
 void printBin(uint64_t value)
 {
     printBase(value, (uint32_t)2);
+    printString("b",white);
 }
 
 void printBase(uint64_t value, uint32_t base)
@@ -249,7 +254,11 @@ uint16_t getWidth()
     return screenData->width;
 }
 
-void setFontSize(uint32_t size) {
-    fontSize = size;
+int changeFontSize(uint32_t dif) {
+    if ((fontSize + dif > MAX_FONTSIZE) || (fontSize + dif < MIN_FONTSIZE)){
+        return 0;
+    }
+    fontSize = fontSize + dif;
     clearScreen();
+    return 1;
 }

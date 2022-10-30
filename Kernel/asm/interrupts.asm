@@ -12,6 +12,9 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
+GLOBAL getSavedRegisters
+GLOBAL saveRegisters
+
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
@@ -20,6 +23,9 @@ GLOBAL syscallINTHandler
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
+
+EXTERN saveKey
+EXTERN timer_handler
 
 EXTERN sys_write
 EXTERN sys_read
@@ -32,7 +38,9 @@ EXTERN sys_heightScr
 EXTERN sys_widthScr
 EXTERN sys_timedRead
 EXTERN sys_drawRectangle
-
+EXTERN sys_changeFontSize
+EXTERN sys_snapshot
+EXTERN sys_inforeg
 
 
 SECTION .text
@@ -73,24 +81,49 @@ SECTION .text
     pop rax
 %endmacro
 
-%macro irqHandlerMaster 1
-    pushState
 
-    mov rdi, %1 ; pasaje de parametro
-    call irqDispatcher
+%macro snapshot 0
+    cli
+    mov [registers+1*8], rax
+    mov [registers+2*8], rbx
+    mov [registers+3*8], rcx
+    mov [registers+4*8], rdx
+    mov [registers+5*8], rsi
+    mov [registers+6*8], rdi
+    mov [registers+7*8], rbp
 
-    ; signal pic EOI (End of Interrupt)
-    mov al, 20h
-    out 20h, al
+    ; rsp
+    mov rax, rsp
+    add rax, 160
+    mov [registers+8*8], rax
 
-    popState
-    iretq
+    mov [registers+9*8], r8
+    mov [registers+10*8], r9
+    mov [registers+11*8], r10
+    mov [registers+12*8], r11
+    mov [registers+13*8], r12
+    mov [registers+14*8], r13
+    mov [registers+15*8], r14
+    mov [registers+16*8], r15
+
+    ;flags:
+    mov rax, [rsp+8]
+    mov [registers+17*8], rax
+
+    ; rip
+    mov rax, [rsp+15*8]
+    mov [registers], rax
+
+    mov byte [registersSaved], 1
+
+    sti
 %endmacro
-
 
 
 %macro exceptionHandler 1
     pushState
+
+    snapshot
 
     mov rdi, %1 ; pasaje de parametro
     call exceptionDispatcher
@@ -131,13 +164,53 @@ picSlaveMask:
     retn
 
 
+%macro irqHandlerMaster 1
+    pushState
+
+    mov rdi, %1 ; pasaje de parametro
+    call irqDispatcher
+
+    ; signal pic EOI (End of Interrupt)
+%endmacro
+
+
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	irqHandlerMaster 0
+    pushState
+    call timer_handler
+    mov al, 20h
+    out 20h, al
+
+    popState
+    iretq
+
+
+keyPressed:
+    mov rax, 0
+.inicio:
+    in al, 64h
+    and al, 0x01
+    je .inicio
+    in al, 60h
+    ret
 
 ;Keyboard
 _irq01Handler:
-	irqHandlerMaster 1
+    pushState
+    call keyPressed
+
+    cmp al, 0b10011101
+    jne .end
+    snapshot
+
+.end:
+    mov rdi, rax
+    call saveKey
+
+    mov al, 20h
+    out 20h, al
+    popState
+    iretq
 
 ;Cascade pic never called
 _irq02Handler:
@@ -203,6 +276,12 @@ syscallINTHandler:
     cmp rax, 0x0A
     je .drawRectangle
 
+    cmp rax, 0x0B
+    je .changeFontsize
+
+    cmp rax, 0x0C
+    je .inforeg
+
     jmp .end
 
 .write:
@@ -249,7 +328,17 @@ syscallINTHandler:
 	call sys_drawRectangle
 	jmp .end
 
+.changeFontsize:
+	call sys_changeFontSize
+	jmp .end
+
+.inforeg:
+        call sys_inforeg
+        jmp .end
+
 .end:
+    mov al, 20h
+    out 20h, al
     iretq
 
 haltcpu:
@@ -257,8 +346,15 @@ haltcpu:
 	hlt
 	ret
 
+saveRegisters:
+    snapshot
+    ret
 
+getSavedRegisters:
+    mov rdi, registers
+    ret
 
 SECTION .bss
-	aux resq 1
-
+    registersSaved resb 1
+    aux resq 1
+    registers resq 18

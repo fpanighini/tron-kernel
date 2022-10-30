@@ -6,10 +6,6 @@ void ringBell();
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos);
 
-uint64_t sys_setFontSize(uint32_t size) {
-    setFontSize(size);
-    return 0;
-}
 
 uint64_t sys_write(char *string, Color color) {
     // printString("sys_write\n", color);
@@ -129,14 +125,18 @@ uint64_t sys_wait(uint32_t millis){
 }
 
 
-// uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {sys_write, sys_read, sys_time ,sys_date , sys_paintScreen , sys_drawRectangle , sys_bell, sys_heightScr, sys_widthScr, sys_setFontSize};
-// 
-// uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax) {
-//     // printDec(rax);
-//     if ((rax < sizeof(syscall_handlers)/sizeof(syscall_handlers[0])) && syscall_handlers[rax] != 0x00){
-//         // printString((uint8_t *)"sys_handler\n", white);
-//         return syscall_handlers[rax](rdi, rsi, rdx, r10, r8);
-//     }
-//     return 0;
-// }
+uint64_t sys_inforeg(uint64_t array[REGISTER_NUM]){
+    long * registers = getSavedRegisters();
+    if (registers != 0){
+        for (int i = 0 ; i < REGISTER_NUM ; i++){
+            array[i] = registers[i];
+        }
+        return 1;
+    }
+    return 0;
+}
 
+
+uint64_t sys_changeFontSize(uint32_t size) {
+    return changeFontSize(size);
+}
