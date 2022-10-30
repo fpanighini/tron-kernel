@@ -2,8 +2,6 @@
 #include <syscalls.h>
 #include <stdarg.h>
 
-#define WAIT_MILLIS 50
-
 /**
  * @brief
  *  Compares two strings.
@@ -318,8 +316,7 @@ void puts(char *str)
 	putChar('\n');
 }
 
-void printStringAt(int x, int y, char *str, Color c)
-{
+void printStringAt(int x, int y, char *str, Color c) {
 	sys_writeAt((short)x, (short)y, str, c);
 }
 
@@ -410,10 +407,6 @@ long drawRectangle(int x, int y, int width, int height, Color color) {
     return sys_drawRectangle(x, y, width, height, color);
 }
 
-void shortSleep() {
-    sys_wait(WAIT_MILLIS);
-}
-
-void printAt(int x, int y, char* string, Color color) {
-    sys_writeAt(x, y, string, color);
+void shortSleep(int ticks) {
+    sys_wait(ticks);
 }
