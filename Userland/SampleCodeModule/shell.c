@@ -50,8 +50,8 @@ void testInvalidOpException();
 
 void printInforeg();
 
-void increaseFontSize(int currentSize);
-void decreaseFontSize(int currentSize);
+int increaseFontSize();
+int decreaseFontSize();
 
 extern void invalidOpcode();
 extern void divideZero();
@@ -116,7 +116,17 @@ int readBuffer(char *buf)
     }
     else if (!strcmp(buf, TRON_COMMAND)){
         clear();
-        mainTron();
+
+        // Lower font size
+        int count = 0;
+        for (; decreaseFontSize() ;count++);
+
+        mainTron();             // Call to tron game
+
+        // Reset font size to previous value
+        for (int i = 0 ; i < count ; i++){
+            increaseFontSize();
+        }
         clear();
     }
     else if (!strcmp(buf, DATE_COMMAND)){
@@ -138,7 +148,7 @@ int readBuffer(char *buf)
         printf("%s\n",string);
     }
     else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
-        int check = sys_changeFontSize(INCREASE);
+        int check = increaseFontSize();
         if (!check){
             printErrorMessage(buf, INCREASE_FONT_FAIL);
             printNewline();
@@ -148,7 +158,7 @@ int readBuffer(char *buf)
         }
     }
     else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND)){
-        int check = sys_changeFontSize(DECREASE);
+        int check = decreaseFontSize();
         if (!check){
             printErrorMessage(buf, DECREASE_FONT_FAIL);
             printNewline();
@@ -220,4 +230,12 @@ void printInforeg(){
     } else {
         printf("First you need to press a snapshot key. Try CTRL!");
     }
+}
+
+int increaseFontSize(){
+    return sys_changeFontSize(INCREASE);
+}
+
+int decreaseFontSize(){
+    return sys_changeFontSize(DECREASE);
 }

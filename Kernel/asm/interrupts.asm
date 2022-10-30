@@ -339,8 +339,10 @@ syscallINTHandler:
         jmp .end
 
 .end:
+    push rax
     mov al, 20h
     out 20h, al
+    pop rax
     iretq
 
 haltcpu:
