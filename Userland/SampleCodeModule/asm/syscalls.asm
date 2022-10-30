@@ -11,6 +11,7 @@ GLOBAL sys_timedRead
 GLOBAL sys_drawRectangle
 GLOBAL sys_screenshot
 GLOBAL sys_inforeg
+GLOBAL sys_setFontSize
 
 ; syscall 0x00
 sys_write:
@@ -94,3 +95,10 @@ sys_inforeg:
     mov r10, rcx
     int 0x80
     ret
+
+; syscall 0x0D
+sys_setFontSize:
+    mov rax, 0x0D
+    int 0x80
+    ret
+

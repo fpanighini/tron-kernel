@@ -1,6 +1,5 @@
 #include <syscallManager.h>
 
-
 #define WAIT_TIME 10
 
 void ringBell();
@@ -128,6 +127,7 @@ uint64_t sys_wait(uint32_t millis){
     }
     return 0;
 }
+
 
 // uint64_t (*syscall_handlers[])(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8) = {sys_write, sys_read, sys_time ,sys_date , sys_paintScreen , sys_drawRectangle , sys_bell, sys_heightScr, sys_widthScr, sys_setFontSize};
 // 

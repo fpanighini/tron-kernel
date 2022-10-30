@@ -19,11 +19,10 @@ char *v = (char *)0xB8000 + 79 * 2;
 int main()
 {
     // sys_write("\n[Userland]\n", green);
-
     sys_clearScreen();
 
     shell();
-    
+
     //printf("Hola %s %d %x\n %s", "que tal", 17, 17, "abajo");
 
 

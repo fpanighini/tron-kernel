@@ -21,6 +21,11 @@
 #define DATE_COMMAND "date"
 #define TIME_COMMAND "time"
 #define DATE_TIME_COMMAND "datetime"
+#define INC_FONT_SIZE_COMMAND "incFont"
+#define DEC_FONT_SIZE_COMMAND "decFont"
+
+#define MAX_FONT_SIZE 5
+#define MIN_FONT_SIZE 1
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
 #define HELP_MESSAGE "HELP"
@@ -35,15 +40,21 @@ void helpCommand(void);
 void printNewline(void);
 void testDivideByZeroExcpetion();
 void testInvalidOpException();
+void increaseFontSize(int currentSize);
+void decreaseFontSize(int currentSize);
+void setFontSize(int size);
 
 extern void invalidOpcode();
 extern void divideZero();
+
+int shellFontSize = 1;
 
 void shell()
 {
     char str[100];
     char *string = str;
     int out = 1;
+
     while (out)
     {
         bufferRead(&string);
@@ -126,6 +137,12 @@ int readBuffer(char *buf)
         printf("%s\n",string);
         return 1;
     }
+    else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
+        
+    }
+    else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND)){
+
+    }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
         testDivideByZeroExcpetion();
         return 0;
@@ -167,3 +184,5 @@ void testDivideByZeroExcpetion(){
 void testInvalidOpException(){
     invalidOpcode();
 }
+
+
