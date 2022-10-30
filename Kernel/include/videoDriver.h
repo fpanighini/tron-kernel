@@ -16,7 +16,7 @@ extern Color blue;
 extern Color red;
 extern Color magenta;
 
-void setFontSize(uint32_t size);
+int changeFontSize(uint32_t size);
 
 void* getPixel(uint16_t x, uint16_t y);
 

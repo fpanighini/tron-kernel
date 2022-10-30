@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void saveKey();
+void saveKey(uint8_t c);
 
 uint32_t readBuf(char * str, uint32_t count);
 

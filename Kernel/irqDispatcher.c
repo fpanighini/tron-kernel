@@ -4,6 +4,7 @@
 #include <keyboardDriver.h>
 
 void irqDispatcher(uint64_t irq) {
+    /*
     switch (irq) {
         case 0:
             int_20();
@@ -13,6 +14,7 @@ void irqDispatcher(uint64_t irq) {
             break;
     }
     return;
+    */
 }
 
 void int_20() {
@@ -21,17 +23,8 @@ void int_20() {
 }
 
 void int_21(){
-    saveKey();
-        //sys_write("key pressed\n",red);
-//    if (!keyRead()){
-        //char a = readBuf();
-        // if (a == -1){
-        //     return ;
-        // }
-        //clearScreen();
-        //printChar(0,0,a,white);
-        //printStringAt(0,0,(uint8_t *)"\n",white);
-  //  }
+    char c = 0;
+    saveKey(c);
 }
 
 

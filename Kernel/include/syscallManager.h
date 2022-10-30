@@ -8,7 +8,9 @@
 #include <interrupts.h>
 
 
-#define SYSCALL_NUMBER 7
+//#define SYSCALL_NUMBER 7
+#define REGISTER_NUM 18
+#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
 
 
 
@@ -28,11 +30,11 @@ uint64_t sys_drawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t heig
 uint64_t sys_bell();
 uint64_t sys_widthScr();
 uint64_t sys_heightScr();
-uint64_t sys_setFontSize(uint32_t size); //put in syshandler
 uint64_t sys_wait(uint32_t millis);
 uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis);
-
-uint64_t sys_screenshot(void);
 uint64_t sys_inforeg(uint64_t * array);
+uint64_t sys_changeFontSize(uint32_t dif); //put in syshandler
+
+void printTest();
 
 #endif

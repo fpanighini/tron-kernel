@@ -2,6 +2,11 @@
 #include <syscalls.h>
 #include <stdarg.h>
 
+#define BUFF_SIZE 100
+
+uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
+
+
 /**
  * @brief
  *  Compares two strings.
@@ -410,3 +415,43 @@ long drawRectangle(int x, int y, int width, int height, Color color) {
 void shortSleep(int ticks) {
     sys_wait(ticks);
 }
+
+
+void printBase(uint64_t value, uint32_t base)
+{
+    uint8_t buf[BUFF_SIZE] = {0};
+    uint8_t * buffer = buf;
+    uintToBase(value, buffer, base);
+    Color white = {0xff, 0xff, 0xff};
+    sys_write(buffer, white);
+}
+
+uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
+{
+    uint8_t *p = buffer;
+    uint8_t *p1, *p2;
+    uint32_t digits = 0;
+
+    do
+    {
+        uint32_t remainder = value % base;
+        *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+        digits++;
+    } while (value /= base);
+
+    *p = 0;
+
+    p1 = buffer;
+    p2 = p - 1;
+    while (p1 < p2)
+    {
+        char tmp = *p1;
+        *p1 = *p2;
+        *p2 = tmp;
+        p1++;
+        p2--;
+    }
+
+    return digits;
+}
+

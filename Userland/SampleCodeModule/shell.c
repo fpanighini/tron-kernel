@@ -15,20 +15,27 @@
 #define CLEAR_COMMAND "clear"
 #define EXIT_COMMAND "exit"
 #define TRON_COMMAND "tron"
-#define COMMAND_NOT_FOUND_MESSAGE "Command not found"
 #define DIVIDE_BY_ZERO "div-zero"
 #define INVALID_OP "invalid-op"
 #define DATE_COMMAND "date"
 #define TIME_COMMAND "time"
 #define DATE_TIME_COMMAND "datetime"
-#define INC_FONT_SIZE_COMMAND "incFont"
-#define DEC_FONT_SIZE_COMMAND "decFont"
-
-#define MAX_FONT_SIZE 5
-#define MIN_FONT_SIZE 1
+#define INC_FONT_SIZE_COMMAND "inc-font"
+#define DEC_FONT_SIZE_COMMAND "dec-font"
+#define INFOREG_COMMAND "inforeg"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
 #define HELP_MESSAGE "HELP"
+
+#define INCREASE 1
+#define DECREASE -1
+
+#define REGISTER_NUM 18
+#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
+
+#define COMMAND_NOT_FOUND_MESSAGE "Command not found"
+#define INCREASE_FONT_FAIL "Font upper size limit reached"
+#define DECREASE_FONT_FAIL "Font lower size limit reached"
 
 #define NEWLINE "\n"
 
@@ -40,14 +47,14 @@ void helpCommand(void);
 void printNewline(void);
 void testDivideByZeroExcpetion();
 void testInvalidOpException();
-void increaseFontSize(int currentSize);
-void decreaseFontSize(int currentSize);
-void setFontSize(int size);
+
+void printInforeg();
+
+int increaseFontSize();
+int decreaseFontSize();
 
 extern void invalidOpcode();
 extern void divideZero();
-
-int shellFontSize = 1;
 
 void shell()
 {
@@ -100,48 +107,68 @@ void bufferRead(char **buf)
 int readBuffer(char *buf)
 {
     if (!strcmp(buf, "")){
-        return 1;
     }
     else if (!strcmp(buf, HELP_COMMAND)){
         helpCommand();
-        return 1;
     }
     else if (!strcmp(buf, CLEAR_COMMAND)){
-        sys_clearScreen();
-        return 1;
+        clear();
     }
     else if (!strcmp(buf, TRON_COMMAND)){
-        sys_clearScreen();
-        mainTron();
-        sys_clearScreen();
-        return 1;
+        clear();
+
+        // Lower font size
+        int count = 0;
+        for (; decreaseFontSize() ;count++);
+
+        mainTron();             // Call to tron game
+
+        // Reset font size to previous value
+        for (int i = 0 ; i < count ; i++){
+            increaseFontSize();
+        }
+        clear();
     }
     else if (!strcmp(buf, DATE_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getDateFormat(string);
         printf("%s\n",string);
-        return 1;
     }
     else if (!strcmp(buf, TIME_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getTimeFormat(string);
         printf("%s\n",string);
-        return 1;
     }
     else if (!strcmp(buf, DATE_TIME_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getDateAndTime(string);
         printf("%s\n",string);
-        return 1;
     }
     else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
-        
+        int check = increaseFontSize();
+        if (!check){
+            printErrorMessage(buf, INCREASE_FONT_FAIL);
+            printNewline();
+        }
+        else {
+            clear();
+        }
     }
     else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND)){
-
+        int check = decreaseFontSize();
+        if (!check){
+            printErrorMessage(buf, DECREASE_FONT_FAIL);
+            printNewline();
+        }
+        else {
+            clear();
+        }
+    }
+    else if (!strcmp(buf, INFOREG_COMMAND)){
+        printInforeg();
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
         testDivideByZeroExcpetion();
@@ -156,15 +183,18 @@ int readBuffer(char *buf)
         return 0;
     }
     else {
-        sys_write(SHELL_NAME, green);
-        sys_write(": ", green);
-        sys_write(buf, white);
-        sys_write(": ", green);
-        sys_write(COMMAND_NOT_FOUND_MESSAGE, red);
+        printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
-        return 1;
     }
     return 1;
+}
+
+void printErrorMessage(char * program, char * errorMessage){
+    sys_write(SHELL_NAME, green);
+    sys_write(": ", green);
+    sys_write(program, white);
+    sys_write(": ", green);
+    sys_write(errorMessage, red);
 }
 
 void helpCommand(){
@@ -185,4 +215,27 @@ void testInvalidOpException(){
     invalidOpcode();
 }
 
+void printInforeg(){
+    long array[REGISTER_NUM] = {0};
+    long * arr = &array;
+    int check = sys_inforeg(arr);
+    char * registerNames[] = REGISTER_NAMES;
+    if (check){
+        for (int i = 0 ; i < REGISTER_NUM; i++){
+            printf("%s : ",registerNames[i]);
+            printBase(arr[i], 2);
+            printf("b\n");
+        }
 
+    } else {
+        printf("First you need to press a snapshot key. Try CTRL!");
+    }
+}
+
+int increaseFontSize(){
+    return sys_changeFontSize(INCREASE);
+}
+
+int decreaseFontSize(){
+    return sys_changeFontSize(DECREASE);
+}
