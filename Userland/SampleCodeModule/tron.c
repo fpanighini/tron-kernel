@@ -1,13 +1,8 @@
-// VER SYS...... USAR LIB (wrappers)
-
 #include <tron.h>
 
 #define DEFAULT_CANVAS_COLOR green
-#define WAIT_MILLIS 60
-#define SCALE 2
 #define BOARD_SCALE 8
 #define CANVAS_SCALE 4
-#define READ_WAIT 60
 
 #define PLAYER1_WON "PLAYER 1 WON THE GAME!"
 #define PLAYER2_WON "PLAYER 2 WON THE GAME!"
@@ -16,9 +11,9 @@
 
 int mainTron() {
     do {
-        sys_clearScreen();
+        clear();
         startGame();
-    }while(getChar());
+    } while(getChar());
     // VER restart();
     // quitMain();
     return 0;
@@ -40,16 +35,10 @@ void startGame() {
 }
 
 void playTron(Player *p1, Player *p2, Canvas *canvas) {
-    int game = 1, oldKey = -1, newKey = -1, player1Lost = 0, player2Lost = 0;
-    int P1X, P1Y, P2X, P2Y;
+    int game = 1, oldKey = -1, newKey = -1;
 
-
-    P1X = p1->x;
-    P1Y = p1->y;
-    P2X = p2->x;
-    P2Y = p2->y;
-    canvas->board[P1X][P1Y] = 1;
-    canvas->board[P2X][P2Y] = 1;
+    canvas->board[p1->x][p1->y] = 1;
+    canvas->board[p2->x][p2->y] = 1;
 
     while (game) {
 
@@ -61,71 +50,84 @@ void playTron(Player *p1, Player *p2, Canvas *canvas) {
         tick(p1);
         tick(p2);
 
-        P1X = p1->x;
-        P1Y = p1->y;
-        P2X = p2->x;
-        P2Y = p2->y;
-
-
-        // VER BEEP cuando pierde
-
-        if(!isValidPoint(P1X, P1Y, canvas)) {
-            game = 0;
-            player1Lost = 1;
-            p1->color = white;
-        }
-
-        if(!isValidPoint(P2X, P2Y, canvas)) {
-            game = 0;
-            player2Lost = 1;
-            p2->color = white;
-        }
-
-        if((P1X == P2X && P1Y == P2Y) || (player1Lost && player2Lost)) {
-            game = 0;
-            p1->color = white;
-            p2->color = white;
-            drawPlayers(p1, p2, canvas);
-            endGame(DRAW, canvas);
+        if(!validPositions(p1, p2, canvas))
             return;
-        } else {
-            if (canvas->board[P1X][P1Y] || player1Lost) {
-                game = 0;
-                p1->color = white;
-                drawPlayers(p1, p2, canvas);
-                endGame(PLAYER2_WON, canvas);
-                return;
-            }
 
-            if (canvas->board[P2X][P2Y] || player2Lost) {
-                game = 0;
-                p2->color = white;
-                drawPlayers(p1, p2, canvas);
-                endGame(PLAYER1_WON, canvas);
-                return;
-            }
-
-            canvas->board[P1X][P1Y] = 1;
-            canvas->board[P2X][P2Y] = 1;
-        }
+        canvas->board[p1->x][p1->y] = 1;
+        canvas->board[p2->x][p2->y] = 1;
 
         drawPlayers(p1, p2, canvas);
-
-        // VER SPEED (hasta un valor x)
-        //shortSleep(10);
     }
+}
+
+int validPositions(Player *p1, Player *p2, Canvas *canvas) {
+    int player1Lost = 0, player2Lost = 0;
+    int P1X = p1->x;
+    int P1Y = p1->y;
+    int P2X = p2->x;
+    int P2Y = p2->y;
+
+    int opposedDir = p1->dir - p2->dir;
+    int posYDiff = P1Y - P2Y;
+    int posXDiff = P1X - P2X;
+
+
+    // VER BEEP cuando pierde
+
+    if(!isValidPoint(P1X, P1Y, canvas)) {
+        player1Lost = 1;
+        p1->color = white;
+    }
+
+    if(!isValidPoint(P2X, P2Y, canvas)) {
+        player2Lost = 1;
+        p2->color = white;
+    }
+
+    if((P1X == P2X && P1Y == P2Y) || (player1Lost && player2Lost))
+        return gameTied(p1, p2, canvas);
+    
+    if(P1X == P2X && (posYDiff<2 && posYDiff>-2) && (p1->dir == UP || p1->dir == DOWN) && (opposedDir == 1 || opposedDir == -1)) 
+        return gameTied(p1, p2, canvas);
+    
+    if(P1Y == P2Y && (posXDiff<2 && posXDiff>-2) && (p1->dir == LEFT || p1->dir == RIGHT) && (opposedDir == 1 || opposedDir == -1))
+        return gameTied(p1, p2, canvas);
+    
+    if (canvas->board[P1X][P1Y] || player1Lost) {
+        p1->color = white;
+        drawPlayers(p1, p2, canvas);
+        endGame(PLAYER2_WON, canvas);
+        return 0;
+    }
+
+    if (canvas->board[P2X][P2Y] || player2Lost) {
+        p2->color = white;
+        drawPlayers(p1, p2, canvas);
+        endGame(PLAYER1_WON, canvas);
+        return 0;
+    }
+    
+    return 1;
+}
+
+int gameTied(Player *p1, Player *p2, Canvas *canvas) {
+    p1->color = white;
+    p2->color = white;
+    drawPlayers(p1, p2, canvas);
+    endGame(DRAW, canvas);
+    return 0;
 }
 
 // VER SCALE
 void dimensions(Canvas *canvas) {
-    canvas->width = sys_getScreenWidth() / BOARD_SCALE;
-    canvas->height = sys_getScreenHeight() / BOARD_SCALE;
+    canvas->width = getScreenWidth() / BOARD_SCALE;
+    canvas->height = getScreenHeight() / BOARD_SCALE;
 }
 
 void drawPlayer(Player * p, Canvas *canvas){
-    int y = (sys_getScreenHeight() - canvas->height*CANVAS_SCALE)/2;
-    int x = (sys_getScreenWidth() - canvas->width*CANVAS_SCALE)/2;
-    sys_drawRectangle(x + p->x*CANVAS_SCALE - CANVAS_SCALE/2, y + p->y*CANVAS_SCALE - CANVAS_SCALE/2, CANVAS_SCALE, CANVAS_SCALE, p->color);
+    int y = (getScreenHeight() - canvas->height*CANVAS_SCALE)/2;
+    int x = (getScreenWidth() - canvas->width*CANVAS_SCALE)/2;
+    drawRectangle(x + p->x*CANVAS_SCALE - CANVAS_SCALE/2, y + p->y*CANVAS_SCALE - CANVAS_SCALE/2, CANVAS_SCALE, CANVAS_SCALE, p->color);
 }
 
 void drawPlayers(Player *p1, Player *p2, Canvas *canvas) {
@@ -133,21 +135,10 @@ void drawPlayers(Player *p1, Player *p2, Canvas *canvas) {
     drawPlayer(p2, canvas);
 }
 
-void shortSleep() {
-    sys_wait(WAIT_MILLIS);
-}
-
 void drawCanvas(Canvas *canvas, Color color) {
-    int y = (sys_getScreenHeight() - canvas->height*CANVAS_SCALE)/2;
-    int x = (sys_getScreenWidth() - canvas->width*CANVAS_SCALE)/2;
-    sys_drawRectangle(x, y, canvas->width*CANVAS_SCALE, canvas->height*CANVAS_SCALE, color);
-}
-
-// VER en lib.h!!!
-int getTimedChar(){
-    char c[2] = {1, 0};
-    sys_timedRead(0, (char *)&c, 2, 1);
-    return c[0];
+    int y = (getScreenHeight() - canvas->height*CANVAS_SCALE)/2;
+    int x = (getScreenWidth() - canvas->width*CANVAS_SCALE)/2;
+    drawRectangle(x, y, canvas->width*CANVAS_SCALE, canvas->height*CANVAS_SCALE, color);
 }
 
 int getKey() {
@@ -162,20 +153,11 @@ void pause() {
     }
 }
 
-// VER lib.h
-void drawRectangle(int x, int y, int width, int height, Color color) {
-    sys_drawRectangle(x, y, width, height, color);
-}
-
-// VER lib.h
-void printAt(int x, int y, char* string, Color color) {
-    sys_writeAt(x, y, string, color);
-}
-
 void endGame(char* string, Canvas *canvas) {
-    int y = (sys_getScreenHeight() - canvas->height)/2;
-    int x = (sys_getScreenWidth() - canvas->width)/2;
-
+    // VER no esta funcionando bien printAt
+    //char * restartMsg = "To restart press any key!";
+    //printAt(getScreenWidth()/2, getScreenHeight()/8, restartMsg, white);
+    
     drawRectangle(0, 0, canvas->width * 0.8, canvas->height * 0.2, white);
     printAt(0, 0, string, black);
 
