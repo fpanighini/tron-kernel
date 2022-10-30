@@ -59,6 +59,10 @@ void startGame();
 
 void playTron(Player *p1, Player *p2, Canvas *canvas);
 
+int validPositions(Player *p1, Player *p2, Canvas *canvas);
+
+int gameTied(Player *p1, Player *p2, Canvas *canvas);
+
 void endGame(char* string, Canvas *canvas);
 
 void dimensions(Canvas *canvas);

@@ -28,5 +28,10 @@ void puts(char *fmt);
 void scanf(int length, const char *fmt, ...);
 void printStringAt(int x, int y, char *str, Color c);
 void clear();
+int getTimedChar();
+long getScreenWidth();
+long getScreenHeight();
+long drawRectangle(int x, int y, int width, int height, Color color);
+void shortSleep();
 
 #endif

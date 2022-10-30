@@ -2,6 +2,8 @@
 #include <syscalls.h>
 #include <stdarg.h>
 
+#define WAIT_MILLIS 50
+
 /**
  * @brief
  *  Compares two strings.
@@ -388,4 +390,30 @@ void scanf(int lenght, const char *fmt, ...)
 
 void clear() {
 	sys_clearScreen();
+}
+
+int getTimedChar(){
+    char c[2] = {1, 0};
+    sys_timedRead(0, (char *)&c, 2, 1);
+    return c[0];
+}
+
+long getScreenWidth() {
+    return sys_getScreenWidth();
+}
+
+long getScreenHeight() {
+    return sys_getScreenHeight();
+}
+
+long drawRectangle(int x, int y, int width, int height, Color color) {
+    return sys_drawRectangle(x, y, width, height, color);
+}
+
+void shortSleep() {
+    sys_wait(WAIT_MILLIS);
+}
+
+void printAt(int x, int y, char* string, Color color) {
+    sys_writeAt(x, y, string, color);
 }
