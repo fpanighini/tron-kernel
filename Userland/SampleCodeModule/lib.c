@@ -31,7 +31,7 @@ int strcmp(const char *str1, const char *str2)
  */
 int strncmp(const char *str1, const char *str2, char n)
 {
-	for (; *str1 == *str2 && *str1 != '\0' && n != 0; str1++, str2++, n--)
+	for (; (*str1 == *str2) && (*str1 != '\0') && (n != 0); str1++, str2++, n--)
 		;
 	return *str1 - *str2;
 }
