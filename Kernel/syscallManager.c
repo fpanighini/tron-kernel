@@ -6,6 +6,8 @@ void ringBell();
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos);
 
+extern uint64_t registers[REGISTER_NUM];
+
 
 uint64_t sys_write(char *string, Color color) {
     // printString("sys_write\n", color);
@@ -126,7 +128,7 @@ uint64_t sys_wait(uint32_t millis){
 
 
 uint64_t sys_inforeg(uint64_t array[REGISTER_NUM]){
-    long * registers = getSavedRegisters();
+    //long * registers = getSavedRegisters();
     if (registers != 0){
         for (int i = 0 ; i < REGISTER_NUM ; i++){
             array[i] = registers[i];
@@ -139,4 +141,8 @@ uint64_t sys_inforeg(uint64_t array[REGISTER_NUM]){
 
 uint64_t sys_changeFontSize(uint32_t size) {
     return changeFontSize(size);
+}
+
+void printTest(){
+    sys_write("CTRL", red);
 }

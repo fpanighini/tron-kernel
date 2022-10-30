@@ -7,6 +7,7 @@
 void endException(uint8_t * str);
 void printSavedRegisters(void);
 
+extern uint64_t registers[REGISTER_NUM];
 
 void exceptionDispatcher(uint64_t e){
     switch (e) {
@@ -40,18 +41,18 @@ void invalidOpcodeException(){
 }
 
 void printSavedRegisters(){
-    long * regs = getSavedRegisters();
+    // long * regs = getSavedRegisters();
     char * regNames[] = REGISTER_NAMES;
     int i = 0;
     for (; i < REGISTER_NUM - 1 ; i++){
         printString(regNames[i],magenta);
-        printString("\t\t\t\t\t",magenta);
-        printHex(regs[i]);
+        printString("\t\t\t\t\t\t",magenta);
+        printBin(registers[i]);
         printString("\n",magenta);
     }
     printString(regNames[i],magenta);
-    printString("\t\t\t\t\t",magenta);
-    printHex(regs[i]);
+    printString("\t\t\t",magenta);
+    printBin(registers[i]);
     printString("\n",magenta);
 }
 

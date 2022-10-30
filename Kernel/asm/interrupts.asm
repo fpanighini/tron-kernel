@@ -12,13 +12,15 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
-GLOBAL getSavedRegisters
-GLOBAL saveRegisters
-
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
 GLOBAL syscallINTHandler
+
+GLOBAL registers
+
+; Borrar:
+EXTERN printTest
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher

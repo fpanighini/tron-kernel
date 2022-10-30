@@ -213,8 +213,8 @@ void printInforeg(){
     if (check){
         for (int i = 0 ; i < REGISTER_NUM; i++){
             printf("%s : ",registerNames[i]);
-            printBase(arr[i], 16);
-            printf("h\n");
+            printBase(arr[i], 2);
+            printf("b\n");
         }
 
     } else {
