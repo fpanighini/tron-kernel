@@ -127,6 +127,14 @@ getYear:
 
 
 ringBell:
+    mov ax, 2153
+    out 42h, al
+    mov al, ah
+    out  42h, al
+
+    in al, 61h
+    or al, 00000011b
+    out 61h, al
     ret
 
 

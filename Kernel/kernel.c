@@ -46,11 +46,11 @@ void *initializeKernelBinary()
 
     return getStackBase();
 }
+void ringBell();
 
 int main()
 {
     load_idt();
-    colorScreen(black);
     sys_clearScreen();
 
     int a = 0;
@@ -60,11 +60,11 @@ int main()
 
     //printStringAt(100,15, "TrollOlllllS", green);
 
+    ringBell();
 
     //printStringAt(0,0,"xx",white);
-    printString("hola",red);
 
-    a = ((EntryPoint) sampleCodeModuleAddress)();
+    //a = ((EntryPoint) sampleCodeModuleAddress)();
 
     //if (a == 1){
     //    sys_write("Hola", red);
