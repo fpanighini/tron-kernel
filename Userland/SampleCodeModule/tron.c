@@ -5,9 +5,9 @@
 #define CANVAS_SCALE 4
 #define FONT_SIZE 16
 
-#define PLAYER1_WON "PLAYER 1 WON THE GAME!"
-#define PLAYER2_WON "PLAYER 2 WON THE GAME!"
-#define DRAW "DRAW!"
+#define PLAYER1_WON "PLAYER 1 WON"
+#define PLAYER2_WON "PLAYER 2 WON"
+#define DRAW "IT'S A DRAW!"
 
 // VER score counter
 //int player1Score = 0, player2Score = 0;
@@ -94,24 +94,30 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
         player2Lost = 1;
         p2->color = white;
     }
-
-    if((P1X == P2X && P1Y == P2Y) || (player1Lost && player2Lost))
-        return gameTied(p1, p2, canvas);
     
     if(P1X == P2X && (posYDiff<2 && posYDiff>-2) && (p1->dir == UP || p1->dir == DOWN) && (opposedDir == 1 || opposedDir == -1)) 
         return gameTied(p1, p2, canvas);
     
     if(P1Y == P2Y && (posXDiff<2 && posXDiff>-2) && ((p1->dir == LEFT && p2->dir != DOWN) || p1->dir == RIGHT) && (opposedDir == 1 || opposedDir == -1))
         return gameTied(p1, p2, canvas);
+
+    if(canvas->board[P1X][P1Y])
+        player1Lost = canvas->board[P1X][P1Y];
     
-    if (canvas->board[P1X][P1Y] || player1Lost) {
+    if(canvas->board[P2X][P2Y])
+        player2Lost = canvas->board[P2X][P2Y];
+
+    if((P1X == P2X && P1Y == P2Y) || (player1Lost && player2Lost))
+        return gameTied(p1, p2, canvas);
+    
+    if (player1Lost) {
         p1->color = white;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER2_WON, canvas);
         return 0;
     }
 
-    if (canvas->board[P2X][P2Y] || player2Lost) {
+    if (player2Lost) {
         p2->color = white;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER1_WON, canvas);
@@ -206,8 +212,14 @@ void clearInfo() {
 void endGame(char* string, Canvas *canvas) {
     endInfo();
     
-    drawRectangle(0, 0, canvas->width * 0.8, canvas->height * 0.2, white);
-    printStringAt(0, 0, string, black);
+    int recWidth = canvas->width*0.8 + 5;
+    int recHeight = 35;
+    int x = getScreenWidth()/2 - recWidth/2; 
+    int y = getScreenHeight() - getScreenHeight()/8 - recHeight/2 - 10;
+    int lineAt = y/FONT_SIZE + 1;
+
+    drawRectangle(x, y, recWidth, recHeight, white);
+    printStringAt(x + 5, lineAt, string, black);
 }
 
 void endInfo() {

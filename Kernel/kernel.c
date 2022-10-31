@@ -64,13 +64,13 @@ int main()
 
     //printStringAt(0,0,"xx",white);
 
-    //a = ((EntryPoint) sampleCodeModuleAddress)();
+    a = ((EntryPoint) sampleCodeModuleAddress)();
 
-    //if (a == 1){
-    //    sys_write("Hola", red);
-    //}
-    //else {
-    //    sys_write("chaus", red);
-    //}
+    if (a == 1){
+        sys_write("Hola", red);
+    }
+    else {
+        sys_write("chaus", red);
+    }
     return 0;
 }
