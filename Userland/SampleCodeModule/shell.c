@@ -89,7 +89,6 @@ void shell()
         bufferRead(&string);
         printf("\b");
         printNewline();
-        printf("%s\n",string);
         out = readBuffer(string);
     }
 }
