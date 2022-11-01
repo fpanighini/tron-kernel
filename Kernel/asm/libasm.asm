@@ -6,9 +6,6 @@ GLOBAL getHours
 GLOBAL getDay
 GLOBAL getMonth
 GLOBAL getYear
-;GLOBAL ringBell
-;GLOBAL _speaker_tone
-;GLOBAL _speaker_off
 GLOBAL inb
 GLOBAL outb
 EXTERN sys_wait
@@ -150,7 +147,6 @@ outb:
     mov rsp, rbp
     pop rbp
     ret
-
 
 ; Esto ??
 

@@ -7,10 +7,14 @@
 #include <keyboardDriver.h>
 #include <interrupts.h>
 
+#define STDIN 0
+#define STDERR 1
+#define STDOUT 0
+
 
 //#define SYSCALL_NUMBER 7
-#define REGISTER_NUM 18
-#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
+#define REGISTER_NUM 17
+#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"}
 
 
 
@@ -20,7 +24,7 @@
     Check return type.
 */
 void syscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r10, uint64_t r8, uint64_t rax);
-uint64_t sys_write(char *string, Color color);
+uint64_t sys_write(uint8_t fd, char *string, Color color);
 uint64_t sys_read(uint8_t fd, char * buf, uint32_t count);
 uint64_t sys_writeAt(uint16_t x, uint16_t y, char *string, Color color);
 uint64_t sys_time();             // Tiempo hh:mm:ss

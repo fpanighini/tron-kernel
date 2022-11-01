@@ -22,9 +22,9 @@ void exceptionDispatcher(uint64_t e){
 }
 
 void endException(uint8_t * errorString){
-    colorScreen(blue);
-    printStringAt(0,0, (uint8_t *) errorString, red);
-    printString("\nYOU WILL BE RETURNED TO TROLL SHELL IN TEN SECONDS\n\n",green);
+    colorScreen(BLUE);
+    printStringAt(0,0, (uint8_t *) errorString, RED);
+    printString("\nYOU WILL BE RETURNED TO THE SHELL IN TEN SECONDS\n\n",GREEN);
     printSavedRegisters();
     sys_wait(10000);
     loadMain();
@@ -45,15 +45,11 @@ void printSavedRegisters(){
     char * regNames[] = REGISTER_NAMES;
     int i = 0;
     for (; i < REGISTER_NUM - 1 ; i++){
-        printString(regNames[i],magenta);
-        printString("\t\t\t\t\t\t",magenta);
+        printString(regNames[i],MAGENTA);
+        printString("\t\t\t\t\t\t",MAGENTA);
         printBin(registers[i]);
-        printString("\n",magenta);
+        printString("\n",MAGENTA);
     }
-    printString(regNames[i],magenta);
-    printString("\t\t\t",magenta);
-    printBin(registers[i]);
-    printString("\n",magenta);
 }
 
 

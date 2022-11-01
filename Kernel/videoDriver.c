@@ -8,15 +8,6 @@
 #define MAX_FONTSIZE 5
 #define MIN_FONTSIZE 1
 
-
-Color black = {0x00, 0x00, 0x00};
-Color white = {0xFF, 0xFF, 0xFF};
-Color green = {0x1F, 0xED, 0x11};
-Color gray = {0x90, 0x90, 0x90};
-Color blue = {0xFF, 0x00, 0x00};
-Color red = {0x00, 0x00, 0xFF};
-Color magenta = {0x87, 0x18, 0xD6};
-
 uint32_t fontSize = 1;
 uint32_t posX = 0;
 
@@ -130,7 +121,7 @@ void printStringAt(uint16_t x, uint8_t y, uint8_t *string, Color color)
         }
         if (c == BACKSPACE){
             i--;
-            fillrect(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT/2 * fontSize, x + 1 + FONT_WIDTH * i * fontSize, (y + 1) * FONT_HEIGHT/2 * fontSize, black);
+            fillrect(x + FONT_WIDTH * i * fontSize, y * FONT_HEIGHT/2 * fontSize, x + 1 + FONT_WIDTH * i * fontSize, (y + 1) * FONT_HEIGHT/2 * fontSize, BLACK);
         }
         else if (c != NEWLINE)
         {
@@ -188,14 +179,13 @@ void clearScreen()
 {
     screenData->y_char = 0x00;
     posX = 0;
-    Color black = {0x00, 0x00, 0x00};
-    colorScreen(black);
+    colorScreen(BLACK);
 }
 
 void printHex(uint64_t value)
 {
     printBase(value, (uint32_t)16);
-    printString("h",white);
+    printString("h", WHITE);
 }
 
 void printDec(uint64_t value)
@@ -205,14 +195,13 @@ void printDec(uint64_t value)
 void printBin(uint64_t value)
 {
     printBase(value, (uint32_t)2);
-    printString("b",white);
+    printString("b",WHITE);
 }
 
 void printBase(uint64_t value, uint32_t base)
 {
     uintToBase(value, buffer, base);
-    Color white = {0xff, 0xff, 0xff};
-    printString(buffer, white);
+    printString(buffer, WHITE);
 }
 
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)

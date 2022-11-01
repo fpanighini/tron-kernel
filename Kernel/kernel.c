@@ -20,6 +20,7 @@ static const uint64_t PageSize = 0x1000;
 static void *const sampleCodeModuleAddress = (void *)0x400000;
 static void *const sampleDataModuleAddress = (void *)0x500000;
 
+
 typedef int (*EntryPoint)();
 
 void clearBSS(void *bssAddress, uint64_t bssSize)
@@ -56,22 +57,7 @@ int main()
 
     int a = 0;
 
-    //printStringAt(0,0,"oo",white);
-    //sys_writeAt(10,10,"TrollOSsssssssssssssssssssssss", red);
-
-    //printStringAt(100,15, "TrollOlllllS", green);
-
-    sys_beep(1100);
-
-    //printStringAt(0,0,"xx",white);
-
     a = ((EntryPoint) sampleCodeModuleAddress)();
 
-    if (a == 1){
-        sys_write("Hola", red);
-    }
-    else {
-        sys_write("chaus", red);
-    }
     return 0;
 }

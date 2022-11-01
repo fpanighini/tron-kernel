@@ -16,6 +16,7 @@ GLOBAL sys_beep
 ; syscall 0x00
 sys_write:
     mov rax, 0x00
+    mov r10, rcx
     int 0x80
     ret
 

@@ -1,6 +1,6 @@
 #include <tron.h>
 
-#define DEFAULT_CANVAS_COLOR black
+#define DEFAULT_CANVAS_COLOR BLACK
 #define BOARD_SCALE 8
 #define CANVAS_SCALE 4
 #define FONT_SIZE 16
@@ -87,12 +87,12 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
 
     if(!isValidPoint(P1X, P1Y, canvas)) {
         player1Lost = 1;
-        p1->color = white;
+        p1->color = WHITE;
     }
 
     if(!isValidPoint(P2X, P2Y, canvas)) {
         player2Lost = 1;
-        p2->color = white;
+        p2->color = WHITE;
     }
     
     if(P1X == P2X && (posYDiff<2 && posYDiff>-2) && (p1->dir == UP || p1->dir == DOWN) && (opposedDir == 1 || opposedDir == -1)) 
@@ -111,14 +111,14 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
         return gameTied(p1, p2, canvas);
     
     if (player1Lost) {
-        p1->color = white;
+        p1->color = WHITE;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER2_WON, canvas);
         return 0;
     }
 
     if (player2Lost) {
-        p2->color = white;
+        p2->color = WHITE;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER1_WON, canvas);
         return 0;
@@ -128,8 +128,8 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
 }
 
 int gameTied(Player *p1, Player *p2, Canvas *canvas) {
-    p1->color = white;
-    p2->color = white;
+    p1->color = WHITE;
+    p2->color = WHITE;
     drawPlayers(p1, p2, canvas);
     endGame(DRAW, canvas);
     return 0;
@@ -155,7 +155,7 @@ void drawPlayers(Player *p1, Player *p2, Canvas *canvas) {
 void drawCanvas(Canvas *canvas, Color color) {
     int y = (getScreenHeight() - canvas->height*CANVAS_SCALE)/2 - CANVAS_SCALE/2;
     int x = (getScreenWidth() - canvas->width*CANVAS_SCALE)/2 - CANVAS_SCALE/2;
-    Color borderColor = gray;
+    Color borderColor = GRAY;
     int borderWidth = 10;
     drawRectangle(x-borderWidth/2, y-borderWidth/2, canvas->width*CANVAS_SCALE+borderWidth, canvas->height*CANVAS_SCALE+borderWidth, borderColor);
     drawRectangle(x, y, canvas->width*CANVAS_SCALE, canvas->height*CANVAS_SCALE, color);
@@ -175,15 +175,15 @@ void pause() {
     int y = FONT_SIZE*8;
     int lineAt = y/FONT_SIZE;
 
-    drawRectangle(x, y - 10, recWidth, recHeight, white);
-    printStringAt(x, lineAt, pauseMsg, black);
+    drawRectangle(x, y - 10, recWidth, recHeight, WHITE);
+    printStringAt(x, lineAt, pauseMsg, BLACK);
 
     int c = 0;
     while(c != 'p'){
         c = getChar();
     }
 
-    drawRectangle(x, y - 10, recWidth, recHeight, black);
+    drawRectangle(x, y - 10, recWidth, recHeight, BLACK);
     drawInfo();
 }
 
@@ -195,8 +195,8 @@ void drawInfo() {
     int y = FONT_SIZE*8;
     int lineAt = y/FONT_SIZE;
 
-    drawRectangle(x, y - 10, recWidth, recHeight, white);
-    printStringAt(x, lineAt, pauseMsg, black);
+    drawRectangle(x, y - 10, recWidth, recHeight, WHITE);
+    printStringAt(x, lineAt, pauseMsg, BLACK);
 }
 
 void clearInfo() {
@@ -205,7 +205,7 @@ void clearInfo() {
     int x = getScreenWidth()/2 - recWidth/2; 
     int y = FONT_SIZE*8;
 
-    drawRectangle(x, y - 10, recWidth, recHeight, black);
+    drawRectangle(x, y - 10, recWidth, recHeight, BLACK);
 }
 
 void endGame(char* string, Canvas *canvas) {
@@ -218,8 +218,8 @@ void endGame(char* string, Canvas *canvas) {
     int y = getScreenHeight() - getScreenHeight()/8 - recHeight/2 - 10;
     int lineAt = y/FONT_SIZE + 1;
 
-    drawRectangle(x, y, recWidth, recHeight, white);
-    printStringAt(x + 5, lineAt, string, black);
+    drawRectangle(x, y, recWidth, recHeight, WHITE);
+    printStringAt(x + 5, lineAt, string, BLACK);
 }
 
 void endInfo() {
@@ -231,8 +231,8 @@ void endInfo() {
     int y = getScreenHeight()/8 - recHeight/2;
     int lineAt = y/FONT_SIZE + 1;
 
-    drawRectangle(x, y - 10, recWidth, recHeight, gray);
-    printStringAt(x, lineAt, restartMsg, white);
+    drawRectangle(x, y - 10, recWidth, recHeight, GRAY);
+    printStringAt(x, lineAt, restartMsg, WHITE);
 
     char * quitMsg = "  To quit press Q";
     recWidth = 160;
@@ -240,8 +240,8 @@ void endInfo() {
     y = FONT_SIZE*8;
     lineAt = y/FONT_SIZE;
 
-    drawRectangle(x, y - 10, recWidth, recHeight, gray);
-    printStringAt(x, lineAt, quitMsg, white);
+    drawRectangle(x, y - 10, recWidth, recHeight, GRAY);
+    printStringAt(x, lineAt, quitMsg, WHITE);
 }
 
 /**
@@ -285,12 +285,12 @@ void initializeCanvas(Canvas *canvas) {
  * @param canvas estructura con el tamanio del board
  */
 void initializePlayers(Player *p1, Player *p2, Canvas *canvas) {
-    p1->color = red;
+    p1->color = RED;
     p1->x = (int) canvas->width*0.8;
     p1->y = (int) canvas->height*0.5;
     p1->dir = LEFT;
 
-    p2->color = blue;	
+    p2->color = BLUE;	
     p2->x = (int) canvas->width*0.2;
     p2->y = (int) canvas->height*0.5;
     p2->dir = RIGHT;
@@ -390,26 +390,26 @@ void countdown() {
     int y = getScreenHeight()/2 - squareSize/2 - 10;
     int lineAt = y/FONT_SIZE + 1; 
 
-    drawRectangle(x, y, squareSize, squareSize, white);
-    printStringAt(x + 5, lineAt, msg1, black);
+    drawRectangle(x, y, squareSize, squareSize, WHITE);
+    printStringAt(x + 5, lineAt, msg1, BLACK);
     shortSleep(500);
 
     drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
 
-    drawRectangle(x, y, squareSize, squareSize, white);
-    printStringAt(x + 5, lineAt, msg2, black);
+    drawRectangle(x, y, squareSize, squareSize, WHITE);
+    printStringAt(x + 5, lineAt, msg2, BLACK);
     shortSleep(500);
 
     drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
 
-    drawRectangle(x, y, squareSize, squareSize, white);
-    printStringAt(x + 5, lineAt, msg3, black);
+    drawRectangle(x, y, squareSize, squareSize, WHITE);
+    printStringAt(x + 5, lineAt, msg3, BLACK);
     shortSleep(500);
 
     drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
 
-    drawRectangle(x, y, squareSize, squareSize, white);
-    printStringAt(x, lineAt, msg4, black);
+    drawRectangle(x, y, squareSize, squareSize, WHITE);
+    printStringAt(x, lineAt, msg4, BLACK);
     shortSleep(500);
 }
 

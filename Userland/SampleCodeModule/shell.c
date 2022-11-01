@@ -9,7 +9,7 @@
 #define BACKSPACE '\b'
 #define MAX_KBD_BUF 55
 
-#define SHELL_NAME "Troll"
+#define SHELL_NAME "Shell"
 
 #define HELP_COMMAND "help"
 #define CLEAR_COMMAND "clear"
@@ -26,13 +26,33 @@
 #define PRINTMEM_COMMAND "printmem"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
-#define HELP_MESSAGE "HELP"
+#define HELP_MESSAGE "HELP:\n\
+The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
+\
+help              - Displays the avilable commands the shell can interpret and a short description of them\n\
+clear             - Clears sceen allowing more text to be written\n\
+exit              - Exit the shell returning to kernel space. This command will shut down the program\n\
+tron              - Launches tron game\n\
+div-zero          - Calls function that showcases the Divide By Zero Exception\n\
+invalid-op        - Calls function that showcases the Invalid Opcode Exception\n\
+date              - Displays date\n\
+time              - Displays time\n\
+datetime          - Displays date and time\n\
+inc-font          - Increases font size\n\
+dec-font          - Decreases font size\n\
+inforeg           - Displays the contents of all the registers at a given time.\n\
+                    To save registers press and release the CTRL key.\n\
+                    If the command is called before pressing CTRL at least once,\n\
+                    the registers will appear as if they have the value 0\n\
+printmem           - Receives a parameter in hexadecimal. Displays the next 32 bytes after the given memory direction given\n"
 
 #define INCREASE 1
 #define DECREASE -1
 
-#define REGISTER_NUM 18
-#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
+#define REGISTER_NUM 17
+#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"}
+
+#define PRINT_BYTES 32
 
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
 #define INCREASE_FONT_FAIL "Font upper size limit reached"
@@ -60,12 +80,12 @@ extern void divideZero();
 
 void shell()
 {
-    char str[100];
-    char *string = str;
     int out = 1;
 
     while (out)
     {
+        char str[MAX_TERMINAL_CHARS] = {0};
+        char *string = str;
         bufferRead(&string);
         printf("\b");
         printNewline();
@@ -78,50 +98,94 @@ void bufferRead(char **buf)
     int c = 1;
     int i = 0;
     (*buf)[i] = 0;
-    sys_write(COMMAND_CHAR, green);
-    sys_write(CURSOR, white);
-    while (c != 0)
+    printString(COMMAND_CHAR, GREEN);
+    printf(CURSOR);
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
     {
         c = getChar();
         if (c == BACKSPACE)
         {
             if (i > 0)
             {
-                buf[i--] = 0;
-
-                sys_write("\b", white);
-                sys_write("\b", white);
-                sys_write(CURSOR, white);
+                (*buf)[--i] = 0;
+                printf("\b");
+                printf("\b");
+                printf(CURSOR);
             }
         }
         else if (c >= ' ')
         {
-            (*buf)[i++] = c;
+            (*buf)[i++] = (char) c;
             (*buf)[i] = 0;
 
-            sys_write("\b", white);
-            sys_write((*buf + i - 1), white);
-            sys_write(CURSOR, white);
+            printf("\b");
+            printf(*buf + i - 1);
+            printf(CURSOR);
         }
     }
 }
 
+void printmem(char * buf){
+    int i = 0;
+    while (buf[i] != 0 && buf[i] == ' '){
+        i++;
+    }
+    if (buf[i] == 0){
+        printErrorMessage(PRINTMEM_COMMAND, "No arguemnt received");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == '0'){
+        i++;
+    } else {
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == 'x'){
+        i++;
+    } else {
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == 0){
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    long long accum = 0;
+    for (; buf[i] != 0 ; i++){
+        if (buf[i] >= 'a' && buf[i] <= 'f'){
+            accum = 16*accum + buf[i] - 'a' + 10;
+        }else if (buf[i] >= '0' && buf[i] <= '9'){
+            accum = 16*accum + buf[i] - '0';
+        } else {
+            printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+            printNewline();
+            return ;
+        }
+    }
+    long long * pointer = (long long *) accum;
+    for (int j = 0 ; j < PRINT_BYTES && accum + j < 0xFFFFFFFFFFFFFFFF; j++){
+        printBase(pointer[j], 2);
+        printf("b\n");
+    }
+}
+
+
 int readBuffer(char *buf)
 {
+    int l;
     if (!strcmp(buf, "")){
     }
-    else if (!strncmp(buf, PRINTMEM_COMMAND, /*strlen(PRINTMEM_COMMAND) +*/ 1)){
-        if (strlen(buf) < strlen(PRINTMEM_COMMAND) + 3){
-            printErrorMessage(PRINTMEM_COMMAND, "No arguemnt received");
+    else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND))){
+        if (buf[l] != ' ' && buf[l] != 0){
+            printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
             return 1;
         }
-        if(strncmp(buf+strlen(PRINTMEM_COMMAND) + 1, " 0x", 2)){
-            printErrorMessage(PRINTMEM_COMMAND, "Ivalid Arguement");
-            printNewline();
-            return 1;
-        }
-
+        printmem(buf + l);
     }
     else if (!strcmp(buf, HELP_COMMAND)){
         helpCommand();
@@ -194,7 +258,7 @@ int readBuffer(char *buf)
         return 0;
     }
     else if (!strcmp(buf, EXIT_COMMAND)){
-        sys_clearScreen();
+        clear();
         return 0;
     }
     else {
@@ -205,20 +269,18 @@ int readBuffer(char *buf)
 }
 
 void printErrorMessage(char * program, char * errorMessage){
-    sys_write(SHELL_NAME, green);
-    sys_write(": ", green);
-    sys_write(program, white);
-    sys_write(": ", green);
-    sys_write(errorMessage, red);
+    printString(SHELL_NAME, GREEN);
+    printf(" : %s : ", program);
+    printError(errorMessage);
 }
 
 void helpCommand(){
-    sys_write(HELP_MESSAGE,white);
+    printf(HELP_MESSAGE);
     printNewline();
 }
 
 void printNewline(){
-    sys_write(NEWLINE,white);
+    printString(NEWLINE,WHITE);
 }
 
 void testDivideByZeroExcpetion(){

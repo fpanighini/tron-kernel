@@ -36,7 +36,7 @@ void getTimeFormat(char *buff)
     itoa(minutes, &p[3]);
     p[5] = ':';
     itoa(seconds, &p[6]);
-    p[8] = 0;    
+    p[8] = 0;
 }
 void getDateFormat(char *buff)
 {
