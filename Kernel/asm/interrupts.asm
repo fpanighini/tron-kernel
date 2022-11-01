@@ -19,9 +19,6 @@ GLOBAL syscallINTHandler
 
 GLOBAL registers
 
-; Borrar:
-EXTERN printTest
-
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
@@ -107,10 +104,6 @@ SECTION .text
     mov [registers+14*8], r13
     mov [registers+15*8], r14
     mov [registers+16*8], r15
-
-    ;flags:
-    mov rax, [rsp+8]
-    mov [registers+17*8], rax
 
     ; rip
     mov rax, [rsp+15*8]
@@ -361,4 +354,4 @@ getSavedRegisters:
 SECTION .bss
     registersSaved resb 1
     aux resq 1
-    registers resq 18
+    registers resq 17

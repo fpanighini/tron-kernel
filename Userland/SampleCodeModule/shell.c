@@ -31,8 +31,8 @@
 #define INCREASE 1
 #define DECREASE -1
 
-#define REGISTER_NUM 18
-#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
+#define REGISTER_NUM 17
+#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"}
 
 #define PRINT_BYTES 32
 
@@ -80,8 +80,8 @@ void bufferRead(char **buf)
     int c = 1;
     int i = 0;
     (*buf)[i] = 0;
-    sys_write(COMMAND_CHAR, green);
-    sys_write(CURSOR, white);
+    printString(COMMAND_CHAR, GREEN);
+    printf(CURSOR);
     while (c != 0)
     {
         c = getChar();
@@ -91,9 +91,9 @@ void bufferRead(char **buf)
             {
                 buf[i--] = 0;
 
-                sys_write("\b", white);
-                sys_write("\b", white);
-                sys_write(CURSOR, white);
+                printf("\b");
+                printf("\b");
+                printf(CURSOR);
             }
         }
         else if (c >= ' ')
@@ -101,9 +101,9 @@ void bufferRead(char **buf)
             (*buf)[i++] = c;
             (*buf)[i] = 0;
 
-            sys_write("\b", white);
-            sys_write((*buf + i - 1), white);
-            sys_write(CURSOR, white);
+            printf("\b");
+            printf(*buf + i - 1);
+            printf(CURSOR);
         }
     }
 }
@@ -163,8 +163,7 @@ int readBuffer(char *buf)
     if (!strcmp(buf, "")){
     }
     else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND))){
-        if (buf[l] != ' '){
-            printf("hola");
+        if (buf[l] != ' ' && buf[l] != 0){
             printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
             return 1;
@@ -242,7 +241,7 @@ int readBuffer(char *buf)
         return 0;
     }
     else if (!strcmp(buf, EXIT_COMMAND)){
-        sys_clearScreen();
+        clear();
         return 0;
     }
     else {
@@ -253,20 +252,18 @@ int readBuffer(char *buf)
 }
 
 void printErrorMessage(char * program, char * errorMessage){
-    sys_write(SHELL_NAME, green);
-    sys_write(": ", green);
-    sys_write(program, white);
-    sys_write(": ", green);
-    sys_write(errorMessage, red);
+    printString(SHELL_NAME, GREEN);
+    printf(" : %s : ", program);
+    printError(errorMessage);
 }
 
 void helpCommand(){
-    sys_write(HELP_MESSAGE,white);
+    printf(HELP_MESSAGE);
     printNewline();
 }
 
 void printNewline(){
-    sys_write(NEWLINE,white);
+    printString(NEWLINE,WHITE);
 }
 
 void testDivideByZeroExcpetion(){

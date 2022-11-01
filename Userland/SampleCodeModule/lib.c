@@ -169,7 +169,7 @@ long itoa(long number, char *str)
 int getChar()
 {
 	char c[2] = {1, 0};
-	sys_read(0, (char *)&c, 2);
+	sys_read(STDIN, (char *)&c, 2);
 	return c[0];
 }
 
@@ -230,7 +230,7 @@ static void print(const char *fmt, va_list args)
 			case 's':
 			{
 				char *s = va_arg(args, char *);
-				sys_write(s, white);
+				sys_write(STDOUT, s, WHITE);
 				break;
 			}
 			case 'i':
@@ -239,7 +239,7 @@ static void print(const char *fmt, va_list args)
 				char buffer[27];
 				int num = va_arg(args, int);
 				numToBase(num, buffer, 10);
-				sys_write(buffer, white);
+				sys_write(STDOUT, buffer, WHITE);
 				break;
 			}
 			case 'o':
@@ -247,7 +247,7 @@ static void print(const char *fmt, va_list args)
 				char buffer[27];
 				int num = va_arg(args, int);
 				numToBase(num, buffer, 8);
-				sys_write(buffer, white);
+				sys_write(STDOUT, buffer, WHITE);
 				break;
 			}
 			case 'x':
@@ -259,7 +259,7 @@ static void print(const char *fmt, va_list args)
 				putChar('0');
 				putChar('x');
 				numToBase(num, buffer, 8);
-				sys_write(buffer, white);
+				sys_write(STDOUT, buffer, WHITE);
 				break;
 			}
 			case '%':
@@ -272,7 +272,7 @@ static void print(const char *fmt, va_list args)
 				char buffer[27];
 				long num = va_arg(args, long);
 				numToBase(num, buffer, 8);
-				sys_write(buffer, white);
+				sys_write(STDOUT, buffer, WHITE);
 				break;
 			}
 			}
@@ -298,7 +298,7 @@ void printf(const char *fmt, ...)
  */
 int putChar(int c)
 {
-	return putColorChar(c, white);
+	return putColorChar(c, WHITE);
 }
 
 int putColorChar(int car, Color c)
@@ -306,7 +306,7 @@ int putColorChar(int car, Color c)
 	char str[2];
 	str[0] = car;
 	str[1] = '\0';
-	sys_write((char *)str, c);
+	sys_write(STDOUT, (char *)str, c);
 	return str[0];
 }
 
@@ -362,7 +362,7 @@ static void scan(const char *fmt, va_list args, int length)
 			case 's':
 			{
 
-				sys_read(0, va_arg(args, char *), length);
+				sys_read(STDIN, va_arg(args, char *), length);
 				break;
 			}
 			case 'i':
@@ -373,7 +373,7 @@ static void scan(const char *fmt, va_list args, int length)
 			case 'p':
 			{
 				//warning type
-				sys_read(0, va_arg(args, int *), length); 
+				sys_read(STDIN, va_arg(args, int *), length); 
 				break;
 			}
 			}
@@ -430,8 +430,7 @@ void printBase(uint64_t value, uint32_t base)
     uint8_t buf[BUFF_SIZE] = {0};
     uint8_t * buffer = buf;
     uintToBase(value, buffer, base);
-    Color white = {0xff, 0xff, 0xff};
-    sys_write(buffer, white);
+    sys_write(STDOUT, buffer, WHITE);
 }
 
 uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
@@ -463,3 +462,10 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
     return digits;
 }
 
+void printError(char * str){
+    sys_write(STDERR, str, RED);
+}
+
+void printString(char * str, Color color){
+    sys_write(STDOUT, str, color);
+}

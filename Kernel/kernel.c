@@ -59,24 +59,7 @@ int main()
 
     int a = 0;
 
-    //printStringAt(0,0,"oo",white);
-    //sys_writeAt(10,10,"TrollOSsssssssssssssssssssssss", red);
-
-    //printStringAt(100,15, "TrollOlllllS", green);
-
-    // ringBell();
-    //_speaker_tone(1000);
-
-
-    //printStringAt(0,0,"xx",white);
-
     a = ((EntryPoint) sampleCodeModuleAddress)();
 
-    if (a == 1){
-        sys_write("Hola", red);
-    }
-    else {
-        sys_write("chaus", red);
-    }
     return 0;
 }
