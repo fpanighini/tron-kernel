@@ -37,7 +37,6 @@ EXTERN sys_widthScr
 EXTERN sys_timedRead
 EXTERN sys_drawRectangle
 EXTERN sys_changeFontSize
-EXTERN sys_snapshot
 EXTERN sys_inforeg
 EXTERN sys_beep
 
@@ -323,14 +322,6 @@ haltcpu:
 	cli
 	hlt
 	ret
-
-saveRegisters:
-    snapshot
-    ret
-
-getSavedRegisters:
-    mov rdi, registers
-    ret
 
 SECTION .bss
     registersSaved resb 1
