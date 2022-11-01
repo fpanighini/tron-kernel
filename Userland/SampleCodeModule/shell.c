@@ -9,7 +9,7 @@
 #define BACKSPACE '\b'
 #define MAX_KBD_BUF 55
 
-#define SHELL_NAME "Troll"
+#define SHELL_NAME "Shell"
 
 #define HELP_COMMAND "help"
 #define CLEAR_COMMAND "clear"
@@ -26,7 +26,25 @@
 #define PRINTMEM_COMMAND "printmem"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
-#define HELP_MESSAGE "HELP"
+#define HELP_MESSAGE "HELP:\n\
+The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
+\
+help              - Displays the avilable commands the shell can interpret and a short description of them\n\
+clear             - Clears sceen allowing more text to be written\n\
+exit              - Exit the shell returning to kernel space. This command will shut down the program\n\
+tron              - Launches tron game\n\
+div-zero          - Calls function that showcases the Divide By Zero Exception\n\
+invalid-op        - Calls function that showcases the Invalid Opcode Exception\n\
+date              - Displays date\n\
+time              - Displays time\n\
+datetime          - Displays date and time\n\
+inc-font          - Increases font size\n\
+dec-font          - Decreases font size\n\
+inforeg           - Displays the contents of all the registers at a given time.\n\
+                    To save registers press and release the CTRL key.\n\
+                    If the command is called before pressing CTRL at least once,\n\
+                    the registers will appear as if they have the value 0\n\
+printmem           - Receives a parameter in hexadecimal. Displays the next 32 bytes after the given memory direction given\n"
 
 #define INCREASE 1
 #define DECREASE -1
@@ -62,15 +80,16 @@ extern void divideZero();
 
 void shell()
 {
-    char str[100];
-    char *string = str;
     int out = 1;
 
     while (out)
     {
+        char str[MAX_TERMINAL_CHARS] = {0};
+        char *string = str;
         bufferRead(&string);
         printf("\b");
         printNewline();
+        printf("%s\n",string);
         out = readBuffer(string);
     }
 }
@@ -82,15 +101,14 @@ void bufferRead(char **buf)
     (*buf)[i] = 0;
     printString(COMMAND_CHAR, GREEN);
     printf(CURSOR);
-    while (c != 0)
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
     {
         c = getChar();
         if (c == BACKSPACE)
         {
             if (i > 0)
             {
-                buf[i--] = 0;
-
+                (*buf)[--i] = 0;
                 printf("\b");
                 printf("\b");
                 printf(CURSOR);
@@ -98,7 +116,7 @@ void bufferRead(char **buf)
         }
         else if (c >= ' ')
         {
-            (*buf)[i++] = c;
+            (*buf)[i++] = (char) c;
             (*buf)[i] = 0;
 
             printf("\b");
