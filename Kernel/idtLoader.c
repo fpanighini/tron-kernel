@@ -2,7 +2,6 @@
 #include <idtLoader.h>
 #include <defs.h>
 #include <interrupts.h>
-#include <syscallManager.h>
 
 #pragma pack(push)
 #pragma pack (1)

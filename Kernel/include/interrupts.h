@@ -8,8 +8,6 @@
 #ifndef INTERRUPTS_H_
 #define INTERRUPTS_H_
 
-// #include <idtLoader.h>  //Porque??
-
 void _irq00Handler(void);
 void _irq01Handler(void);
 void _irq02Handler(void);
@@ -21,18 +19,16 @@ void _exception0Handler(void);
 void _exception6Handler(void);
 
 void _cli(void);
-
 void _sti(void);
 
 void _hlt(void);
 
 void picMasterMask(uint8_t mask);
-
 void picSlaveMask(uint8_t mask);
 
 void syscallINTHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t r9);
 
-//Termina la ejecución de la cpu.
+/* Ends cpu execution */
 void haltcpu(void);
 
 uint64_t * getSavedRegisters(void);

@@ -1,6 +1,3 @@
-// BORRAR:
-#include <videoDriver.h>
-
 #include <stdint.h>
 #include <keyboardDriver.h>
 #include <interrupts.h>
@@ -14,16 +11,14 @@ uint8_t getKey(uint8_t id);
 
 typedef struct buf {
     uint8_t keys[BUF_SIZE];
-    //uint8_t read;
     uint8_t count;
 } bufT;
 
 bufT buf = {{0},0};
 
 void saveKey(uint8_t c){
-    if (c > 128){
-        return ;
-    }
+    if (c > 128)
+        return;
     buf.keys[buf.count++] = getKey(c);
 }
 
@@ -47,12 +42,10 @@ uint8_t getCount(){
     return buf.count;
 }
 
-uint8_t getKey(uint8_t id)
-{
+uint8_t getKey(uint8_t id) {
     if (id >= 128)
-    {
         return -1;
-    }
+
     char kbd_US[128] =
         {
             0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',

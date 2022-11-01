@@ -19,7 +19,6 @@ GLOBAL syscallINTHandler
 
 GLOBAL registers
 
-EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
@@ -154,20 +153,10 @@ picMasterMask:
 picSlaveMask:
 	push    rbp
     mov     rbp, rsp
-    mov     ax, di  ; ax = mascara de 16 bits
-    out	0A1h,al
+    mov     ax, di  ; ax = 16 bit mask
+    out	0A1h, al
     pop     rbp
     retn
-
-
-%macro irqHandlerMaster 1
-    pushState
-
-    mov rdi, %1 ; pasaje de parametro
-    call irqDispatcher
-
-    ; signal pic EOI (End of Interrupt)
-%endmacro
 
 
 ;8254 Timer (Timer Tick)
@@ -207,22 +196,6 @@ _irq01Handler:
     out 20h, al
     popState
     iretq
-
-;Cascade pic never called
-_irq02Handler:
-	irqHandlerMaster 2
-
-;Serial Port 2 and 4
-_irq03Handler:
-	irqHandlerMaster 3
-
-;Serial Port 1 and 3
-_irq04Handler:
-	irqHandlerMaster 4
-
-;USB
-_irq05Handler:
-	irqHandlerMaster 5
 
 
 ; Zero Division Exception

@@ -5,7 +5,7 @@
 
 
 void endException(uint8_t * str);
-void printSavedRegisters(void);
+void printSavedRegisters();
 
 extern uint64_t registers[REGISTER_NUM];
 
@@ -41,7 +41,6 @@ void invalidOpcodeException(){
 }
 
 void printSavedRegisters(){
-    // long * regs = getSavedRegisters();
     char * regNames[] = REGISTER_NAMES;
     int i = 0;
     for (; i < REGISTER_NUM - 1 ; i++){
@@ -51,7 +50,3 @@ void printSavedRegisters(){
         printString((uint8_t *) "\n",MAGENTA);
     }
 }
-
-
-
-

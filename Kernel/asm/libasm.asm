@@ -1,5 +1,4 @@
 GLOBAL cpuVendor
-GLOBAL keyPressed
 GLOBAL getSeconds
 GLOBAL getMinutes
 GLOBAL getHours
@@ -8,7 +7,6 @@ GLOBAL getMonth
 GLOBAL getYear
 GLOBAL inb
 GLOBAL outb
-EXTERN sys_wait
 
 section .text
 	
@@ -147,15 +145,3 @@ outb:
     mov rsp, rbp
     pop rbp
     ret
-
-; Esto ??
-
-;vbe_get_info_block:
-;        mov ax, 0x4F00				; get VBE BIOS info
-;	mov di, vbe_info_block
-;        int 0x10
-;
-;vbe_info_structure:
-;	.signature		db "VBE2"	; indicate support for VBE 2.0+
-;	.table_data:		resb 512-4	; reserve space for the table below
-;

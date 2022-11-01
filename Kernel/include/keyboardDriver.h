@@ -4,13 +4,8 @@
 #include <stdint.h>
 
 void saveKey(uint8_t c);
-
-uint32_t readBuf(char * str, uint32_t count);
-
 void clearKeyboardBuffer();
-
 uint8_t getCount();
-
 uint32_t readBuf(char * str, uint32_t count);
 
 #endif

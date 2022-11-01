@@ -4,8 +4,6 @@
 #include <moduleLoader.h>
 #include <videoDriver.h>
 #include <idtLoader.h>
-// include syscallmanager for testing
-#include <syscallManager.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -23,24 +21,22 @@ static void *const sampleDataModuleAddress = (void *)0x500000;
 
 typedef int (*EntryPoint)();
 
-void clearBSS(void *bssAddress, uint64_t bssSize)
-{
+void clearBSS(void *bssAddress, uint64_t bssSize) {
     memset(bssAddress, 0, bssSize);
 }
 
-void *getStackBase()
-{
+void *getStackBase() {
     return (void *)((uint64_t)&endOfKernel + PageSize * 8 // The size of the stack itself, 32KiB
             - sizeof(uint64_t)                    // Begin at the top of the stack
             );
 }
 
-void *initializeKernelBinary()
-{
+void *initializeKernelBinary() {
 
     void *moduleAddresses[] = {
         sampleCodeModuleAddress,
-        sampleDataModuleAddress};
+        sampleDataModuleAddress
+        };
 
     loadModules(&endOfKernelBinary, moduleAddresses);
 
@@ -50,10 +46,9 @@ void *initializeKernelBinary()
 }
 
 
-int main()
-{
+int main() {
     load_idt();
-    sys_clearScreen();
+    clearScreen();
 
     int a = 0;
 

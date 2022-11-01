@@ -9,10 +9,5 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 char *cpuVendor(char *result);
 
 char keyPressed(void);
-void int_20();
-void int_21();
-
-// Va ??
-void timer_handler();
 
 #endif
