@@ -27,7 +27,7 @@ uint64_t sys_time();             // Tiempo hh:mm:ss
 uint64_t sys_date();             // dd/mm/aa
 uint64_t sys_clearScreen();      // clean screen
 uint64_t sys_drawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, Color color);
-uint64_t sys_bell();
+uint64_t sys_beep(uint32_t frequency);
 uint64_t sys_widthScr();
 uint64_t sys_heightScr();
 uint64_t sys_wait(uint32_t millis);

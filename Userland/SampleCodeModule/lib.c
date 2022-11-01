@@ -455,3 +455,6 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
     return digits;
 }
 
+void beep(int frequency) {
+	sys_beep(frequency);
+}

@@ -43,6 +43,7 @@ EXTERN sys_drawRectangle
 EXTERN sys_changeFontSize
 EXTERN sys_snapshot
 EXTERN sys_inforeg
+EXTERN sys_beep
 
 
 SECTION .text
@@ -284,6 +285,9 @@ syscallINTHandler:
     cmp rax, 0x0C
     je .inforeg
 
+    cmp rax, 0x0D
+    je .beep
+
     jmp .end
 
 .write:
@@ -336,6 +340,10 @@ syscallINTHandler:
 
 .inforeg:
         call sys_inforeg
+        jmp .end
+
+.beep:
+        call sys_beep
         jmp .end
 
 .end:

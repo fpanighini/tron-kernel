@@ -2,7 +2,6 @@
 #define _TRON_H_
 
 #include <color.h>
-#include <syscalls.h>
 #include <lib.h>
 
 #define MAX_WIDTH 1024

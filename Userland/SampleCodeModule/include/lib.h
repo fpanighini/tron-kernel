@@ -34,5 +34,6 @@ long getScreenHeight();
 long drawRectangle(int x, int y, int width, int height, Color color);
 void shortSleep();
 void printBase(uint64_t value, uint32_t base);
+void beep(int frequency);
 
 #endif

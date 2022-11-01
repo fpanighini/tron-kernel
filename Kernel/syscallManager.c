@@ -2,9 +2,11 @@
 
 #define WAIT_TIME 10
 
-void ringBell();
-
 int getKbdBuffer(char * buf, uint32_t count, int * pos);
+void playSound(uint32_t nFrequence);
+void noSound();
+void beep1(uint32_t nFrequence);
+void beep2();
 
 extern uint64_t registers[REGISTER_NUM];
 
@@ -97,9 +99,44 @@ uint64_t sys_drawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t heig
     return 0;
 }
 
-uint64_t sys_bell() {
-    printStringAt(0,0, (uint8_t *)"sys_bell\n", white);
-    //ringBell();
+
+void playSound(uint32_t nFrequence) {
+ 	uint32_t Div;
+ 	uint8_t tmp;
+ 
+    //Set the PIT to the desired frequency
+ 	Div = 1193180 / nFrequence;
+ 	outb(0x43, 0xb6);
+ 	outb(0x42, (uint8_t) (Div) );
+ 	outb(0x42, (uint8_t) (Div >> 8));
+ 
+    //And play the sound using the PC speaker
+ 	tmp = inb(0x61);
+  	if (tmp != (tmp | 3))
+ 		outb(0x61, tmp | 3);
+ }
+ 
+ void noSound() {
+ 	uint8_t tmp = inb(0x61) & 0xFC;
+ 	outb(0x61, tmp);
+ }
+ 
+ void beep1(uint32_t nFrequence) {
+ 	playSound(nFrequence);
+    sys_wait(200);
+ 	noSound();
+ }
+
+  void beep2() {
+ 	playSound(1193180);
+    sys_wait(200);
+ 	noSound();
+ }
+
+uint64_t sys_beep(uint32_t nFrequence) {
+    beep1(nFrequence);
+ 	sys_wait(100);
+    beep2();
     return 0;
 }
 
@@ -146,3 +183,5 @@ uint64_t sys_changeFontSize(uint32_t size) {
 void printTest(){
     sys_write("CTRL", red);
 }
+
+

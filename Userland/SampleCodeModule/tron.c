@@ -211,6 +211,7 @@ void clearInfo() {
 void endGame(char* string, Canvas *canvas) {
     endInfo();
     
+    beep(1100);
     int recWidth = canvas->width*0.8 + 5;
     int recHeight = 35;
     int x = getScreenWidth()/2 - recWidth/2; 

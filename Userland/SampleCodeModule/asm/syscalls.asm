@@ -9,8 +9,9 @@ GLOBAL sys_getScreenHeight
 GLOBAL sys_getScreenWidth
 GLOBAL sys_timedRead
 GLOBAL sys_drawRectangle
-GLOBAL sys_inforeg
 GLOBAL sys_changeFontSize
+GLOBAL sys_inforeg
+GLOBAL sys_beep
 
 ; syscall 0x00
 sys_write:
@@ -91,6 +92,12 @@ sys_changeFontSize:
 sys_inforeg:
     mov rax, 0x0C
     mov r10, rcx
+    int 0x80
+    ret
+
+; syscall 0x0D
+sys_beep:
+    mov rax, 0x0D
     int 0x80
     ret
 

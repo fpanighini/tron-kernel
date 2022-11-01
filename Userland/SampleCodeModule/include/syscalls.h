@@ -9,6 +9,7 @@ long sys_clearScreen();
 long sys_wait(int ticks);
 long sys_time();
 long sys_date();
+long sys_beep();
 long sys_getScreenHeight();
 long sys_getScreenWidth();
 long sys_timedRead(unsigned char fd, char * s, int count, int millis);
