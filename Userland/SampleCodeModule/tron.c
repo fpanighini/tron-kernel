@@ -204,7 +204,6 @@ void clearInfo() {
     int recHeight = 35;
     int x = getScreenWidth()/2 - recWidth/2; 
     int y = FONT_SIZE*8;
-    int lineAt = y/FONT_SIZE;
 
     drawRectangle(x, y - 10, recWidth, recHeight, black);
 }

@@ -13,6 +13,9 @@ extern uint8_t data;
 extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
+extern void _speaker_tone(int tone);
+extern void _speaker_off();
+
 
 static const uint64_t PageSize = 0x1000;
 
@@ -46,7 +49,8 @@ void *initializeKernelBinary()
 
     return getStackBase();
 }
-void ringBell();
+
+//void ringBell();
 
 int main()
 {
@@ -60,7 +64,9 @@ int main()
 
     //printStringAt(100,15, "TrollOlllllS", green);
 
-    ringBell();
+    _speaker_tone(880);
+    //sys_wait(1000);
+    //_speaker_off();
 
     //printStringAt(0,0,"xx",white);
 

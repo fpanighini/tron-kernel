@@ -99,7 +99,7 @@ uint64_t sys_drawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t heig
 
 uint64_t sys_bell() {
     printStringAt(0,0, (uint8_t *)"sys_bell\n", white);
-    ringBell();
+    //ringBell();
     return 0;
 }
 

@@ -129,4 +129,9 @@ int isValidPoint(int x, int y, Canvas *canvas);
 */
 int input(Player *p1, Player *p2, int *oldKey, int newKey);
 
+void drawInfo();
+void clearInfo();
+void endInfo();
+void countdown();
+
 #endif
