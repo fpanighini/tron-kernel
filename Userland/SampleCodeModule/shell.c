@@ -34,6 +34,8 @@
 #define REGISTER_NUM 18
 #define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15", "rFlags"}
 
+#define PRINT_BYTES 32
+
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
 #define INCREASE_FONT_FAIL "Font upper size limit reached"
 #define DECREASE_FONT_FAIL "Font lower size limit reached"
@@ -106,22 +108,68 @@ void bufferRead(char **buf)
     }
 }
 
+void printmem(char * buf){
+    int i = 0;
+    while (buf[i] != 0 && buf[i] == ' '){
+        i++;
+    }
+    if (buf[i] == 0){
+        printErrorMessage(PRINTMEM_COMMAND, "No arguemnt received");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == '0'){
+        i++;
+    } else {
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == 'x'){
+        i++;
+    } else {
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    if (buf[i] == 0){
+        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printNewline();
+        return ;
+    }
+    long long accum = 0;
+    for (; buf[i] != 0 ; i++){
+        if (buf[i] >= 'a' && buf[i] <= 'f'){
+            accum = 16*accum + buf[i] - 'a' + 10;
+        }else if (buf[i] >= '0' && buf[i] <= '9'){
+            accum = 16*accum + buf[i] - '0';
+        } else {
+            printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+            printNewline();
+            return ;
+        }
+    }
+    long long * pointer = (long long *) accum;
+    for (int j = 0 ; j < PRINT_BYTES && accum + j < 0xFFFFFFFFFFFFFFFF; j++){
+        printBase(pointer[j], 2);
+        printf("b\n");
+    }
+}
+
+
 int readBuffer(char *buf)
 {
+    int l;
     if (!strcmp(buf, "")){
     }
-    else if (!strncmp(buf, PRINTMEM_COMMAND, /*strlen(PRINTMEM_COMMAND) +*/ 1)){
-        if (strlen(buf) < strlen(PRINTMEM_COMMAND) + 3){
-            printErrorMessage(PRINTMEM_COMMAND, "No arguemnt received");
+    else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND))){
+        if (buf[l] != ' '){
+            printf("hola");
+            printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
             return 1;
         }
-        if(strncmp(buf+strlen(PRINTMEM_COMMAND) + 1, " 0x", 2)){
-            printErrorMessage(PRINTMEM_COMMAND, "Ivalid Arguement");
-            printNewline();
-            return 1;
-        }
-
+        printmem(buf + l);
     }
     else if (!strcmp(buf, HELP_COMMAND)){
         helpCommand();

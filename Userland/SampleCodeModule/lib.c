@@ -28,11 +28,19 @@ int strcmp(const char *str1, const char *str2)
  * @param n
  * @return int
  */
-int strncmp(const char *str1, const char *str2, char n)
+int strncmp(const char *str1, const char *str2, int n)
 {
-	for (; (*str1 == *str2) && (*str1 != '\0') && (n != 0); str1++, str2++, n--)
-		;
-	return *str1 - *str2;
+    //printf(str1);
+    //printf(str2);
+    int i = 0;
+    for (i = 0 ; i < n - 1 && str1[i] != 0 && str1[i] == str2[i] ; i++);
+    return str1[i] - str2[i];
+        // h o l a 0
+        // h 0
+
+	// for (; (*str1 == *str2) && (*str1 != '\0') && (n != 0); str1++, str2++, n--)
+	// 	;
+	// return *str1 - *str2;
 }
 /**
  * @brief

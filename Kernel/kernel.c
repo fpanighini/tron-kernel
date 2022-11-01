@@ -19,6 +19,10 @@ static const uint64_t PageSize = 0x1000;
 static void *const sampleCodeModuleAddress = (void *)0x400000;
 static void *const sampleDataModuleAddress = (void *)0x500000;
 
+void _speaker_tone(int n);
+void _speaker_off();
+
+
 typedef int (*EntryPoint)();
 
 void clearBSS(void *bssAddress, uint64_t bssSize)
@@ -60,7 +64,9 @@ int main()
 
     //printStringAt(100,15, "TrollOlllllS", green);
 
-    ringBell();
+    // ringBell();
+    //_speaker_tone(1000);
+
 
     //printStringAt(0,0,"xx",white);
 

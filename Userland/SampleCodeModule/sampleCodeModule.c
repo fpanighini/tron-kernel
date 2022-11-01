@@ -23,6 +23,12 @@ int main()
 
     shell();
 
+    //if (strncmp("printmem 0xFFFFFF","printmem",9) == 0){
+    //    sys_write("Hola Como estas",red);
+    //}
+
+    while(1);
+
     //printf("Hola %s %d %x\n %s", "que tal", 17, 17, "abajo");
 
 
