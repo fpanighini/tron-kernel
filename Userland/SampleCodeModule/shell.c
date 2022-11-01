@@ -78,12 +78,10 @@ int decreaseFontSize();
 extern void invalidOpcode();
 extern void divideZero();
 
-void shell()
-{
+void shell() {
     int out = 1;
 
-    while (out)
-    {
+    while (out) {
         char str[MAX_TERMINAL_CHARS] = {0};
         char *string = str;
         bufferRead(&string);
@@ -93,31 +91,24 @@ void shell()
     }
 }
 
-void bufferRead(char **buf)
-{
+void bufferRead(char **buf) {
     int c = 1;
     int i = 0;
     (*buf)[i] = 0;
     printString(COMMAND_CHAR, GREEN);
     printf(CURSOR);
-    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
-    {
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1) {
         c = getChar();
-        if (c == BACKSPACE)
-        {
-            if (i > 0)
-            {
+        if (c == BACKSPACE) {
+            if (i > 0) {
                 (*buf)[--i] = 0;
                 printf("\b");
                 printf("\b");
                 printf(CURSOR);
             }
-        }
-        else if (c >= ' ')
-        {
+        } else if (c >= ' ') {
             (*buf)[i++] = (char) c;
             (*buf)[i] = 0;
-
             printf("\b");
             printf(*buf + i - 1);
             printf(CURSOR);
@@ -125,26 +116,25 @@ void bufferRead(char **buf)
     }
 }
 
-void printmem(char * buf){
+void printmem(char * buf) {
     int i = 0;
-    while (buf[i] != 0 && buf[i] == ' '){
+    while (buf[i] != 0 && buf[i] == ' ')
         i++;
-    }
     if (buf[i] == 0){
         printErrorMessage(PRINTMEM_COMMAND, "No argument received");
         printNewline();
         return ;
     }
-    if (buf[i] == '0'){
+    if (buf[i] == '0')
         i++;
-    } else {
+    else {
         printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
         return ;
     }
-    if (buf[i] == 'x'){
+    if (buf[i] == 'x')
         i++;
-    } else {
+    else {
         printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
         return ;
@@ -156,11 +146,11 @@ void printmem(char * buf){
     }
     long long accum = 0;
     for (; buf[i] != 0 ; i++){
-        if (buf[i] >= 'a' && buf[i] <= 'f'){
+        if (buf[i] >= 'a' && buf[i] <= 'f')
             accum = 16*accum + buf[i] - 'a' + 10;
-        }else if (buf[i] >= '0' && buf[i] <= '9'){
+        else if (buf[i] >= '0' && buf[i] <= '9')
             accum = 16*accum + buf[i] - '0';
-        } else {
+        else {
             printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
             printNewline();
             return ;
@@ -174,11 +164,9 @@ void printmem(char * buf){
 }
 
 
-int readBuffer(char *buf)
-{
+int readBuffer(char *buf) {
     int l;
-    if (!strcmp(buf, "")){
-    }
+    if (!strcmp(buf, ""));
     else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND))){
         if (buf[l] != ' ' && buf[l] != 0){
             printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
@@ -187,12 +175,10 @@ int readBuffer(char *buf)
         }
         printmem(buf + l);
     }
-    else if (!strcmp(buf, HELP_COMMAND)){
+    else if (!strcmp(buf, HELP_COMMAND))
         helpCommand();
-    }
-    else if (!strcmp(buf, CLEAR_COMMAND)){
+    else if (!strcmp(buf, CLEAR_COMMAND))
         clear();
-    }
     else if (!strcmp(buf, TRON_COMMAND)){
         clear();
 
@@ -200,68 +186,55 @@ int readBuffer(char *buf)
         int count = 0;
         for (; decreaseFontSize() ;count++);
 
-        mainTron();             // Call to tron game
+        mainTron();             // Call tron game
 
         // Reset font size to previous value
-        for (int i = 0 ; i < count ; i++){
+        for (int i = 0 ; i < count ; i++)
             increaseFontSize();
-        }
         clear();
-    }
-    else if (!strcmp(buf, DATE_COMMAND)){
+    } else if (!strcmp(buf, DATE_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getDateFormat(string);
         printf("%s\n",string);
-    }
-    else if (!strcmp(buf, TIME_COMMAND)){
+    } else if (!strcmp(buf, TIME_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getTimeFormat(string);
         printf("%s\n",string);
-    }
-    else if (!strcmp(buf, DATE_TIME_COMMAND)){
+    } else if (!strcmp(buf, DATE_TIME_COMMAND)){
         char str[MAX_TERMINAL_CHARS] = {0};
         char * string = str;
         getDateAndTime(string);
         printf("%s\n",string);
-    }
-    else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
+    } else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
         int check = increaseFontSize();
         if (!check){
             printErrorMessage(buf, INCREASE_FONT_FAIL);
             printNewline();
-        }
-        else {
+        } else
             clear();
-        }
     }
     else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND)){
         int check = decreaseFontSize();
         if (!check){
             printErrorMessage(buf, DECREASE_FONT_FAIL);
             printNewline();
-        }
-        else {
+        } else
             clear();
-        }
     }
-    else if (!strcmp(buf, INFOREG_COMMAND)){
+    else if (!strcmp(buf, INFOREG_COMMAND))
         printInforeg();
-    }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
         testDivideByZeroException();
         return 0;
-    }
-    else if (!strcmp(buf, INVALID_OP)){
+    } else if (!strcmp(buf, INVALID_OP)){
         testInvalidOpException();
         return 0;
-    }
-    else if (!strcmp(buf, EXIT_COMMAND)){
+    } else if (!strcmp(buf, EXIT_COMMAND)){
         clear();
         return 0;
-    }
-    else {
+    } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
     }
@@ -295,17 +268,11 @@ void testInvalidOpException(){
 void printInforeg(){
     long array[REGISTER_NUM] = {0};
     long * arr = (long *) &array;
-    int check = sys_inforeg(arr);
     char * registerNames[] = REGISTER_NAMES;
-    if (check){
-        for (int i = 0 ; i < REGISTER_NUM; i++){
-            printf("%s : ",registerNames[i]);
-            printBase(arr[i], 2);
-            printf("b\n");
-        }
-
-    } else {
-        printf("First you need to press a snapshot key. Try CTRL!");
+    for (int i = 0 ; i < REGISTER_NUM; i++){
+        printf("%s : ",registerNames[i]);
+        printBase(arr[i], 2);
+        printf("b\n");
     }
 }
 

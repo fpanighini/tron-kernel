@@ -6,7 +6,6 @@
 
 uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
 
-
 /**
  * @brief
  *  Compares two strings.
@@ -14,12 +13,11 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
  * @param str2
  * @return int
  */
-int strcmp(const char *str1, const char *str2)
-{
-	for (; *str1 == *str2 && *str1 != '\0'; str1++, str2++)
-		;
+int strcmp(const char *str1, const char *str2) {
+	for (; *str1 == *str2 && *str1 != '\0'; str1++, str2++);
 	return *str1 - *str2;
 }
+
 /**
  * @brief
  *  Compares n characters between two strings.
@@ -28,31 +26,21 @@ int strcmp(const char *str1, const char *str2)
  * @param n
  * @return int
  */
-int strncmp(const char *str1, const char *str2, int n)
-{
-    //printf(str1);
-    //printf(str2);
+int strncmp(const char *str1, const char *str2, int n) {
     int i = 0;
     for (i = 0 ; i < n - 1 && str1[i] != 0 && str1[i] == str2[i] ; i++);
     return str1[i] - str2[i];
-        // h o l a 0
-        // h 0
-
-	// for (; (*str1 == *str2) && (*str1 != '\0') && (n != 0); str1++, str2++, n--)
-	// 	;
-	// return *str1 - *str2;
 }
+
 /**
  * @brief
  *  Length of the string.
  * @param str1
  * @return int
  */
-int strlen(const char *str1)
-{
+int strlen(const char *str1) {
 	int i = 0;
-	for (; str1[i] != '\0' && *str1 != '\0'; i++)
-		;
+	for (; str1[i] != '\0' && *str1 != '\0'; i++);
 	return i;
 }
 
@@ -63,18 +51,15 @@ int strlen(const char *str1)
  * @param src
  * @return char*
  */
-char *strcat(char *dest, const char *src)
-{
+char *strcat(char *dest, const char *src) {
 	char *aux;
-	for (aux = dest; *aux != '\0'; aux++)
-		;
+	for (aux = dest; *aux != '\0'; aux++);
 	for (; *src != '\0';)
-	{
 		*(aux++) = *(src++);
-	}
 	*aux = '\0';
 	return aux;
 }
+
 /**
  * @brief
  *  Concat first n characters from src to dest.
@@ -83,18 +68,15 @@ char *strcat(char *dest, const char *src)
  * @param n
  * @return char*
  */
-char *strncat(char *dest, const char *src, int n)
-{
+char *strncat(char *dest, const char *src, int n) {
 	char *aux;
-	for (aux = dest; *aux != '\0'; aux++)
-		;
+	for (aux = dest; *aux != '\0'; aux++);
 	for (; *src != '\0' && n != 0; n--)
-	{
 		*(aux++) = *(src++);
-	}
 	*aux = '\0';
 	return aux;
 }
+
 /**
  * @brief
  *  Copy the content of src into dest.
@@ -102,16 +84,14 @@ char *strncat(char *dest, const char *src, int n)
  * @param src
  * @return char*
  */
-char *strcpy(char *dest, const char *src)
-{
+char *strcpy(char *dest, const char *src) {
 	char *aux;
 	for (aux = dest; *src != '\0';)
-	{
 		*(aux++) = *(src++);
-	}
 	*aux = '\0';
 	return aux;
 }
+
 /**
  * @brief
  *  Copy first n characters from src into dest.
@@ -120,16 +100,14 @@ char *strcpy(char *dest, const char *src)
  * @param n
  * @return char*
  */
-char *strncpy(char *dest, const char *src, int n)
-{
+char *strncpy(char *dest, const char *src, int n) {
 	char *aux;
 	for (aux = dest; *src != '\0' && n != 0; n--)
-	{
 		*(aux++) = *(src++);
-	}
 	*aux = '\0';
 	return aux;
 }
+
 /**
  * @brief
  *  Transform integer into string.
@@ -137,14 +115,11 @@ char *strncpy(char *dest, const char *src, int n)
  * @param str
  * @return int
  */
-long itoa(long number, char *str)
-{
+long itoa(long number, char *str) {
 	int digits = 1;
-	for (long n = number / 10; n != 0; digits++, n /= 10)
-		;
+	for (long n = number / 10; n != 0; digits++, n /= 10);
 
-	if (digits == 1)
-	{
+	if (digits == 1) {
 		str[0] = '0';
 		str[1] = number + '0';
 		str[2] = 0;
@@ -152,8 +127,7 @@ long itoa(long number, char *str)
 	}
 
 	str[digits] = 0;
-	for (int i = digits - 1; i >= 0; i--)
-	{
+	for (int i = digits - 1; i >= 0; i--) {
 		str[i] = (number % 10) + '0';
 		number /= 10;
 	}
@@ -166,21 +140,18 @@ long itoa(long number, char *str)
  *  Get the Char
  * @return int
  */
-int getChar()
-{
+int getChar() {
 	char c[2] = {1, 0};
 	sys_read(STDIN, (char *)&c, 2);
 	return c[0];
 }
 
-static int numToBase(long value, char *buffer, int base)
-{
+static int numToBase(long value, char *buffer, int base) {
 	char *p = buffer;
 	char *p1, *p2;
 	int digits = 0;
 
-	do
-	{
+	do {
 		int remainder = value % base;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 		digits++;
@@ -190,8 +161,7 @@ static int numToBase(long value, char *buffer, int base)
 
 	p1 = buffer;
 	p2 = p - 1;
-	while (p1 < p2)
-	{
+	while (p1 < p2) {
 		char tmp = *p1;
 		*p1 = *p2;
 		*p2 = tmp;
@@ -201,80 +171,72 @@ static int numToBase(long value, char *buffer, int base)
 
 	return digits;
 }
-static void print(const char *fmt, va_list args)
-{
+
+static void print(const char *fmt, va_list args) {
 	int state = 0;
-	while (*fmt)
-	{
-		if (state == 0)
-		{
+	while (*fmt) {
+		if (state == 0) {
 			if (*fmt == '%')
-			{
 				state = 1;
-			}
 			else
-			{
 				putChar(*fmt);
-			}
 		}
-		else if (state == 1)
-		{
-			switch (*fmt)
-			{
-			case 'c':
-			{
-				char ch = va_arg(args, int);
-				putChar(ch);
-				break;
-			}
-			case 's':
-			{
-				char *s = va_arg(args, char *);
-				sys_write(STDOUT, s, WHITE);
-				break;
-			}
-			case 'i':
-			case 'd':
-			{
-				char buffer[27];
-				int num = va_arg(args, int);
-				numToBase(num, buffer, 10);
-				sys_write(STDOUT, buffer, WHITE);
-				break;
-			}
-			case 'o':
-			{
-				char buffer[27];
-				int num = va_arg(args, int);
-				numToBase(num, buffer, 8);
-				sys_write(STDOUT, buffer, WHITE);
-				break;
-			}
-			case 'x':
-			case 'X':
-			case 'p':
-			{
-				char buffer[27];
-				int num = va_arg(args, int);
-				putChar('0');
-				putChar('x');
-				numToBase(num, buffer, 8);
-				sys_write(STDOUT, buffer, WHITE);
-				break;
-			}
-			case '%':
-			{
-				putChar('%');
-				break;
-			}
-			case 'l':
-			{
-				char buffer[27];
-				long num = va_arg(args, long);
-				numToBase(num, buffer, 8);
-				sys_write(STDOUT, buffer, WHITE);
-				break;
-			}
+		else if (state == 1) {
+			switch (*fmt) {
+				case 'c':
+				{
+					char ch = va_arg(args, int);
+					putChar(ch);
+					break;
+				}
+				case 's':
+				{
+					char *s = va_arg(args, char *);
+					sys_write(STDOUT, s, WHITE);
+					break;
+				}
+				case 'i':
+				case 'd':
+				{
+					char buffer[27];
+					int num = va_arg(args, int);
+					numToBase(num, buffer, 10);
+					sys_write(STDOUT, buffer, WHITE);
+					break;
+				}
+				case 'o':
+				{
+					char buffer[27];
+					int num = va_arg(args, int);
+					numToBase(num, buffer, 8);
+					sys_write(STDOUT, buffer, WHITE);
+					break;
+				}
+				case 'x':
+				case 'X':
+				case 'p':
+				{
+					char buffer[27];
+					int num = va_arg(args, int);
+					putChar('0');
+					putChar('x');
+					numToBase(num, buffer, 8);
+					sys_write(STDOUT, buffer, WHITE);
+					break;
+				}
+				case '%':
+				{
+					putChar('%');
+					break;
+				}
+				case 'l':
+				{
+					char buffer[27];
+					long num = va_arg(args, long);
+					numToBase(num, buffer, 8);
+					sys_write(STDOUT, buffer, WHITE);
+					break;
+				}
 			}
 			state = 0;
 		}
@@ -282,8 +244,7 @@ static void print(const char *fmt, va_list args)
 	}
 }
 
-void printf(const char *fmt, ...)
-{
+void printf(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	print(fmt, args);
@@ -296,13 +257,11 @@ void printf(const char *fmt, ...)
  * @param c
  * @return int
  */
-int putChar(int c)
-{
+int putChar(int c) {
 	return putColorChar(c, WHITE);
 }
 
-int putColorChar(int car, Color c)
-{
+int putColorChar(int car, Color c) {
 	char str[2];
 	str[0] = car;
 	str[1] = '\0';
@@ -310,19 +269,15 @@ int putColorChar(int car, Color c)
 	return str[0];
 }
 
-void putStringColor(char *str, Color c)
-{
-	while (*str)
-	{
+void putStringColor(char *str, Color c) {
+	while (*str) {
 		putColorChar(*str, c);
 		str++;
 	}
 }
 
-void puts(char *str)
-{
-	while (*str)
-	{
+void puts(char *str) {
+	while (*str) {
 		putChar(*str);
 		str++;
 	}
@@ -334,48 +289,36 @@ void printStringAt(int x, int y, char *str, Color c) {
 }
 
 //length problem
-static void scan(const char *fmt, va_list args, int length)
-{
+static void scan(const char *fmt, va_list args, int length) {
 	int state = 0;
-	while (*fmt)
-	{
-		if (state == 0)
-		{
+	while (*fmt) {
+		if (state == 0) {
 			if (*fmt == '%')
-			{
 				state = 1;
-			}
 			else
-			{
 				putChar(*fmt);
-			}
-		}
-		else if (state == 1)
-		{
-			switch (*fmt)
-			{
-			case 'c':
-			{
-				*(va_arg(args, char *)) = getChar();
-				break;
-			}
-			case 's':
-			{
-
-				sys_read(STDIN, va_arg(args, char *), length);
-				break;
-			}
-			case 'i':
-			case 'd':
-			case 'o':
-			case 'x':
-			case 'X':
-			case 'p':
-			{
-				//warning type
-				sys_read(STDIN, (char *) va_arg(args, int *), length); 
-				break;
-			}
+		} else if (state == 1) {
+			switch (*fmt) {
+				case 'c':
+				{
+					*(va_arg(args, char *)) = getChar();
+					break;
+				}
+				case 's':
+				{
+					sys_read(STDIN, va_arg(args, char *), length);
+					break;
+				}
+				case 'i':
+				case 'd':
+				case 'o':
+				case 'x':
+				case 'X':
+				case 'p':
+				{
+					sys_read(STDIN, (char *) va_arg(args, int *), length); 
+					break;
+				}
 			}
 			state = 0;
 		}
@@ -390,8 +333,7 @@ static void scan(const char *fmt, va_list args, int length)
  * @param ...
  * @return int
  */
-void scanf(int lenght, const char *fmt, ...)
-{
+void scanf(int lenght, const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	scan(fmt, args, lenght);
@@ -402,7 +344,7 @@ void clear() {
 	sys_clearScreen();
 }
 
-int getTimedChar(){
+int getTimedChar() {
     char c[2] = {1, 0};
     sys_timedRead(0, (char *)&c, 2, 1);
     return c[0];
@@ -420,27 +362,27 @@ long drawRectangle(int x, int y, int width, int height, Color color) {
     return sys_drawRectangle(x, y, width, height, color);
 }
 
+/**
+   * @brief Function that halts for a given amount of ticks.
+*/
 void shortSleep(int ticks) {
     sys_wait(ticks);
 }
 
 
-void printBase(uint64_t value, uint32_t base)
-{
+void printBase(uint64_t value, uint32_t base) {
     uint8_t buf[BUFF_SIZE] = {0};
     uint8_t * buffer = buf;
     uintToBase(value, buffer, base);
     sys_write(STDOUT, (char *) buffer, WHITE);
 }
 
-uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
-{
+uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base) {
     uint8_t *p = buffer;
     uint8_t *p1, *p2;
     uint32_t digits = 0;
 
-    do
-    {
+    do {
         uint32_t remainder = value % base;
         *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
         digits++;
@@ -450,8 +392,7 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
 
     p1 = buffer;
     p2 = p - 1;
-    while (p1 < p2)
-    {
+    while (p1 < p2) {
         char tmp = *p1;
         *p1 = *p2;
         *p2 = tmp;

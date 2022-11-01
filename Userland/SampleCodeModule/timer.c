@@ -10,16 +10,14 @@ void getTimeFormat(char *buffer);
  *
  * @return char*
  */
-void getDateAndTime(char *buff)
-{
+void getDateAndTime(char *buff) {
     char *p = buff;
     getDateFormat(p);
     p[8] = ' ';
     getTimeFormat(&p[9]);
 }
 
-void getTimeFormat(char *buff)
-{
+void getTimeFormat(char *buff) {
     char *p = buff;
     long time = sys_time();
     int hours = ((time)&0xFF), minutes = ((time >> 8) & 0xFF), seconds = ((time >> 16) & 0xFF);
@@ -38,11 +36,10 @@ void getTimeFormat(char *buff)
     itoa(seconds, &p[6]);
     p[8] = 0;
 }
-void getDateFormat(char *buff)
-{
+
+void getDateFormat(char *buff) {
     char* p = buff;
 	long date = sys_date();
-
 	itoa((date & 0xFF), p);
 	p[2] = '/';
 	itoa((date >> 8) & 0xFF, &p[3]);

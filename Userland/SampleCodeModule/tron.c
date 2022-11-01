@@ -10,16 +10,19 @@
 #define DRAW "IT'S A DRAW!"
 
 // VER score counter
-//int player1Score = 0, player2Score = 0;
+int player1Score = 0, player2Score = 0;
 
 
 int mainTron() {
+    int reset = 0;
+
     do {
         clear();
+        drawScores();
         startGame();
         endInfo();
-    } while(getChar() != 'q');
-    // VER restart
+        reset = resetScore();
+    } while(reset != 'q');
     return 0;
 }
 
@@ -32,14 +35,11 @@ void startGame() {
     initializePlayers(&p1, &p2, &canvas);
     initializeCanvas(&canvas);
 
-    // VER cambios de color opcional y borde
     drawCanvas(&canvas, DEFAULT_CANVAS_COLOR);
     drawPlayers(&p1, &p2, &canvas);
 
     countdown();
-
     drawCanvas(&canvas, DEFAULT_CANVAS_COLOR);
-
     playTron(&p1, &p2, &canvas);
 }
 
@@ -82,9 +82,6 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
     int posYDiff = P1Y - P2Y;
     int posXDiff = P1X - P2X;
 
-
-    // VER BEEP cuando pierde
-
     if(!isValidPoint(P1X, P1Y, canvas)) {
         player1Lost = 1;
         p1->color = WHITE;
@@ -111,6 +108,7 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
         return gameTied(p1, p2, canvas);
     
     if (player1Lost) {
+        player2Score++;
         p1->color = WHITE;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER2_WON, canvas);
@@ -118,6 +116,7 @@ int validPositions(Player *p1, Player *p2, Canvas *canvas) {
     }
 
     if (player2Lost) {
+        player1Score++;
         p2->color = WHITE;
         drawPlayers(p1, p2, canvas);
         endGame(PLAYER1_WON, canvas);
@@ -135,7 +134,6 @@ int gameTied(Player *p1, Player *p2, Canvas *canvas) {
     return 0;
 }
 
-// VER SCALE
 void dimensions(Canvas *canvas) {
     canvas->width = getScreenWidth() / BOARD_SCALE;
     canvas->height = getScreenHeight() / BOARD_SCALE;
@@ -165,7 +163,6 @@ int getKey() {
     return getTimedChar();
 }
 
-// VER cartel con msj
 void pause() {
     clearInfo();
     char * pauseMsg = " Game paused, to continue press P";
@@ -179,10 +176,9 @@ void pause() {
     printStringAt(x, lineAt, pauseMsg, BLACK);
 
     int c = 0;
-    while(c != 'p'){
+    while(c != 'p')
         c = getChar();
-    }
-
+    
     drawRectangle(x, y - 10, recWidth, recHeight, BLACK);
     drawInfo();
 }
@@ -220,6 +216,36 @@ void endGame(char* string, Canvas *canvas) {
 
     drawRectangle(x, y, recWidth, recHeight, WHITE);
     printStringAt(x + 5, lineAt, string, BLACK);
+
+    drawScores();
+}
+
+void drawScores() {
+    char* scoreP2Msg = "Player 2: ";
+    char scoreP2[2];
+    int recWidth = 110;
+    int recHeight = 40;
+    int x = getScreenWidth()/2 - 263; 
+    int y = getScreenHeight() - 170 - recHeight/2;
+    int lineAt = y/FONT_SIZE + 1;
+
+    drawRectangle(x, y, recWidth, recHeight, GRAY);
+    printStringAt(x + 5, lineAt, scoreP2Msg, BLUE);
+    itoa(player2Score, (char *)scoreP2);
+    printStringAt(x + 85, lineAt, scoreP2, WHITE);
+
+    char* scoreP1Msg = "Player 1: ";
+    char scoreP1[2];
+    recWidth = 110;
+    recHeight = 40;
+    x = getScreenWidth()/2 + 149; 
+    y = getScreenHeight() - 170 - recHeight/2;
+    lineAt = y/FONT_SIZE + 1;
+
+    drawRectangle(x, y, recWidth, recHeight, GRAY);
+    printStringAt(x + 5, lineAt, scoreP1Msg, RED);
+    itoa(player1Score, (char *)scoreP1);
+    printStringAt(x + 85, lineAt, scoreP1, WHITE);
 }
 
 void endInfo() {
@@ -242,13 +268,17 @@ void endInfo() {
 
     drawRectangle(x, y - 10, recWidth, recHeight, GRAY);
     printStringAt(x, lineAt, quitMsg, WHITE);
+
+    char * resetMsg = "  To reset scores press N";
+    recWidth = 220;
+    x = getScreenWidth()/2 - recWidth/2; 
+    y = FONT_SIZE*2;
+    lineAt = y/FONT_SIZE;
+
+    drawRectangle(x, y - 10, recWidth, recHeight, GRAY);
+    printStringAt(x, lineAt, resetMsg, WHITE);
 }
 
-/**
- * @brief Funcion que modifica las coordenadas de un jugador en una posicion.
- *
- * @param player jugador.
- */
 void tick(Player *player) {
     switch(player->dir) {
         case UP:
@@ -266,24 +296,12 @@ void tick(Player *player) {
     }
 }
 
-/**
- * @brief Funcion que inicializa una matriz con ceros dados ancho y altura.
- *
- * @param canvas estructura con la matriz a inicializar.
- */
 void initializeCanvas(Canvas *canvas) {
     for(int i=0; i<canvas->width; i++)
         for(int j=0; j<canvas->height; j++)
             canvas->board[i][j] = 0;
 }
 
-/**
- * @brief Funcion que define los colores, coordenadas y direcciones iniciales de los jugadores.
- *
- * @param p1 jugador 1.
- * @param p2 jugador 2.
- * @param canvas estructura con el tamanio del board
- */
 void initializePlayers(Player *p1, Player *p2, Canvas *canvas) {
     p1->color = RED;
     p1->x = (int) canvas->width*0.8;
@@ -296,14 +314,6 @@ void initializePlayers(Player *p1, Player *p2, Canvas *canvas) {
     p2->dir = RIGHT;
 }
 
-/**
- * @brief Funcion que valida si un punto esta incluido en width*height.
- *
- * @param x coordenada x del punto.
- * @param y coordenada y del punto.
- * @param canvas estructura con las medidas del board
- * @return 1 si esta incluido, 0 si no.
- */
 int isValidPoint(int x, int y, Canvas *canvas) {
     if(x >= canvas->width || y >= canvas->height || x < 0 || y < 0)
         return 0;
@@ -311,27 +321,17 @@ int isValidPoint(int x, int y, Canvas *canvas) {
     return 1;
 }
 
-/**
- * @brief Funcion que analiza una nueva tecla apretada y modifica, o no, la direccion a la que apunta un jugador.
- *		Tambien permite salir del juego.
- *
- * @param p1 jugador 1.
- * @param p2 jugador 2.
- * @param oldKey ultima tecla apretada.
- * @param newKey nueva tecla apretada.
- */
 int input(Player *p1, Player *p2, int *oldKey, int newKey) {
     int p1Key = 0;
 
     if (newKey == 'r')
         return 1;
-    
 
     if (newKey == 'p')
         pause();
     
-
     if (*oldKey != newKey){
+        
         *oldKey = newKey;
 
         switch(p1->dir) {
@@ -377,51 +377,67 @@ int input(Player *p1, Player *p2, int *oldKey, int newKey) {
     return 0;
 }
 
-
 void countdown() {
 
+    char * titleMsg = " TRON - LIGHT CYCLES";
     char * msg1 = " 3 ";
     char * msg2 = " 2 ";
     char * msg3 = " 1 ";
     char * msg4 = " GO! ";
 
+    int recWidth = 165;
     int squareSize = 35;
+    int xMsg = getScreenWidth()/2 - recWidth/2; 
+    int yMsg = FONT_SIZE*8;
+    int lineAtMsg = yMsg/FONT_SIZE;
+
     int x = getScreenWidth()/2 - squareSize/2;
     int y = getScreenHeight()/2 - squareSize/2 - 10;
     int lineAt = y/FONT_SIZE + 1; 
+
+    drawRectangle(xMsg, yMsg - 10, recWidth, squareSize, WHITE);
+    printStringAt(xMsg, lineAtMsg, titleMsg, RED);
 
     drawRectangle(x, y, squareSize, squareSize, WHITE);
     printStringAt(x + 5, lineAt, msg1, BLACK);
     shortSleep(500);
 
-    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
+    printStringAt(xMsg, lineAtMsg, titleMsg, BLUE);
 
+    shortSleep(500);
+    printStringAt(xMsg, lineAtMsg, titleMsg, RED);
+
+    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
     drawRectangle(x, y, squareSize, squareSize, WHITE);
     printStringAt(x + 5, lineAt, msg2, BLACK);
     shortSleep(500);
 
-    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
+    printStringAt(xMsg, lineAtMsg, titleMsg, BLUE);
 
+    shortSleep(500);
+    printStringAt(xMsg, lineAtMsg, titleMsg, RED);
+    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
     drawRectangle(x, y, squareSize, squareSize, WHITE);
     printStringAt(x + 5, lineAt, msg3, BLACK);
     shortSleep(500);
 
-    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
+    printStringAt(xMsg, lineAtMsg, titleMsg, BLUE);
 
+    shortSleep(500);
+    printStringAt(xMsg, lineAtMsg, titleMsg, BLUE);
+    drawRectangle(x, y, squareSize, squareSize, DEFAULT_CANVAS_COLOR);
     drawRectangle(x, y, squareSize, squareSize, WHITE);
     printStringAt(x, lineAt, msg4, BLACK);
     shortSleep(500);
 }
 
-/*
+int resetScore() {
+    int resetScore = getChar();
+    if(resetScore == 'n'){
+        player1Score = 0;
+        player2Score = 0;
+        drawScores();
+    }
 
-void drawMenu() {
-    //VER QUE PONER
-    int center_x = game->panel->width/2;
-
-    window_draw_string(center_x - 14, 2, "TRON - LIGHT CYCLES!");
-    window_draw_string(center_x - 14, 6, "Press any key to start"); 
-    window_draw_string(center_x - 7, 10, "Press 'q' to quit"); 
+    return resetScore;
 }
-
-*/

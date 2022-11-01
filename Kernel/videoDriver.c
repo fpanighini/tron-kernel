@@ -52,6 +52,7 @@ struct vbe_mode_info_structure {
 
 
 static uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
+void printBase(uint64_t value, uint32_t base);
 
 static uint8_t buffer[64] = {'0'};
 
@@ -153,15 +154,6 @@ void clearScreen() {
     screenData->y_char = 0x00;
     posX = 0;
     colorScreen(BLACK);
-}
-
-void printHex(uint64_t value) {
-    printBase(value, (uint32_t)16);
-    printString((uint8_t *) "h", WHITE);
-}
-
-void printDec(uint64_t value) {
-    printBase(value, (uint32_t)10);
 }
 
 void printBin(uint64_t value) {
