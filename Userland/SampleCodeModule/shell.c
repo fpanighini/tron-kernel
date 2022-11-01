@@ -275,6 +275,7 @@ void testInvalidOpException(){
 void printInforeg(){
     long array[REGISTER_NUM] = {0};
     long * arr = (long *) &array;
+    sys_inforeg(arr);
     char * registerNames[] = REGISTER_NAMES;
     for (int i = 0 ; i < REGISTER_NUM; i++){
         printf("%s : ",registerNames[i]);
