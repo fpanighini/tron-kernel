@@ -185,7 +185,7 @@ void clearScreen()
 void printHex(uint64_t value)
 {
     printBase(value, (uint32_t)16);
-    printString("h", WHITE);
+    printString((uint8_t *) "h", WHITE);
 }
 
 void printDec(uint64_t value)
@@ -195,7 +195,7 @@ void printDec(uint64_t value)
 void printBin(uint64_t value)
 {
     printBase(value, (uint32_t)2);
-    printString("b",WHITE);
+    printString((uint8_t *) "b",WHITE);
 }
 
 void printBase(uint64_t value, uint32_t base)

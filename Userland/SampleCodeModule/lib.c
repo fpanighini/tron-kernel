@@ -373,7 +373,7 @@ static void scan(const char *fmt, va_list args, int length)
 			case 'p':
 			{
 				//warning type
-				sys_read(STDIN, va_arg(args, int *), length); 
+				sys_read(STDIN, (char *) va_arg(args, int *), length); 
 				break;
 			}
 			}
@@ -430,7 +430,7 @@ void printBase(uint64_t value, uint32_t base)
     uint8_t buf[BUFF_SIZE] = {0};
     uint8_t * buffer = buf;
     uintToBase(value, buffer, base);
-    sys_write(STDOUT, buffer, WHITE);
+    sys_write(STDOUT, (char *) buffer, WHITE);
 }
 
 uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)

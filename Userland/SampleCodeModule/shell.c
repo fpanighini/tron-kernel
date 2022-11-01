@@ -25,12 +25,12 @@
 #define INFOREG_COMMAND "inforeg"
 #define PRINTMEM_COMMAND "printmem"
 
-#define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the commmand prompt and cursor characters)
+#define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
 The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
 \
-help              - Displays the avilable commands the shell can interpret and a short description of them\n\
-clear             - Clears sceen allowing more text to be written\n\
+help              - Displays the available commands the shell can interpret and a short description of them\n\
+clear             - Clears screen allowing more text to be written\n\
 exit              - Exit the shell returning to kernel space. This command will shut down the program\n\
 tron              - Launches tron game\n\
 div-zero          - Calls function that showcases the Divide By Zero Exception\n\
@@ -55,8 +55,8 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 #define PRINT_BYTES 32
 
 #define COMMAND_NOT_FOUND_MESSAGE "Command not found"
-#define INCREASE_FONT_FAIL "Font upper size limit reached"
-#define DECREASE_FONT_FAIL "Font lower size limit reached"
+#define INCREASE_FONT_FAIL "Maximum font size reached"
+#define DECREASE_FONT_FAIL "Minimum font size reached"
 
 #define NEWLINE "\n"
 
@@ -66,8 +66,8 @@ int readBuffer(char *buf);
 void printLine(char *str);
 void helpCommand(void);
 void printNewline(void);
-void testDivideByZeroExcpetion();
 void testInvalidOpException();
+void testDivideByZeroException();
 
 void printInforeg();
 void printErrorMessage(char * program, char * errorMessage);
@@ -131,26 +131,26 @@ void printmem(char * buf){
         i++;
     }
     if (buf[i] == 0){
-        printErrorMessage(PRINTMEM_COMMAND, "No arguemnt received");
+        printErrorMessage(PRINTMEM_COMMAND, "No argument received");
         printNewline();
         return ;
     }
     if (buf[i] == '0'){
         i++;
     } else {
-        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
         return ;
     }
     if (buf[i] == 'x'){
         i++;
     } else {
-        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
         return ;
     }
     if (buf[i] == 0){
-        printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+        printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
         return ;
     }
@@ -161,7 +161,7 @@ void printmem(char * buf){
         }else if (buf[i] >= '0' && buf[i] <= '9'){
             accum = 16*accum + buf[i] - '0';
         } else {
-            printErrorMessage(PRINTMEM_COMMAND, "Arguemnt must be a hexa value");
+            printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
             printNewline();
             return ;
         }
@@ -250,7 +250,7 @@ int readBuffer(char *buf)
         printInforeg();
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO)){
-        testDivideByZeroExcpetion();
+        testDivideByZeroException();
         return 0;
     }
     else if (!strcmp(buf, INVALID_OP)){
@@ -283,7 +283,7 @@ void printNewline(){
     printString(NEWLINE,WHITE);
 }
 
-void testDivideByZeroExcpetion(){
+void testDivideByZeroException(){
     divideZero();
 }
 
@@ -294,7 +294,7 @@ void testInvalidOpException(){
 
 void printInforeg(){
     long array[REGISTER_NUM] = {0};
-    long * arr = &array;
+    long * arr = (long *) &array;
     int check = sys_inforeg(arr);
     char * registerNames[] = REGISTER_NAMES;
     if (check){

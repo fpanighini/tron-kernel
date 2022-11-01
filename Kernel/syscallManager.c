@@ -3,6 +3,8 @@
 #define WAIT_TIME 10
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos);
+extern void outb(int par1, uint8_t par2);
+extern uint8_t inb(uint8_t par1);
 void playSound(uint32_t nFrequence);
 void noSound();
 void beep1(uint32_t nFrequence);
