@@ -92,7 +92,7 @@ SECTION .text
 
     ; rsp
     mov rax, rsp
-    add rax, 160
+    add rax, 120
     mov [registers+8*8], rax
 
     mov [registers+9*8], r8

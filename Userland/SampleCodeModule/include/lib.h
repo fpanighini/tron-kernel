@@ -27,6 +27,8 @@ void putStringColor(char *str, Color c);
 void puts(char *fmt);
 void scanf(int length, const char *fmt, ...);
 void printStringAt(int x, int y, char *str, Color c);
+void printString(char *str, Color c);
+void printError(char * str);
 void clear();
 int getTimedChar();
 long getScreenWidth();

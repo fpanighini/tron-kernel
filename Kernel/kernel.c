@@ -50,9 +50,7 @@ int main() {
     load_idt();
     clearScreen();
 
-    int a = 0;
-
-    a = ((EntryPoint) sampleCodeModuleAddress)();
+    ((EntryPoint) sampleCodeModuleAddress)();
 
     return 0;
 }
