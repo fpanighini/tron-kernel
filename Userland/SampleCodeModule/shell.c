@@ -157,7 +157,14 @@ void printmem(char * buf) {
         }
     }
     long long * pointer = (long long *) accum;
-    for (int j = 0 ; j < PRINT_BYTES && accum + j < 0xFFFFFFFFFFFFFFFF; j++){
+    if (0xFFFFFFFF - accum <= 32){
+        printErrorMessage(PRINTMEM_COMMAND, "Number too big");
+        printNewline();
+        return ;
+    }
+    for (long long j = 0 ; j < PRINT_BYTES && accum + j + 2 < 0xFFFFFFFFFFFFFFFF; j++){
+        printBase((int) j,10);
+        printf("d\n");
         printBase(pointer[j], 2);
         printf("b\n");
     }
