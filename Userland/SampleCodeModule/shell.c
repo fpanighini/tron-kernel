@@ -158,7 +158,7 @@ void printmem(char * buf) {
     }
     long long * pointer = (long long *) accum;
     if (0xFFFFFFFF - accum <= 32){
-        printErrorMessage(PRINTMEM_COMMAND, "Number too big");
+        printErrorMessage(PRINTMEM_COMMAND, "Input number is too big, limit is 0xFFFFFFDE");
         printNewline();
         return ;
     }
