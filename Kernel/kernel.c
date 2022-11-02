@@ -15,8 +15,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void *const sampleCodeModuleAddress = (void *)0x400000;
-static void *const sampleDataModuleAddress = (void *)0x500000;
+static void *const uCodeModuleAddress = (void *)0x400000;
+static void *const uDataModuleAddress = (void *)0x500000;
 
 
 typedef int (*EntryPoint)();
@@ -34,8 +34,8 @@ void *getStackBase() {
 void *initializeKernelBinary() {
 
     void *moduleAddresses[] = {
-        sampleCodeModuleAddress,
-        sampleDataModuleAddress
+        uCodeModuleAddress,
+        uDataModuleAddress
         };
 
     loadModules(&endOfKernelBinary, moduleAddresses);
@@ -50,7 +50,7 @@ int main() {
     load_idt();
     clearScreen();
 
-    ((EntryPoint) sampleCodeModuleAddress)();
+    ((EntryPoint) uCodeModuleAddress)();
 
     return 0;
 }
