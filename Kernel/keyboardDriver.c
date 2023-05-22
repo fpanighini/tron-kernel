@@ -38,6 +38,16 @@ void saveKey(uint8_t c){
         ctrl = 0;
         return;
     }
+    if (shift){
+        if (c == 0x2B) {
+            buf.keys[buf.count++] = '|';
+            return ;
+        }
+        if (c == 0x8) {
+            buf.keys[buf.count++] = '&';
+            return ;
+        }
+    }
     if (c > 128)
         return;
     buf.keys[buf.count++] = getKey(c) + ('A' - 'a') * shift;
