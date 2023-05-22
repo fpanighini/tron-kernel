@@ -34,58 +34,6 @@ void *getStackBase() {
 }
 
 
-void fun1(uint64_t * num1, uint64_t * num2){
-    *num2 = *num1 + 10;
-}
-
-void fun2(char * str){
-    str[4] = ' ';
-    str[5] = 'c';
-    str[6] = 'o';
-    str[7] = 'm';
-    str[8] = 'o';
-    str[9] = 0;
-}
-
-void testMemoryManager(){
-    uint64_t * num1 = sys_malloc(sizeof(uint64_t));
-    uint64_t * num2 = sys_malloc(sizeof(uint64_t));
-    *num1 = 4;
-
-    *num2 = 7;
-
-    printBase(*num1, 10);
-    printBase(*num2, 10);
-
-
-    printBase(*num1, 10);
-    printBase(*num2, 10);
-
-
-    fun1(num1, num2);
-
-
-    char * str = sys_malloc(sizeof(char) * 10);
-
-    str[0] = 'H';
-    str[1] = 'o';
-    str[2] = 'l';
-    str[3] = 'a';
-    str[4] = 0;
-
-    printString(str, RED);
-
-    fun2(str);
-
-    printString(str, BLUE);
-    printString(str, BLUE);
-    printString(str, BLUE);
-    printString(str, BLUE);
-    return ;
-
-}
-
-
 void *initializeKernelBinary() {
 
     void *moduleAddresses[] = {
@@ -97,13 +45,9 @@ void *initializeKernelBinary() {
 
     void * startOfMem = (void *)(((uint8_t *) endOfModules + PageSize - (uint64_t) endOfModules % PageSize));
 
-    //printBase((uint64_t) startOfMem, 16);
-
     MemoryManagerADT memoryManager = createMemoryManager(startOfMem, startOfMem + sizeof(MemoryManagerADT));
 
-
     clearBSS(&bss, &endOfKernel - &bss);
-
 
     return getStackBase();
 }
@@ -112,11 +56,8 @@ void *initializeKernelBinary() {
 int main() {
     load_idt();
     clearScreen();
-    // testMemoryManager();
 
     ((EntryPoint) uCodeModuleAddress)();
-
-
 
     return 0;
 }
