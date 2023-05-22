@@ -413,3 +413,7 @@ void printString(char * str, Color color){
 void beep(int frequency) {
 	sys_beep(frequency);
 }
+
+void * malloc(unsigned int memSize) {
+    return sys_malloc(memSize);
+}

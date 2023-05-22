@@ -32,5 +32,6 @@ long drawRectangle(int x, int y, int width, int height, Color color);
 void shortSleep(int ticks);
 void printBase(uint64_t value, uint32_t base);
 void beep(int frequency);
+void * malloc(unsigned int memSize);
 
 #endif

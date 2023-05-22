@@ -39,6 +39,7 @@ EXTERN sys_drawRectangle
 EXTERN sys_changeFontSize
 EXTERN sys_inforeg
 EXTERN sys_beep
+EXTERN sys_malloc
 
 
 SECTION .text
@@ -252,6 +253,9 @@ syscallINTHandler:
 
     cmp rax, 0x0D
     je .beep
+    
+    cmp rax, 0x0E
+    je .malloc
 
     jmp .end
 
@@ -309,6 +313,10 @@ syscallINTHandler:
 
 .beep:
         call sys_beep
+        jmp .end
+
+.malloc:
+        call sys_malloc
         jmp .end
 
 .end:

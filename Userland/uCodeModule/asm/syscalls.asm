@@ -12,6 +12,7 @@ GLOBAL sys_drawRectangle
 GLOBAL sys_changeFontSize
 GLOBAL sys_inforeg
 GLOBAL sys_beep
+GLOBAL sys_malloc
 
 ; syscall 0x00
 sys_write:
@@ -102,4 +103,8 @@ sys_beep:
     int 0x80
     ret
 
-
+; syscall 0x0E
+sys_malloc:
+    mov rax, 0x0E
+    int 0x80
+    ret
