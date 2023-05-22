@@ -186,7 +186,9 @@ _irq01Handler:
 
     cmp al, 0b10011101
     jne .end
+    popState
     snapshot
+    pushState
 
 .end:
     mov rdi, rax

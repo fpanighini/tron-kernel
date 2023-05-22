@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <keyboardDriver.h>
 #include <interrupts.h>
+#include <videoDriver.h>
 
 #define BUF_SIZE 55
 #define CTRL 31
@@ -15,11 +16,31 @@ typedef struct buf {
 } bufT;
 
 bufT buf = {{0},0};
+uint8_t shift = 0;
+uint8_t ctrl = 0;
 
 void saveKey(uint8_t c){
+    // clearScreen();
+    // printBase(c, 16);
+    if (c == 0x2A || c == 0x36) {
+        shift = 1;
+        return ;
+    }
+    if (c == 0xAA || c == 0xB6) {
+        shift = 0;
+        return ;
+    }
+    if (c == 0x1D) {
+        ctrl = 1;
+        return;
+    }
+    if (c == 0) {
+        ctrl = 0;
+        return;
+    }
     if (c > 128)
         return;
-    buf.keys[buf.count++] = getKey(c);
+    buf.keys[buf.count++] = getKey(c) + ('A' - 'a') * shift;
 }
 
 uint32_t readBuf(char * str, uint32_t count){
