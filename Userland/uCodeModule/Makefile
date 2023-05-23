@@ -9,6 +9,7 @@ all: $(MODULE)
 
 $(MODULE): $(SOURCES) $(OBJECTS_ASM)
 	$(GCC) $(GCCFLAGS) -I./include -T uCodeModule.ld _loader.c $(OBJECTS_ASM) $(SOURCES) -o ../$(MODULE)
+	$(GCC) $(GCCFLAGS) -I./include -T uCodeModule.ld -Wl,--oformat=elf64-x86-64 _loader.c $(OBJECTS_ASM) $(SOURCES) -o ../0000-sampleCodeModule.elf
 
 object/%.asm.o : asm/%.asm
 	mkdir -p object
