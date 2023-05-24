@@ -4,8 +4,10 @@
 #include <moduleLoader.h>
 #include <videoDriver.h>
 #include <idtLoader.h>
-#include <MemoryManager.h>
+#include <memoryManager.h>
 #include <syscallManager.h>
+
+#define HEAP_SIZE 0x100000
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -45,7 +47,7 @@ void *initializeKernelBinary() {
 
     void * startOfMem = (void *)(((uint8_t *) endOfModules + PageSize - (uint64_t) endOfModules % PageSize));
 
-    MemoryManagerADT memoryManager = createMemoryManager(startOfMem, startOfMem + sizeof(MemoryManagerADT));
+    initMemoryManager(startOfMem, HEAP_SIZE);
 
     clearBSS(&bss, &endOfKernel - &bss);
 

@@ -6,6 +6,7 @@
 #include <videoDriver.h>
 #include <keyboardDriver.h>
 #include <interrupts.h>
+#include <memoryManager.h>
 
 #define STDIN 0
 #define STDERR 1
