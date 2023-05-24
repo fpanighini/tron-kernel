@@ -93,6 +93,7 @@ Image/x64BareBonesImage.qcow2
 Image/x64BareBonesImage.vmdk
 Image/packedKernel.bin
 *.bin
+*.elf
 Userland/*.bin
 Kernel/*.bin
 
