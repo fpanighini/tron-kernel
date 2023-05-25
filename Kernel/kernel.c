@@ -22,6 +22,8 @@ static const uint64_t PageSize = 0x1000;
 static void *const uCodeModuleAddress = (void *)0x400000;
 static void *const uDataModuleAddress = (void *)0x500000;
 
+static void *const idleCodeModule = (void *)0x1400000;
+
 
 typedef int (*EntryPoint)();
 
@@ -40,7 +42,8 @@ void *initializeKernelBinary() {
 
     void *moduleAddresses[] = {
         uCodeModuleAddress,
-        uDataModuleAddress
+        uDataModuleAddress,
+        idleCodeModule
         };
 
     void * endOfModules = loadModules(&endOfKernelBinary, moduleAddresses);
@@ -59,7 +62,7 @@ int main() {
     load_idt();
     clearScreen();
 
-    ((EntryPoint) uCodeModuleAddress)();
+    ((EntryPoint) idleCodeModule)();
 
     return 0;
 }
