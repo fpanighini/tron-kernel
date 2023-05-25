@@ -2,7 +2,10 @@ include Makefile.inc
 
 U_DATA=0001-uDataModule.bin
 
-all: uCodeModule uDataModule idleCodeModule
+all: lib uCodeModule uDataModule idleCodeModule
+
+lib:
+	cd lib; make
 
 uCodeModule:
 	cd uCodeModule; make
@@ -16,6 +19,7 @@ uDataModule:
 clean:
 	cd uCodeModule; make clean
 	cd idleCodeModule; make clean
+	cd lib; make clean
 	rm -rf *.bin
 	rm -rf *.elf
 

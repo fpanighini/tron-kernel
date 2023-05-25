@@ -5,11 +5,29 @@ SOURCES=$(wildcard [^_]*.c)
 SOURCES_ASM=$(wildcard asm/*.asm)
 OBJECTS_ASM=$(SOURCES_ASM:asm/%.asm=object/%.asm.o)
 
+OBJECTS=$(SOURCES:.c=.o)
+OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
+LOADERSRC=_loader.c
+
+LIB_SOURCES=$(wildcard ../lib/*.c)
+LIB_ASM=$(wildcard ../lib/asm/*.o)
+
+LOADEROBJECT=$(LOADERSRC:.c=.o)
+
 all: $(MODULE)
 
 $(MODULE): $(SOURCES) $(OBJECTS_ASM)
-	$(GCC) $(GCCFLAGS) -I./include -T uCodeModule.ld _loader.c $(OBJECTS_ASM) $(SOURCES) -o ../$(MODULE)
-	$(GCC) $(GCCFLAGS) -I./include -T uCodeModule.ld -Wl,--oformat=elf64-x86-64 _loader.c $(OBJECTS_ASM) $(SOURCES) -o ../0000-sampleCodeModule.elf
+	$(GCC) $(GCCFLAGS) -I./include -I../lib/include -T uCodeModule.ld _loader.c $(OBJECTS_ASM) $(SOURCES) $(LIB_ASM) $(LIB_SOURCES) -o ../$(MODULE)
+	$(GCC) $(GCCFLAGS) -I./include -I../lib/include -T uCodeModule.ld -Wl,--oformat=elf64-x86-64 _loader.c $(OBJECTS_ASM) $(SOURCES) $(LIB_ASM) $(LIB_SOURCES) -o ../0000-uCodeModule.elf
+
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -I./include -I../lib/include -c $< -o $@
+
+%.o : %.asm
+	$(ASM) $(ASMFLAGS) $< -o $@
+
+$(LOADEROBJECT):
+	$(GCC) $(GCCFLAGS) $(LOADERSRC) -c -o $(LOADEROBJECT)
 
 object/%.asm.o : asm/%.asm
 	mkdir -p object

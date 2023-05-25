@@ -62,7 +62,7 @@ int main() {
     load_idt();
     clearScreen();
 
-    ((EntryPoint) idleCodeModule)();
+    ((EntryPoint) uCodeModuleAddress)();
 
     return 0;
 }
