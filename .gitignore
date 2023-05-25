@@ -96,6 +96,8 @@ Image/packedKernel.bin
 *.elf
 Userland/*.bin
 Kernel/*.bin
+Userland/*.elf
+Kernel/*.elf
 
 object/
 
