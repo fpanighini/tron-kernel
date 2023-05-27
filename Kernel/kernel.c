@@ -6,6 +6,8 @@
 #include <idtLoader.h>
 #include <memoryManager.h>
 #include <syscallManager.h>
+#include <codeModules.h>
+#include <scheduler.h>
 
 #define HEAP_SIZE 0x100000
 
@@ -19,10 +21,6 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void *const uCodeModuleAddress = (void *)0x400000;
-static void *const uDataModuleAddress = (void *)0x500000;
-
-static void *const idleCodeModule = (void *)0x1400000;
 
 
 typedef int (*EntryPoint)();
@@ -48,11 +46,14 @@ void *initializeKernelBinary() {
 
     void * endOfModules = loadModules(&endOfKernelBinary, moduleAddresses);
 
-    void * startOfMem = (void *)(((uint8_t *) endOfModules + PageSize - (uint64_t) endOfModules % PageSize));
 
-    initMemoryManager(startOfMem, HEAP_SIZE);
 
     clearBSS(&bss, &endOfKernel - &bss);
+
+
+    void * startOfMem = (void *)(((uint8_t *) endOfModules + PageSize - (uint64_t) endOfModules % PageSize));
+    initMemoryManager(startOfMem, HEAP_SIZE);
+    init_scheduler();
 
     return getStackBase();
 }
@@ -61,8 +62,9 @@ void *initializeKernelBinary() {
 int main() {
     load_idt();
     clearScreen();
+    // scheduler();
 
-    ((EntryPoint) uCodeModuleAddress)();
+    // ((EntryPoint) uCodeModuleAddress)();
 
     return 0;
 }

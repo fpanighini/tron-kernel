@@ -5,7 +5,7 @@
 
 #define STANDARD_WAIT 5
 
-void timerHandler();
+void timer_handler();
 int ticks_elapsed();
 int seconds_elapsed();
 uint64_t getTime();

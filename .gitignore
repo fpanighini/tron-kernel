@@ -85,6 +85,7 @@ fabric.properties
 
 .vscode
 .bash_history
+.gdb_history
 
 runDocker.sh
 

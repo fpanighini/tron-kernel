@@ -7,6 +7,7 @@ GLOBAL getMonth
 GLOBAL getYear
 GLOBAL inb
 GLOBAL outb
+GLOBAL force_timer_tick
 
 section .text
 	
@@ -144,4 +145,8 @@ outb:
     out dx, al
     mov rsp, rbp
     pop rbp
+    ret
+
+force_timer_tick:
+    int 20h
     ret
