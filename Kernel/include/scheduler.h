@@ -16,5 +16,7 @@ void killCurrentProcess(void);
 
 void init_scheduler();
 
+void add_process(char * name, void * program);
+void idle2(void);
 
 #endif

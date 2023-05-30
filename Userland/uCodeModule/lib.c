@@ -417,3 +417,7 @@ void beep(int frequency) {
 void * malloc(unsigned int memSize) {
     return sys_malloc(memSize);
 }
+
+void exec(char * name, void * program) {
+    sys_exec(name, program);
+}

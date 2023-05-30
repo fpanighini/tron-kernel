@@ -96,6 +96,9 @@ Image/packedKernel.bin
 *.elf
 Userland/*.bin
 Kernel/*.bin
+.gdbinit
+.gdbinit
+.gdb_history
 
 object/
 

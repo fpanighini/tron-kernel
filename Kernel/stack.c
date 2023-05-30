@@ -20,7 +20,7 @@ StackFrame createStack(void * entryPoint, void * stackBase) {
     stackFrame.rcx = 0x0;
     stackFrame.rbx = 0x0;
     stackFrame.rax = 0x0;
-    stackFrame.ip = (uint64_t) entryPoint;
+    stackFrame.ip = entryPoint;
     stackFrame.cs = 0x8;
     stackFrame.eflags = 0x202;
     stackFrame.sp = (uint64_t) stackBase;

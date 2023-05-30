@@ -41,6 +41,7 @@ EXTERN sys_changeFontSize
 EXTERN sys_inforeg
 EXTERN sys_beep
 EXTERN sys_malloc
+EXTERN sys_exec
 
 
 SECTION .text
@@ -263,6 +264,9 @@ syscallINTHandler:
     cmp rax, 0x0E
     je .malloc
 
+    cmp rax, 0x0F
+    je .exec
+
     jmp .end
 
 .write:
@@ -323,6 +327,10 @@ syscallINTHandler:
 
 .malloc:
         call sys_malloc
+        jmp .end
+
+.exec
+        call sys_exec
         jmp .end
 
 .end:

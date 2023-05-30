@@ -8,8 +8,13 @@ void shell(void);
 
 char *v = (char *)0xB8000 + 79 * 2;
 
+void start_shell(void){
+    shell();
+}
+
 int main() {
     sys_clearScreen();
-    shell();
+    exec("shell", &start_shell);
+
     return 0;
 }

@@ -62,6 +62,8 @@ void *initializeKernelBinary() {
 int main() {
     load_idt();
     clearScreen();
+    // add_process("IDLE2", &idle2);
+
     // scheduler();
 
     ((EntryPoint) uCodeModuleAddress)();
