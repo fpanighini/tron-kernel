@@ -10,6 +10,13 @@
 #include <codeModules.h>
 #include <videoDriver.h>
 
+typedef struct Node {
+    ProcessP proc;
+    struct Node * next;
+} Node;
+
+typedef Node * NodeP;
+
 uint64_t scheduler(uint64_t sp);
 
 void killCurrentProcess(void);

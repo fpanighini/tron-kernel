@@ -1,10 +1,19 @@
 #include "include/timer.h"
 #include "include/videoDriver.h"
 #include <scheduler.h>
+#include <stdint.h>
+
+
+void add_node(ProcessP process);
+NodeP find_next_ready(NodeP current);
+
+NodeP first = NULL;
+NodeP currentNode = NULL;
+
+
 
 ProcessP processes[2];
 uint64_t counter = 0;
-uint64_t current = 0;
 
 extern void force_timer_tick();
 
@@ -15,34 +24,61 @@ uint64_t scheduler(uint64_t sp){
         return sp;
     }
     uint64_t te = ticks_elapsed();
-    processes[current]->sp = sp;
-    current = ((te % 10) == 0) ? 0 : 1;
-    return processes[current]->sp;
+    currentNode->proc->sp = sp;
+    if((te % 1) == 0){
+        currentNode->proc->state = currentNode->proc->state == BLOCKED ? BLOCKED : READY;
+        currentNode = find_next_ready(currentNode);
+        currentNode->proc->state = RUNNING;
+    }
+    return currentNode->proc->sp;
 
 }
+
+NodeP find_next_ready(NodeP current){
+    if (current->next->proc->state == READY || current->next->proc->state == NEW){
+        return current->next;
+    }
+    return find_next_ready(current->next);
+}
+
 
 void idle(){
     while(1){
-        wait(1);
-        printString("IDLE", WHITE);
-    }
-}
-
-
-
-void idle2(){
-    while(1){
-        wait(1);
-        printString("ooooo", WHITE);
+        _hlt();
+        printString((uint8_t) "IDLE", WHITE);
     }
 }
 
 void init_scheduler(){
-    add_process("IDLE", &idle);
+    NodeP newNode = malloc(sizeof(Node));
+    if (newNode == NULL){
+    printString("MemError", RED);
+        return 0;
+    }
+    newNode->proc = newProcess("IDLE", &idle);
+    first = newNode;
+    newNode->next = first;
+    currentNode = first;
+    counter++;
+    currentNode->proc->state = READY;
+    // add_process("IDLE", &idle);
 }
 
 void add_process(char * name, void * program){
-    processes[counter++] = newProcess(name, program);
+    add_node(newProcess(name, program));
+    counter++;
+}
+
+
+void add_node(ProcessP process){
+    NodeP newNode = malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printString("MemError", RED);
+        return 0;
+    }
+    newNode->proc = process;
+    newNode->next = currentNode->next;
+    currentNode->next = newNode;
 }
 
 
