@@ -15,6 +15,10 @@ void start_shell(void){
 int main() {
     sys_clearScreen();
     exec("shell", &start_shell);
+    while(1){
+        // INIT PROCESS
+        shortSleep(1);
+    }
 
     return 0;
 }

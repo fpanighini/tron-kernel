@@ -1,3 +1,5 @@
+#include "include/scheduler.h"
+#include "include/videoDriver.h"
 #include <syscallManager.h>
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos);
@@ -171,5 +173,7 @@ void * sys_malloc(uint64_t memSize) {
 }
 
 void * sys_exec(char * name, void * program){
-
+    add_process(name, program);
 }
+
+

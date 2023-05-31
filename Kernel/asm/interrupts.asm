@@ -165,7 +165,7 @@ picSlaveMask:
 _irq00Handler:
     pushState
     mov rdi, rsp
-    ; call timer_handler
+    call timer_handler
     call scheduler
     mov rsp, rax
     mov al, 20h

@@ -1,3 +1,4 @@
+#include "include/timer.h"
 #include "include/videoDriver.h"
 #include <scheduler.h>
 
@@ -10,32 +11,12 @@ extern void force_timer_tick();
 typedef int (*EntryPoint)();
 
 uint64_t scheduler(uint64_t sp){
-    timer_handler();
     if (counter == 1){
-        // processes[current]->sp = sp;
         return sp;
     }
-
-
     uint64_t te = ticks_elapsed();
-
-    //if (processes[current]->state == NEW) {
-    if (te == 1){
-        processes[current]->state = RUNNING;
-        // ((EntryPoint) processes[0]->entryPoint)();
-    } else {
-
-        processes[current]->sp = sp;
-        if (te % 3 == 0) {
-            current = 0;
-        } else {
-            current = 1;
-        }
-    }
-
-    // printString("TICK", WHITE);
-
-    // StackFrame * s = ((StackFrame *) processes[0]->stack);
+    processes[current]->sp = sp;
+    current = ((te % 10) == 0) ? 0 : 1;
     return processes[current]->sp;
 
 }
