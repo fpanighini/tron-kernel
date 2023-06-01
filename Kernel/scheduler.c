@@ -6,6 +6,7 @@
 
 void add_node(ProcessP process);
 NodeP find_next_ready(NodeP current);
+NodeP find_node(uint64_t pid);
 
 NodeP first = NULL;
 NodeP currentNode = NULL;
@@ -40,18 +41,19 @@ NodeP find_next_ready(NodeP current){
 
 void idle(){
     while(1){
-        _hlt();
-        printString((uint8_t) "IDLE", WHITE);
+        // _hlt();
+        printString((uint8_t *) "IDLE", WHITE);
     }
 }
 
 void init_scheduler(){
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL){
-    printString("MemError", RED);
-        return 0;
+    printString((uint8_t *) "MemError", RED);
+        return ;
     }
-    newNode->proc = newProcess("IDLE", &idle);
+    char * argv[] = {NULL};
+    newNode->proc = newProcess("IDLE", &idle, argv, 0);
     first = newNode;
     newNode->next = first;
     currentNode = first;
@@ -60,8 +62,8 @@ void init_scheduler(){
     // add_process("IDLE", &idle);
 }
 
-void add_process(char * name, void * program){
-    add_node(newProcess(name, program));
+void add_process(char * name, void * program, char ** argv, uint64_t priority){
+    add_node(newProcess(name, program, argv, priority));
     counter++;
 }
 
@@ -69,7 +71,7 @@ void add_process(char * name, void * program){
 void add_node(ProcessP process){
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL) {
-        printString("MemError", RED);
+        printString((uint8_t *) "MemError", RED);
         return ;
     }
     newNode->proc = process;
@@ -84,5 +86,36 @@ void killCurrentProcess(){
     return;
 }
 
+NodeP find_node(uint64_t pid){
+    if (first->proc->pid == pid){
+        return first;
+    }
+    NodeP current = first->next;
+    while (current != first){
+        if (current->proc->pid == pid){
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
 
+void block_current_process(){
+    currentNode->proc->state = BLOCKED;
+    // scheduler();
+}
+
+void block_process(uint64_t pid){
+    NodeP node = find_node(pid);
+    node->proc->state = BLOCKED;
+}
+
+void ready_process(uint64_t pid){
+    NodeP node = find_node(pid);
+    node->proc->state = READY;
+}
+
+uint64_t get_running_pid(void){
+    return currentNode == NULL ? 0 : currentNode->proc->pid;
+}
 

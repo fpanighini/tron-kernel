@@ -418,6 +418,6 @@ void * malloc(unsigned int memSize) {
     return sys_malloc(memSize);
 }
 
-void exec(char * name, void * program) {
-    sys_exec(name, program);
+void exec(char * name, void * program, char ** argv, int priority) {
+    sys_exec(name, program, argv, priority);
 }

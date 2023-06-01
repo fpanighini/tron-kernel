@@ -60,7 +60,7 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 #define NEWLINE "\n"
 
-void shell();
+void shell(int argc, char ** argv);
 void bufferRead(char **buf);
 int readBuffer(char *buf);
 void printLine(char *str);
@@ -78,7 +78,7 @@ int decreaseFontSize();
 extern void invalidOpcode();
 extern void divideZero();
 
-void shell() {
+void shell(int argc, char ** argv) {
     int out = 1;
 
     while (out) {

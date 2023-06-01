@@ -7,7 +7,7 @@
 #include <stack.h>
 #include <memoryManager.h>
 #include <stdint.h>
-#include <codeModules.h>
+// #include <codeModules.h>
 #include <videoDriver.h>
 
 typedef struct Node {
@@ -23,8 +23,14 @@ void killCurrentProcess(void);
 
 void init_scheduler();
 
-void add_process(char * name, void * program);
+void add_process(char * name, void * program, char ** argv, uint64_t priority);
 
-void idle2(void);
+void block_current_process();
+
+void block_process(uint64_t pid);
+
+void ready_process(uint64_t pid);
+
+uint64_t get_running_pid(void);
 
 #endif

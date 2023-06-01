@@ -4,7 +4,8 @@
 #include <timer.h>
 #include <lib.h>
 
-void shell(void);
+//void shell(void);
+void shell(int argc, char ** argv);
 
 char *v = (char *)0xB8000 + 79 * 2;
 
@@ -17,7 +18,8 @@ void start_shell(void){
 
 int main() {
     sys_clearScreen();
-    exec("shell", &shell);
+    char * argv[] = {0};
+    exec("shell", &shell, argv, 0);
     while(1){
         // printf("INIT\n");
         // INIT PROCESS
