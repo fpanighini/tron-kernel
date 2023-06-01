@@ -164,8 +164,8 @@ picSlaveMask:
 ;8254 Timer (Timer Tick)
 _irq00Handler:
     pushState
-    mov rdi, rsp
     call timer_handler
+    mov rdi, rsp
     call scheduler
     mov rsp, rax
     mov al, 20h

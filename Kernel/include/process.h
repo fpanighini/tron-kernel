@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "memoryManager.h"
-#include <scheduler.h>
+// #include <scheduler.h>
 #include <stack.h>
 
 
@@ -11,7 +11,7 @@
 
 typedef enum {READY = 0, RUNNING, BLOCKED, NEW} states;
 
-typedef struct {
+typedef struct Process {
     char * name;
     void * entryPoint;
     uint64_t pid;

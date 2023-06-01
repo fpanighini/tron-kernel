@@ -10,9 +10,6 @@ NodeP find_next_ready(NodeP current);
 NodeP first = NULL;
 NodeP currentNode = NULL;
 
-
-
-ProcessP processes[2];
 uint64_t counter = 0;
 
 extern void force_timer_tick();
@@ -31,7 +28,6 @@ uint64_t scheduler(uint64_t sp){
         currentNode->proc->state = RUNNING;
     }
     return currentNode->proc->sp;
-
 }
 
 NodeP find_next_ready(NodeP current){
@@ -60,7 +56,7 @@ void init_scheduler(){
     newNode->next = first;
     currentNode = first;
     counter++;
-    currentNode->proc->state = READY;
+    currentNode->proc->state = BLOCKED;
     // add_process("IDLE", &idle);
 }
 
@@ -74,7 +70,7 @@ void add_node(ProcessP process){
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL) {
         printString("MemError", RED);
-        return 0;
+        return ;
     }
     newNode->proc = process;
     newNode->next = currentNode->next;

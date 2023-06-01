@@ -172,7 +172,7 @@ void * sys_malloc(uint64_t memSize) {
     return malloc(memSize);
 }
 
-void * sys_exec(char * name, void * program){
+void sys_exec(char * name, void * program){
     add_process(name, program);
 }
 

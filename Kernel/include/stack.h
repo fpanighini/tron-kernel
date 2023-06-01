@@ -2,7 +2,7 @@
 #define _STACK_H_
 
 #include <stdint.h>
-#include <scheduler.h>
+// #include <scheduler.h>
 
 typedef struct StackFrame {
     uint64_t r15;
