@@ -11,7 +11,7 @@ char *v = (char *)0xB8000 + 79 * 2;
 
 void start_shell(void){
     while(1){
-        printf("Hello\n");
+        // printf("Hello\n");
         shortSleep(1);
     }
 }
@@ -20,6 +20,7 @@ int main() {
     sys_clearScreen();
     char * argv[] = {0};
     exec("shell", &shell, argv, 0);
+    //exec("shell2", &start_shell, argv, 8);
     while(1){
         // printf("INIT\n");
         // INIT PROCESS

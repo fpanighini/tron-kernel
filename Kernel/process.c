@@ -1,3 +1,4 @@
+#include "include/scheduler.h"
 #include <process.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,4 +28,7 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t prior
     return proc;
 }
 
-
+void free_proc(ProcessP proc){
+    free(proc->stack);
+    free(proc);
+}

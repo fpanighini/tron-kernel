@@ -10,7 +10,11 @@
 // #include <codeModules.h>
 #include <videoDriver.h>
 
+#define MAX_QUANTUM 5
+
+
 typedef struct Node {
+    uint64_t quantums;
     ProcessP proc;
     struct Node * next;
 } Node;
