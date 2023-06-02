@@ -103,3 +103,11 @@ int strcmp(char * str1, char * str2) {
     }
     return *(const unsigned char*)str1 - *(const unsigned char*)str2;
 }
+
+int strlen(char *str) {
+	int i = 0;
+	for (; str[i] != '\0' && *str != '\0'; i++);
+	return i;
+}
+
+

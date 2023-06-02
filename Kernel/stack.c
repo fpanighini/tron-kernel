@@ -4,9 +4,7 @@
 #include <process.h>
 #include <videoDriver.h>
 
-uint64_t count_argv(char ** argv);
-
-StackFrame createStack(void * entryPoint, void * stackBase, char ** argv){
+StackFrame createStack(void * entryPoint, void * stackBase, uint64_t argc, char ** argv){
     // for (int i = 0 ; i < count_argv(argv); i++){
     //     printString(argv[i], WHITE);
     // }
@@ -20,10 +18,10 @@ StackFrame createStack(void * entryPoint, void * stackBase, char ** argv){
     stackFrame.r10 = 0x0;
     stackFrame.r9 = 0x0;
     stackFrame.r8 = 0x0;
-    stackFrame.rsi = count_argv(argv);
-    stackFrame.rdi = entryPoint;
+    stackFrame.rsi = (uint64_t) argv;
+    stackFrame.rdi = argc;
     stackFrame.rbp = 0x0;
-    stackFrame.rdx = argv;
+    stackFrame.rdx = 0x0;
     stackFrame.rcx = 0x0;
     stackFrame.rbx = 0x0;
     stackFrame.rax = 0x0;
@@ -36,13 +34,4 @@ StackFrame createStack(void * entryPoint, void * stackBase, char ** argv){
 
     return stackFrame;
 }
-
-uint64_t count_argv(char ** argv){
-    uint64_t count = 0;
-    while(argv[count] != NULL){
-        count++;
-    }
-    return count;
-}
-
 

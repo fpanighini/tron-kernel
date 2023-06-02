@@ -77,14 +77,3 @@ uint64_t test_sync(uint64_t argc, char *argv[]) { //{n, use_sem, 0}
   return 0;
 }
 
-char ** save_argv(char ** argv) {
-    char ** ret = malloc(sizeof(char **));
-    int i = 0;
-    while (argv[i] != NULL) {
-        ret[i] = malloc(strlen(argv[i]) + 1);
-        strcpy(ret[i], argv[i]);
-        i++;
-    }
-    ret[i] = NULL;
-    return ret;
-}

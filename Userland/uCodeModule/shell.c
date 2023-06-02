@@ -83,9 +83,6 @@ extern void invalidOpcode();
 extern void divideZero();
 
 void shell(int argc, char ** argv) {
-    // for (int i = 0 ; i < argc ; i++){
-    //     printf("%d\n", argv[i]);
-    // }
     int out = 1;
 
     while (out) {
@@ -249,17 +246,16 @@ int readBuffer(char *buf) {
         clear();
         return 0;
     } else if (!strcmp(buf, TEST_PROCESSES_COMMAND)){
-        char * argv[] = {"1", 0};
-        exec("test_processes", &test_processes, argv, 1);
+        char * argv[] = {"2", 0};
+        exec("test_processes", &test_processes, argv, 0);
         // test_processes(1,argv);
     } else if (!strcmp(buf, TEST_MM_COMMAND)){
-        char * argv[] = {"100", 0};
+        char * argv[] = {"100000000000", 0};
         exec("test_mm", &test_mm, argv, 1);
         // test_processes(1,argv);
     } else if (!strcmp(buf, TEST_SYNC_COMMAND)){
-        char * argv[] = {"2", 0};
-        //exec("test_sync", &test_sync, argv, 1);
-        test_sync(1,argv);
+        char * argv[] = {"10", "1", 0};
+        exec("test_sync", &test_sync, argv, 1);
     } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
