@@ -14,6 +14,7 @@ typedef enum {READY = 0, RUNNING, BLOCKED, NEW, KILLED} states;
 
 typedef struct Process {
     char * name;
+    char ** argv;
     uint64_t pid;
     uint64_t ppid;
     uint64_t sp;

@@ -1,5 +1,4 @@
 /* uCodeModule.c */
-#include "include/syscalls.h"
 #include <syscalls.h>
 #include <color.h>
 #include <timer.h>
@@ -10,7 +9,10 @@ void shell(int argc, char ** argv);
 
 char *v = (char *)0xB8000 + 79 * 2;
 
-void start_shell(void){
+void start_shell(int argc, char ** argv){
+     for (int i = 0 ; i < argc ; i++){
+       printf("%d %s\n",i, argv[i]);
+    }
     while(1){
         // printf("Hello\n");
         shortSleep(1);

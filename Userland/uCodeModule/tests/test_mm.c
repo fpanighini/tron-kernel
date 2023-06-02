@@ -8,9 +8,7 @@ typedef struct MM_rq {
   uint32_t size;
 } mm_rq;
 
-uint64_t test_mm(uint64_t argc, char *argv[]) {
-    printf("%s\n", argv[0]);
-
+uint64_t test_mm(int argc, char ** argv) {
   mm_rq mm_rqs[MAX_BLOCKS];
   uint8_t rq;
   uint32_t total;
@@ -21,7 +19,6 @@ uint64_t test_mm(uint64_t argc, char *argv[]) {
 
   if ((max_memory = satoi(argv[0])) <= 0){
 
-      printf("runnning %s %d\n",argv[0], max_memory );
     return -1;
   }
 
