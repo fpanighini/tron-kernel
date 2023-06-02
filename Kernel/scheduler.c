@@ -108,6 +108,7 @@ void add_node(ProcessP process){
 
 
 void killCurrentProcess(){
+    currentNode->proc->state = KILLED;
     _force_scheduler();
     return;
 }
