@@ -177,23 +177,18 @@ void sys_exec(char * name, void * program, char ** argv, uint64_t priority){
 }
 
 uint64_t syscall_sem_open(char *name, int value) {
-    char *name = (char*) name;
-    int initValue = value; 
-    return sem_open(name,initValue);
+    return sem_open(name,value);
 }
 
 uint64_t syscall_sem_close(char *name) {
-    char *name = (char*) name;
     return sem_close(name);
 }
 
 uint64_t syscall_sem_wait(char *name) {
-    char *name = (char*) name;
     return sem_wait(name);
 }
 
 uint64_t syscall_sem_post(char *name) {
-    char *name = (char*) name;
     return sem_post(name);
 }
 
@@ -202,17 +197,13 @@ uint64_t syscall_sem_count() {
 }
 
 uint64_t syscall_sem_info(int idx, p_sem buffer) {
-    int idx = idx;
-    p_sem buff = (p_sem)buffer;
-    return get_sem_info(idx, buff);
+    return get_sem_info(idx, buffer);
 }
 
 uint64_t syscall_pipe_open(char* name) {
-    char* name = (char*) name;
     return (uint64_t)pipe_open(name);
 }
 uint64_t syscall_pipe_close(int id) {
-    int id = (int) id;
     pipe_close(id);
     return 1;
 }

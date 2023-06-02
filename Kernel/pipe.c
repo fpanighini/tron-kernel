@@ -19,9 +19,9 @@ void fill0(char* arr, int size){
 int pipe_write(int index, char *addr, int n) {
     if(!pipes[index].created)
         return -1;
-    block_process_pipe(pipes[index].wProcesses, get_current_pid());
+    block_process_pipe(pipes[index].wProcesses, get_running_pid());
     sem_wait(pipes[index].name);
-    release_process_pipe(pipes[index].wProcesses, get_current_pid());
+    release_process_pipe(pipes[index].wProcesses, get_running_pid());
     int i;
     for (i = 0; i < n && addr[i] != 0 && (pipes[index].nread)!= (pipes[index].nwrite+1); i++) {
         pipes[index].data[pipes[index].nwrite++ % PIPE_SIZE] = addr[i];
@@ -35,9 +35,9 @@ int pipe_write(int index, char *addr, int n) {
 int pipe_read(int index, char *addr, int n) {
     if(!pipes[index].created)
         return -1;
-    block_process_pipe(pipes[index].rProcesses, get_current_pid());
+    block_process_pipe(pipes[index].rProcesses, get_running_pid());
     sem_wait(pipes[index].name);
-    release_process_pipe(pipes[index].wProcesses, get_current_pid());
+    release_process_pipe(pipes[index].wProcesses, get_running_pid());
     /// 
     
     int i ;
@@ -127,7 +127,7 @@ void list_blocked_processes(int * p, char * buf) {
     char pid[5]={0};
     for (int i = 0; i < PROCS; i++) {
         if (p[i] != 0) {
-            itoa(p[i], pid, 10);
+            itoa(p[i], pid);
             strcat(buf, pid);
             strcat(buf, ", ");
         }
@@ -170,20 +170,20 @@ void block_process_pipe(int * p, int pid) {
     int i;
     for(i = 0; i < PROCS && p[i] != 0; i++){
         if(p[i] == pid){
-            set_process_state(pid, BLOCKED);
+            block_process(pid);
             return;
         }
     }
     if (i == PROCS)
         return;
     p[i] = pid;
-    set_process_state(pid, BLOCKED);
+    block_process(pid);
 }
 
 void release_process_pipe(int * p, int pid) {
     for (int i=0; i < PROCS ;  i++) {
         if(p[i] == pid){
-            set_process_state(p[i], READY);
+            ready_process(pid);
             p[i] = 0;
             return;
         }

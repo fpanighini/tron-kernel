@@ -47,7 +47,7 @@ int	sem_wait(char *name) {
     }
     p_sem sem = &semaphores[idx];
     while(!cond) {                          // Sleeping loop
-        int pid = get_current_pid();
+        int pid = get_running_pid();
         scheduler_disable();                // From here it can't change the process => No race conditions
         // set_process_state(pid, BLOCKED); // DISABLED. It used to block the current process
         uint64_t last;
@@ -58,7 +58,7 @@ int	sem_wait(char *name) {
         while(_cmpxchg(&sem->blocked_last, last+1, last) != last);   // Atomic add
         if(cond) {                          // Checks changes (they could be made by interrupts)
             while((last = sem->blocked_last) - sem->blocked_first > 0 && _cmpxchg(&sem->blocked_last, last-1, last) != last);  // The difference between the counters is the quantity of blocked processes. Atomic decrement of last
-            set_process_state(pid, READY);  // Unlocks the process
+            ready_process(pid);  // Unlocks the process
             scheduler_enable();             // Unlocks the scheduler
             break;
         }
@@ -178,6 +178,6 @@ void update_sem_processes(p_sem sem) {
     }
     if(awake) {
         int pid = sem->blocked_processes[idx % MAX_PROC];  // First process blocked by sem
-        set_process_state(pid, READY);                    // Unblock first process
+        ready_process(pid);                    // Unblock first process
     }
 }

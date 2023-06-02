@@ -11,18 +11,20 @@ NodeP find_node(uint64_t pid);
 void destroy_current_node();
 void free_node(NodeP node);
 
-
+uint64_t disable_count = 0;
 
 NodeP first = NULL;
 NodeP currentNode = NULL;
 
 uint64_t counter = 0;
 
-extern void force_timer_tick();
-
 typedef int (*EntryPoint)();
 
 uint64_t scheduler(uint64_t sp){
+    if(disable_count) {
+        return currentNode->proc->sp = sp;
+    }
+    
     if (counter == 1){
         return sp;
     }
@@ -104,7 +106,7 @@ void add_node(ProcessP process){
 
 
 void killCurrentProcess(){
-    force_timer_tick();
+    _force_scheduler();
     return;
 }
 
@@ -152,4 +154,14 @@ void free_node(NodeP node){
     free(node);
 }
 
+void scheduler_enable() {
+    if(disable_count > 0)
+        disable_count--;
+}
+
+void scheduler_disable() {
+    int count;
+    do count = disable_count; 
+    while(_cmpxchg(&disable_count, count+1, count) != count);
+}
 //TODO: ojo con la declaracion de xchg (libasm.h)
