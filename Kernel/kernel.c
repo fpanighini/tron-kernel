@@ -6,7 +6,7 @@
 #include <idtLoader.h>
 #include <memoryManager.h>
 #include <syscallManager.h>
-#include <codeModules.h>
+// #include <codeModules.h>
 #include <scheduler.h>
 
 #define HEAP_SIZE 0x100000
@@ -21,8 +21,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-// static void *const uCodeModuleAddress = (void *)0x400000;
-// static void *const uDataModuleAddress = (void *)0x500000;
+static void *const uCodeModuleAddress = (void *)0x400000;
+static void *const uDataModuleAddress = (void *)0x500000;
 
 typedef int (*EntryPoint)();
 
@@ -41,8 +41,7 @@ void *initializeKernelBinary() {
 
     void *moduleAddresses[] = {
         uCodeModuleAddress,
-        uDataModuleAddress,
-        idleCodeModule
+        uDataModuleAddress
         };
 
     void * endOfModules = loadModules(&endOfKernelBinary, moduleAddresses);

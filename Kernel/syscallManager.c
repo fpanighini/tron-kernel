@@ -154,12 +154,12 @@ uint64_t sys_wait(uint32_t millis){
 
 
 uint64_t sys_inforeg(uint64_t array[REGISTER_NUM]){
-    if (registers != 0)
-        for (int i = 0 ; i < REGISTER_NUM ; i++)
+    if (registers != 0){
+        for (int i = 0 ; i < REGISTER_NUM ; i++){
             array[i] = registers[i];
-        
+        }
         return 1;
-    
+    }
     return 0;
 }
 
@@ -172,8 +172,8 @@ void * sys_malloc(uint64_t memSize) {
     return malloc(memSize);
 }
 
-void sys_exec(char * name, void * program){
-    add_process(name, program);
+void sys_exec(char * name, void * program, char ** argv, uint64_t priority){
+    add_process(name, program, argv, priority);
 }
 
 uint64_t syscall_sem_open(char *name, int value) {

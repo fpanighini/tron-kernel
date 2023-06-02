@@ -329,7 +329,7 @@ syscallINTHandler:
         call sys_malloc
         jmp .end
 
-.exec
+.exec:
         call sys_exec
         jmp .end
 

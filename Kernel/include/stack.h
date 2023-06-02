@@ -28,7 +28,7 @@ typedef struct StackFrame {
     uint64_t returnAddress;
 } StackFrame;
 
-StackFrame createStack(void * entryPoint, void * stackBase);
+StackFrame createStack(void * entryPoint, void * stackBase, char ** argv);
 
 #endif /* _STACK_H_ */
 

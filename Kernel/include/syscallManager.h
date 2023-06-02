@@ -35,7 +35,7 @@ uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis);
 uint64_t sys_inforeg(uint64_t * array);
 uint64_t sys_changeFontSize(uint32_t dif);
 void * sys_malloc(uint64_t memSize);
-void sys_exec(char * name, void * program);
+void sys_exec(char * name, void * program, char ** argv, uint64_t priority);
 uint64_t sys_pipe_open(char* name);
 uint64_t sys_pipes_info();
 uint64_t sys_pipe_close(int id);

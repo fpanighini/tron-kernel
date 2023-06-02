@@ -113,6 +113,7 @@ sys_malloc:
 ; syscall 0x0F
 sys_exec:
     mov rax, 0x0F
+    mov r10, rcx
     int 0x80
     ret
 
