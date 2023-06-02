@@ -3,7 +3,7 @@
 #include <timer.h>
 #include <lib.h>
 #include <tron.h>
-//#include "tests/include/tests.h"
+#include <tests.h>
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
@@ -244,8 +244,9 @@ int readBuffer(char *buf) {
         clear();
         return 0;
     } else if (!strcmp(buf, TEST_PROCESSES_COMMAND)){
-        // char * argv[] = {"hola", 0};
-        // test_processes(1,argv);
+        char * argv[] = {"4", 0};
+        // exec("test_processes", &test_processes, argv, 0);
+        test_processes(1,argv);
     } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();

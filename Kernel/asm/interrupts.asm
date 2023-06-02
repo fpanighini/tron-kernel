@@ -42,6 +42,19 @@ EXTERN sys_inforeg
 EXTERN sys_beep
 EXTERN sys_malloc
 EXTERN sys_exec
+EXTERN sys_pipe_open
+EXTERN sys_pipes_info
+EXTERN sys_pipe_close
+EXTERN sys_sem_open
+EXTERN sys_sem_close
+EXTERN sys_sem_post
+EXTERN sys_sem_wait
+EXTERN sys_sem_info
+EXTERN sys_sem_count
+EXTERN sys_get_pid
+EXTERN sys_kill
+EXTERN sys_block
+EXTERN sys_unblock
 
 
 SECTION .text
@@ -260,12 +273,51 @@ syscallINTHandler:
 
     cmp rax, 0x0D
     je .beep
-    
+
     cmp rax, 0x0E
     je .malloc
 
     cmp rax, 0x0F
     je .exec
+
+    cmp rax, 0x10
+    je .pipe_open
+
+    cmp rax, 0x11
+    je .pipes_info
+
+    cmp rax, 0x12
+    je .pipe_close
+
+    cmp rax, 0x13
+    je .sem_open
+
+    cmp rax, 0x14
+    je .sem_close
+
+    cmp rax, 0x15
+    je .sem_post
+
+    cmp rax, 0x16
+    je .sem_wait
+
+    cmp rax, 0x17
+    je .sem_info
+
+    cmp rax, 0x18
+    je .sem_count
+
+    cmp rax, 0x19
+    je .get_pid
+
+    cmp rax, 0x1A
+    je .kill
+
+    cmp rax, 0x1B
+    je .block
+
+    cmp rax, 0x1C
+    je .unblock
 
     jmp .end
 
@@ -331,6 +383,58 @@ syscallINTHandler:
 
 .exec:
         call sys_exec
+        jmp .end
+
+.pipe_open:
+        call sys_pipe_open
+        jmp .end
+
+.pipes_info:
+        call sys_pipes_info
+        jmp .end
+
+.pipe_close:
+        call sys_pipe_close
+        jmp .end
+
+.sem_open:
+        call sys_sem_open
+        jmp .end
+
+.sem_close:
+        call sys_sem_close
+        jmp .end
+
+.sem_post:
+        call sys_sem_post
+        jmp .end
+
+.sem_wait:
+        call sys_sem_wait
+        jmp .end
+
+.sem_info:
+        call sys_sem_info
+        jmp .end
+
+.sem_count:
+        call sys_sem_count
+        jmp .end
+
+.get_pid:
+        call sys_get_pid
+        jmp .end
+
+.kill:
+        call sys_kill
+        jmp .end
+
+.block:
+        call sys_block
+        jmp .end
+
+.unblock:
+        call sys_unblock
         jmp .end
 
 .end:

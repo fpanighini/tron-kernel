@@ -35,13 +35,15 @@ void killCurrentProcess(void);
 
 void init_scheduler();
 
-void add_process(char * name, void * program, char ** argv, uint64_t priority);
+uint64_t add_process(char * name, void * program, char ** argv, uint64_t priority);
+
+uint64_t kill_process(uint64_t pid);
 
 void block_current_process();
 
-void block_process(uint64_t pid);
+uint64_t block_process(uint64_t pid);
 
-void ready_process(uint64_t pid);
+uint64_t ready_process(uint64_t pid);
 
 uint64_t get_running_pid(void);
 

@@ -14,6 +14,19 @@ GLOBAL sys_inforeg
 GLOBAL sys_beep
 GLOBAL sys_malloc
 GLOBAL sys_exec
+GLOBAL sys_pipe_open
+GLOBAL sys_pipes_info
+GLOBAL sys_pipe_close
+GLOBAL sys_sem_open
+GLOBAL sys_sem_close
+GLOBAL sys_sem_post
+GLOBAL sys_sem_wait
+GLOBAL sys_sem_info
+GLOBAL sys_sem_count
+GLOBAL sys_get_pid
+GLOBAL sys_kill
+GLOBAL sys_block
+GLOBAL sys_unblock
 
 ; syscall 0x00
 sys_write:
@@ -117,3 +130,80 @@ sys_exec:
     int 0x80
     ret
 
+sys_pipe_open:
+    mov rax, 0x10
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_pipes_info:
+    mov rax, 0x11
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_pipe_close:
+    mov rax, 0x12
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_open:
+    mov rax, 0x13
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_close:
+    mov rax, 0x14
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_post:
+    mov rax, 0x15
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_wait:
+    mov rax, 0x16
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_info:
+    mov rax, 0x17
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_sem_count:
+    mov rax, 0x18
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_get_pid:
+    mov rax, 0x19
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_kill
+    mov rax, 0x1A
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_block
+    mov rax, 0x1B
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_unblock
+    mov rax, 0x1B
+    mov r10, rcx
+    int 0x80
+    ret

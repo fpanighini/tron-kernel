@@ -85,9 +85,11 @@ void init_scheduler(){
     // add_process("IDLE", &idle);
 }
 
-void add_process(char * name, void * program, char ** argv, uint64_t priority){
-    add_node(newProcess(name, program, argv, priority));
+uint64_t add_process(char * name, void * program, char ** argv, uint64_t priority){
+    ProcessP proc = newProcess(name, program, argv, priority);
+    add_node(proc);
     counter++;
+    return proc->pid;
 }
 
 
@@ -124,19 +126,36 @@ NodeP find_node(uint64_t pid){
     return NULL;
 }
 
+uint64_t kill_process(uint64_t pid){
+    NodeP node = find_node(pid);
+    if (node == NULL){
+        return -1;
+    }
+    node->proc->state = KILLED;
+    return node->proc->pid;
+}
+
 void block_current_process(){
     currentNode->proc->state = BLOCKED;
     // scheduler();
 }
 
-void block_process(uint64_t pid){
+uint64_t block_process(uint64_t pid){
     NodeP node = find_node(pid);
+    if (node == NULL){
+        return -1;
+    }
     node->proc->state = BLOCKED;
+    return node->proc->pid;
 }
 
-void ready_process(uint64_t pid){
+uint64_t ready_process(uint64_t pid){
     NodeP node = find_node(pid);
+    if (node == NULL){
+        return -1;
+    }
     node->proc->state = READY;
+    return node->proc->pid;
 }
 
 uint64_t get_running_pid(void){

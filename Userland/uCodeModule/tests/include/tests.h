@@ -1,3 +1,5 @@
+#ifndef _TESTS_H_
+#define _TESTS_H_
 
 
 //#include <stdio.h>
@@ -7,3 +9,5 @@
 
 
 int64_t test_processes(uint64_t argc, char *argv[]);
+
+#endif

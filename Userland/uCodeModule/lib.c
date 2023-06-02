@@ -418,6 +418,22 @@ void * malloc(unsigned int memSize) {
     return sys_malloc(memSize);
 }
 
-void exec(char * name, void * program, char ** argv, int priority) {
-    sys_exec(name, program, argv, priority);
+long exec(char * name, void * program, char ** argv, int priority) {
+    return sys_exec(name, program, argv, priority);
+}
+
+long get_pid(){
+    return sys_get_pid();
+}
+
+long kill(int pid){
+    return sys_kill(pid);
+}
+
+long block(int pid){
+    return sys_block(pid);
+}
+
+long unblock(int pid){
+    return sys_unblock(pid);
 }

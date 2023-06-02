@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stdio.h>
+#include <lib.h>
 #include "syscall.h"
 
 // Random
@@ -65,7 +65,7 @@ void endless_loop() {
 }
 
 void endless_loop_print(uint64_t wait) {
-  int64_t pid = my_getpid();
+  int64_t pid = get_pid();
 
   while (1) {
     printf("%d ", pid);

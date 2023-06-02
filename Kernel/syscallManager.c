@@ -172,43 +172,61 @@ void * sys_malloc(uint64_t memSize) {
     return malloc(memSize);
 }
 
-void sys_exec(char * name, void * program, char ** argv, uint64_t priority){
-    add_process(name, program, argv, priority);
+uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t priority){
+    return add_process(name, program, argv, priority);
 }
 
-uint64_t syscall_sem_open(char *name, int value) {
+uint64_t sys_sem_open(char *name, int value) {
     return sem_open(name,value);
 }
 
-uint64_t syscall_sem_close(char *name) {
+uint64_t sys_sem_close(char *name) {
     return sem_close(name);
 }
 
-uint64_t syscall_sem_wait(char *name) {
+uint64_t sys_sem_wait(char *name) {
     return sem_wait(name);
 }
 
-uint64_t syscall_sem_post(char *name) {
+uint64_t sys_sem_post(char *name) {
     return sem_post(name);
 }
 
-uint64_t syscall_sem_count() {
+uint64_t sys_sem_count() {
     return get_sem_count();
 }
 
-uint64_t syscall_sem_info(int idx, p_sem buffer) {
+uint64_t sys_sem_info(int idx, p_sem buffer) {
     return get_sem_info(idx, buffer);
 }
 
-uint64_t syscall_pipe_open(char* name) {
+uint64_t sys_pipe_open(char* name) {
     return (uint64_t)pipe_open(name);
 }
-uint64_t syscall_pipe_close(int id) {
+uint64_t sys_pipe_close(int id) {
     pipe_close(id);
     return 1;
 }
 
-uint64_t syscall_pipes_info() {
+uint64_t sys_pipes_info() {
     char *response = pipes_info();
     return (uint64_t)response;
 }
+
+uint64_t sys_get_pid(){
+    return get_running_pid();
+}
+
+uint64_t sys_kill(uint64_t pid){
+    return kill_process(pid);
+}
+
+uint64_t sys_block(uint64_t pid){
+    return block_process(pid);
+}
+
+uint64_t sys_unblock(uint64_t pid){
+    return ready_process(pid);
+}
+
+
