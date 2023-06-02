@@ -1,10 +1,25 @@
 #ifndef _SYSCALLS_USERLAND_H_
 #define _SYSCALLS_USERLAND_H_
 #include <color.h>
+#include <stdint.h>
 
 #define STDOUT 0
 #define STDERR 1
 #define STDIN 0
+
+#define PROC_MAX 50
+#define NAME_LIMIT 1024
+
+typedef struct semInfo {
+    int semId;
+    char name[NAME_LIMIT];
+    uint64_t lock;   // lock
+    int value;
+    uint64_t openCount;    // Counter of pending 'close' signals
+    uint64_t blockedProcesses[PROC_MAX];
+    uint64_t blockedFirst;
+    uint64_t blockedLast;
+} semInfo_t;
 
 long sys_read(unsigned char fd, char * s, int count);
 long sys_write(unsigned char fd, char * s, Color c);
@@ -29,7 +44,7 @@ long sys_sem_open(char *name, int value);
 long sys_sem_close(char *name);
 long sys_sem_post(char *name);
 long sys_sem_wait(char *name);
-// long sys_sem_info(int idx, p_sem buffer); // Como hacemos esto desde userland?
+long sys_sem_info(int idx, semInfo_t *buffer);
 long sys_sem_count();
 long sys_get_pid();
 long sys_kill(int pid);

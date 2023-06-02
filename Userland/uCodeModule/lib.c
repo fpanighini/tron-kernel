@@ -437,3 +437,40 @@ long block(int pid){
 long unblock(int pid){
     return sys_unblock(pid);
 }
+
+int sem_open(char *semName, int initValue) {
+    return sys_sem_open(semName, initValue);
+}
+
+int	sem_wait(char *semName) {
+    return sys_sem_wait(semName);
+}
+
+int sem_post(char *semName) {
+    return sys_sem_post(semName);
+}
+
+int sem_close(char *semName) {
+    return sys_sem_close(semName);
+}
+
+int sem_info(int idx, semInfo_t *buffer) {
+    return sys_sem_info(idx, buffer);
+}
+
+int sems_count() {
+    return sys_sem_count();
+}
+
+char * pipes_info() {
+	return (char *) sys_pipes_info();
+}
+
+int pipe_open(char* name) {
+	return sys_pipe_open(name);
+}
+
+//TODO: ver index-2
+void pipe_close(int index) {
+	sys_pipe_close(index-2);
+}

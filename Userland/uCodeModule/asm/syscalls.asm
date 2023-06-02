@@ -190,19 +190,19 @@ sys_get_pid:
     int 0x80
     ret
 
-sys_kill
+sys_kill:
     mov rax, 0x1A
     mov r10, rcx
     int 0x80
     ret
 
-sys_block
+sys_block:
     mov rax, 0x1B
     mov r10, rcx
     int 0x80
     ret
 
-sys_unblock
+sys_unblock:
     mov rax, 0x1B
     mov r10, rcx
     int 0x80
