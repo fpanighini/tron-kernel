@@ -3,6 +3,7 @@
 #include <timer.h>
 #include <lib.h>
 #include <tron.h>
+//#include "tests/include/tests.h"
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
@@ -24,6 +25,7 @@
 #define DEC_FONT_SIZE_COMMAND "dec-font"
 #define INFOREG_COMMAND "inforeg"
 #define PRINTMEM_COMMAND "printmem"
+#define TEST_PROCESSES_COMMAND "test-processes"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -241,6 +243,9 @@ int readBuffer(char *buf) {
     } else if (!strcmp(buf, EXIT_COMMAND)){
         clear();
         return 0;
+    } else if (!strcmp(buf, TEST_PROCESSES_COMMAND)){
+        // char * argv[] = {"hola", 0};
+        // test_processes(1,argv);
     } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
