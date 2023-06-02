@@ -26,6 +26,7 @@
 #define INFOREG_COMMAND "inforeg"
 #define PRINTMEM_COMMAND "printmem"
 #define TEST_PROCESSES_COMMAND "test-processes"
+#define TEST_MM_COMMAND "test-mm"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -81,6 +82,9 @@ extern void invalidOpcode();
 extern void divideZero();
 
 void shell(int argc, char ** argv) {
+    // for (int i = 0 ; i < argc ; i++){
+    //     printf("%d\n", argv[i]);
+    // }
     int out = 1;
 
     while (out) {
@@ -246,6 +250,10 @@ int readBuffer(char *buf) {
     } else if (!strcmp(buf, TEST_PROCESSES_COMMAND)){
         char * argv[] = {"1", 0};
         exec("test_processes", &test_processes, argv, 1);
+        // test_processes(1,argv);
+    } else if (!strcmp(buf, TEST_MM_COMMAND)){
+        char * argv[] = {"100", 0};
+        exec("test_mm", &test_mm, argv, 1);
         // test_processes(1,argv);
     } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);

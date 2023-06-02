@@ -1,4 +1,5 @@
 /* uCodeModule.c */
+#include "include/syscalls.h"
 #include <syscalls.h>
 #include <color.h>
 #include <timer.h>
@@ -18,7 +19,8 @@ void start_shell(void){
 
 int main() {
     sys_clearScreen();
-    char * argv[] = {0};
+    sys_yield();
+    char * argv[] = {"Hola", "como", 0};
     exec("shell", &shell, argv, 0);
     //exec("shell2", &start_shell, argv, 8);
     while(1){

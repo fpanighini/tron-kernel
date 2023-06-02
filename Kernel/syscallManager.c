@@ -172,6 +172,10 @@ void * sys_malloc(uint64_t memSize) {
     return malloc(memSize);
 }
 
+void sys_free(void * ptr){
+    free(ptr);
+}
+
 uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t priority){
     return add_process(name, program, argv, priority);
 }
@@ -229,4 +233,7 @@ uint64_t sys_unblock(uint64_t pid){
     return ready_process(pid);
 }
 
+void sys_yield(void){
+    force_current_yield();
+}
 

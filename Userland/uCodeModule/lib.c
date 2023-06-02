@@ -1,3 +1,4 @@
+#include "include/syscalls.h"
 #include <lib.h>
 #include <syscalls.h>
 #include <stdarg.h>
@@ -416,6 +417,10 @@ void beep(int frequency) {
 
 void * malloc(unsigned int memSize) {
     return sys_malloc(memSize);
+}
+
+void free(void * ptr){
+    sys_free(ptr);
 }
 
 long exec(char * name, void * program, char ** argv, int priority) {

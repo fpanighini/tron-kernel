@@ -51,4 +51,6 @@ void scheduler_enable();
 
 void scheduler_disable();
 
+void force_current_yield();
+
 #endif
