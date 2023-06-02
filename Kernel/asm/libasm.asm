@@ -8,6 +8,8 @@ GLOBAL getYear
 GLOBAL inb
 GLOBAL outb
 GLOBAL force_timer_tick
+GLOBAL _xchg
+GLOBAL _cmpxchg
 
 section .text
 	
@@ -34,6 +36,15 @@ cpuVendor:
 	pop rbp
 	ret
 
+_xchg:
+	mov rax, rsi 
+	xchg [rdi], rax 
+	ret
+
+_cmpxchg:
+	mov rax, rdx
+	lock cmpxchg [rdi], rsi
+	ret
 
 getSeconds:
 	cli

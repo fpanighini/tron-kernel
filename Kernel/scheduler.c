@@ -86,3 +86,4 @@ void killCurrentProcess(){
 
 
 
+//TODO: ojo con la declaracion de xchg (libasm.h)

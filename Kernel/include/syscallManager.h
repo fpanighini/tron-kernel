@@ -8,6 +8,8 @@
 #include <interrupts.h>
 #include <memoryManager.h>
 #include <process.h>
+#include <pipe.h>
+#include <semaphore.h>
 
 #define STDIN 0
 #define STDERR 1
@@ -34,5 +36,16 @@ uint64_t sys_inforeg(uint64_t * array);
 uint64_t sys_changeFontSize(uint32_t dif);
 void * sys_malloc(uint64_t memSize);
 void sys_exec(char * name, void * program);
+uint64_t sys_pipe_open(char* name);
+uint64_t sys_pipes_info();
+uint64_t sys_pipe_close(int id);
+uint64_t sys_sem_open(char *name, int value);
+uint64_t sys_sem_close(char *name);
+uint64_t sys_sem_post(char *name);
+uint64_t sys_sem_wait(char *name);
+uint64_t sys_sem_info(int idx, p_sem buffer);
+uint64_t sys_sem_count();
+
+
 
 #endif
