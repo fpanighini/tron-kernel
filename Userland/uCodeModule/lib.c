@@ -1,6 +1,5 @@
 #include "include/syscalls.h"
 #include <lib.h>
-#include <syscalls.h>
 #include <stdarg.h>
 
 #define BUFF_SIZE 100
@@ -478,4 +477,8 @@ int pipe_open(char* name) {
 //TODO: ver index-2
 void pipe_close(int index) {
 	sys_pipe_close(index-2);
+}
+
+void yield() {
+	sys_yield();
 }

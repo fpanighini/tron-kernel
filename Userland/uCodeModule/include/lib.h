@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include <color.h>
+#include <syscalls.h>
+
 
 typedef uint8_t bool;
 
@@ -39,5 +41,15 @@ long get_pid();
 long kill(int pid);
 long block(int pid);
 long unblock(int pid);
+int sem_open(char *semName, int initValue);
+int	sem_wait(char *semName);
+int sem_post(char *semName);
+int sem_close(char *semName);
+int sem_info(int idx, semInfo_t *buffer);
+int sems_count();
+char * pipes_info();
+int pipe_open(char* name);
+void pipe_close(int index);
+void yield();
 
 #endif

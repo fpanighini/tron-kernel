@@ -27,6 +27,7 @@
 #define PRINTMEM_COMMAND "printmem"
 #define TEST_PROCESSES_COMMAND "test-processes"
 #define TEST_MM_COMMAND "test-mm"
+#define TEST_SYNC_COMMAND "test-sync"
 
 #define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -255,6 +256,10 @@ int readBuffer(char *buf) {
         char * argv[] = {"100", 0};
         exec("test_mm", &test_mm, argv, 1);
         // test_processes(1,argv);
+    } else if (!strcmp(buf, TEST_SYNC_COMMAND)){
+        char * argv[] = {"2", 0};
+        //exec("test_sync", &test_sync, argv, 1);
+        test_sync(1,argv);
     } else {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();

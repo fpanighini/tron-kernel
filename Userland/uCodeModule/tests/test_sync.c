@@ -1,16 +1,14 @@
-#include <stdint.h>
-#include <stdio.h>
-#include "test_util.h"
+#include <tests.h>
 
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
+#define NULL ((void *)0)
 
 int64_t global; // shared memory
 
-/* TODO: Implementar yield
 void slowInc(int64_t *p, int64_t inc) {
   uint64_t aux = *p;
-  my_yield(); // This makes the race condition highly probable
+  yield(); // This makes the race condition highly probable
   aux += inc;
   *p = aux;
 }
@@ -65,17 +63,28 @@ uint64_t test_sync(uint64_t argc, char *argv[]) { //{n, use_sem, 0}
 
   uint64_t i;
   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-    pids[i] = exec("my_process_inc", &my_process_inc, 3, argvDec);
-    pids[i + TOTAL_PAIR_PROCESSES] = exec("my_process_inc", &my_process_inc, 3, argvInc);
+    pids[i] = exec("my_process_inc", &my_process_inc, argvDec, 3);
+    pids[i + TOTAL_PAIR_PROCESSES] = exec("my_process_inc", &my_process_inc, argvInc, 3);
   }
 
   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-    my_wait(pids[i]);
-    my_wait(pids[i + TOTAL_PAIR_PROCESSES]);
+    shortSleep(pids[i]);
+    shortSleep(pids[i + TOTAL_PAIR_PROCESSES]);
   }
 
   printf("Final value: %d\n", global);
 
   return 0;
 }
-*/
+
+char ** save_argv(char ** argv) {
+    char ** ret = malloc(sizeof(char **));
+    int i = 0;
+    while (argv[i] != NULL) {
+        ret[i] = malloc(strlen(argv[i]) + 1);
+        strcpy(ret[i], argv[i]);
+        i++;
+    }
+    ret[i] = NULL;
+    return ret;
+}
