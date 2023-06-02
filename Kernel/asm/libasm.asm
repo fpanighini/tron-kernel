@@ -7,7 +7,9 @@ GLOBAL getMonth
 GLOBAL getYear
 GLOBAL inb
 GLOBAL outb
-GLOBAL force_timer_tick
+GLOBAL _xchg
+GLOBAL _cmpxchg
+GLOBAL _force_scheduler
 
 section .text
 	
@@ -34,7 +36,26 @@ cpuVendor:
 	pop rbp
 	ret
 
+_xchg:
+	mov rax, rsi 
+	xchg [rdi], rax 
+	ret
 
+_cmpxchg:
+	mov rax, rdx
+	lock cmpxchg [rdi], rsi
+	ret
+
+_force_scheduler:
+	; pushState
+	int 20h
+	; mov rdi, rsp
+	; call schedule_handler
+	; mov rsp, rax
+	; popState
+	sti
+	ret
+    
 getSeconds:
 	cli
     mov al, 0x0B
@@ -145,8 +166,4 @@ outb:
     out dx, al
     mov rsp, rbp
     pop rbp
-    ret
-
-force_timer_tick:
-    int 20h
     ret

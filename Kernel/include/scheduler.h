@@ -21,6 +21,14 @@ typedef struct Node {
 
 typedef Node * NodeP;
 
+// ASM functions
+void _force_scheduler();
+
+uint64_t _xchg(uint64_t *dest, uint64_t value);
+
+uint64_t _cmpxchg(uint64_t *dest, uint64_t value, uint64_t test);
+
+
 uint64_t scheduler(uint64_t sp);
 
 void killCurrentProcess(void);
@@ -36,5 +44,9 @@ void block_process(uint64_t pid);
 void ready_process(uint64_t pid);
 
 uint64_t get_running_pid(void);
+
+void scheduler_enable();
+
+void scheduler_disable();
 
 #endif

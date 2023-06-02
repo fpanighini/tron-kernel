@@ -44,3 +44,62 @@ void * memcpy(void * destination, const void * source, uint64_t length) {
 
 	return destination;
 }
+
+/**
+ * @brief
+ *  Concat two strings.
+ * @param dest
+ * @param src
+ * @return char*
+ */
+char *strcat(char *dest, const char *src) {
+	char *aux;
+	for (aux = dest; *aux != '\0'; aux++);
+	for (; *src != '\0';)
+		*(aux++) = *(src++);
+	*aux = '\0';
+	return aux;
+}
+
+/**
+ * @brief
+ *  Copy the content of src into dest.
+ * @param dest
+ * @param src
+ * @return char*
+ */
+char *strcpy(char *dest, const char *src) {
+	char *aux;
+	for (aux = dest; *src != '\0';)
+		*(aux++) = *(src++);
+	*aux = '\0';
+	return aux;
+}
+
+long itoa(long number, char *str) {
+	int digits = 1;
+	for (long n = number / 10; n != 0; digits++, n /= 10);
+
+	if (digits == 1) {
+		str[0] = '0';
+		str[1] = number + '0';
+		str[2] = 0;
+		return digits;
+	}
+
+	str[digits] = 0;
+	for (int i = digits - 1; i >= 0; i--) {
+		str[i] = (number % 10) + '0';
+		number /= 10;
+	}
+
+	return digits;
+}
+
+int strcmp(char * str1, char * str2) {
+	while(*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+    }
+    return *(const unsigned char*)str1 - *(const unsigned char*)str2;
+}

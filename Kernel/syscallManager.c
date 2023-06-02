@@ -13,7 +13,7 @@ void beep2();
 
 extern uint64_t registers[REGISTER_NUM];
 
-
+//TODO: checkear el uso de write con pipes
 uint64_t sys_write(uint8_t fd, char *string, Color color) {
     if (fd == STDERR)
         color = RED;
@@ -21,7 +21,6 @@ uint64_t sys_write(uint8_t fd, char *string, Color color) {
     printString((uint8_t *)string, color);
     return 0;
 }
-
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos){
     if (getCount()){
@@ -32,6 +31,7 @@ int getKbdBuffer(char * buf, uint32_t count, int * pos){
     return 0;
 }
 
+//TODO: checkear el uso de read con pipes
 uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
     if (fd != 0)
         return 0;
@@ -176,4 +176,39 @@ void sys_exec(char * name, void * program, char ** argv, uint64_t priority){
     add_process(name, program, argv, priority);
 }
 
+uint64_t syscall_sem_open(char *name, int value) {
+    return sem_open(name,value);
+}
 
+uint64_t syscall_sem_close(char *name) {
+    return sem_close(name);
+}
+
+uint64_t syscall_sem_wait(char *name) {
+    return sem_wait(name);
+}
+
+uint64_t syscall_sem_post(char *name) {
+    return sem_post(name);
+}
+
+uint64_t syscall_sem_count() {
+    return get_sem_count();
+}
+
+uint64_t syscall_sem_info(int idx, p_sem buffer) {
+    return get_sem_info(idx, buffer);
+}
+
+uint64_t syscall_pipe_open(char* name) {
+    return (uint64_t)pipe_open(name);
+}
+uint64_t syscall_pipe_close(int id) {
+    pipe_close(id);
+    return 1;
+}
+
+uint64_t syscall_pipes_info() {
+    char *response = pipes_info();
+    return (uint64_t)response;
+}
