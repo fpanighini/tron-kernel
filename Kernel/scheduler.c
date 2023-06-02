@@ -8,6 +8,11 @@ void add_node(ProcessP process);
 NodeP find_next_ready(NodeP current);
 NodeP find_node(uint64_t pid);
 
+void destroy_current_node();
+void free_node(NodeP node);
+
+
+
 NodeP first = NULL;
 NodeP currentNode = NULL;
 
@@ -21,19 +26,34 @@ uint64_t scheduler(uint64_t sp){
     if (counter == 1){
         return sp;
     }
-    uint64_t te = ticks_elapsed();
+
+    // Save the current process stack pointer
     currentNode->proc->sp = sp;
-    if((te % 1) == 0){
-        currentNode->proc->state = currentNode->proc->state == BLOCKED ? BLOCKED : READY;
+
+    // If process is running increase its quantums
+    if (currentNode->proc->state == RUNNING){
+        currentNode->quantums++;
+    } else if (currentNode->proc->state == KILLED){ // If process is DEAD destroy the currentNode (replaced by the next ready process)
+        destroy_current_node();
         currentNode = find_next_ready(currentNode);
         currentNode->proc->state = RUNNING;
+        currentNode->quantums = currentNode->proc->priority;
+        return currentNode->proc->sp;
     }
+
+    if (currentNode->quantums > MAX_QUANTUM || currentNode->proc->state == BLOCKED){
+        currentNode->proc->state = READY;
+        currentNode = find_next_ready(currentNode->next);
+        currentNode->proc->state = RUNNING;
+        currentNode->quantums = currentNode->proc->priority;
+    }
+
     return currentNode->proc->sp;
 }
 
 NodeP find_next_ready(NodeP current){
-    if (current->next->proc->state == READY || current->next->proc->state == NEW){
-        return current->next;
+    if (current->proc->state == READY || current->proc->state == NEW){
+        return current;
     }
     return find_next_ready(current->next);
 }
@@ -49,16 +69,17 @@ void idle(){
 void init_scheduler(){
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL){
-    printString((uint8_t *) "MemError", RED);
+        printString((uint8_t *) "MemError", RED);
         return ;
     }
     char * argv[] = {NULL};
-    newNode->proc = newProcess("IDLE", &idle, argv, 0);
+    newNode->proc = newProcess("IDLE", &idle, argv, MAX_QUANTUM);
+    newNode->quantums = MAX_QUANTUM;
     first = newNode;
     newNode->next = first;
     currentNode = first;
     counter++;
-    currentNode->proc->state = BLOCKED;
+    currentNode->proc->state = RUNNING;
     // add_process("IDLE", &idle);
 }
 
@@ -74,6 +95,7 @@ void add_node(ProcessP process){
         printString((uint8_t *) "MemError", RED);
         return ;
     }
+    newNode->quantums = process->priority;
     newNode->proc = process;
     newNode->next = currentNode->next;
     currentNode->next = newNode;
@@ -119,3 +141,13 @@ uint64_t get_running_pid(void){
     return currentNode == NULL ? 0 : currentNode->proc->pid;
 }
 
+void destroy_current_node(){
+    currentNode->proc = currentNode->next->proc;
+    currentNode->next = currentNode->next->next;
+    free_node(currentNode->next);
+}
+
+void free_node(NodeP node){
+    free_proc(node->proc);
+    free(node);
+}

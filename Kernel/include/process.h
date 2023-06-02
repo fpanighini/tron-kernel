@@ -3,13 +3,14 @@
 
 #include <stdint.h>
 #include "memoryManager.h"
+//#include "scheduler.h"
 // #include <scheduler.h>
 #include <stack.h>
 
 
 #define STACK_FRAME_SIZE 4000
 
-typedef enum {READY = 0, RUNNING, BLOCKED, NEW} states;
+typedef enum {READY = 0, RUNNING, BLOCKED, NEW, KILLED} states;
 
 typedef struct Process {
     char * name;
@@ -22,8 +23,10 @@ typedef struct Process {
     uint64_t priority;
 } Process;
 
-typedef Process * ProcessP;
+typedef struct Process * ProcessP;
 
 ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t priority);
+
+void free_proc(ProcessP proc);
 
 #endif
