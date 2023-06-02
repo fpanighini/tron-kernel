@@ -41,6 +41,7 @@ EXTERN sys_changeFontSize
 EXTERN sys_inforeg
 EXTERN sys_beep
 EXTERN sys_malloc
+EXTERN sys_free
 EXTERN sys_exec
 EXTERN sys_pipe_open
 EXTERN sys_pipes_info
@@ -55,6 +56,7 @@ EXTERN sys_get_pid
 EXTERN sys_kill
 EXTERN sys_block
 EXTERN sys_unblock
+EXTERN sys_yield
 
 
 SECTION .text
@@ -278,46 +280,52 @@ syscallINTHandler:
     je .malloc
 
     cmp rax, 0x0F
-    je .exec
+    je .free
 
     cmp rax, 0x10
-    je .pipe_open
+    je .exec
 
     cmp rax, 0x11
-    je .pipes_info
+    je .pipe_open
 
     cmp rax, 0x12
-    je .pipe_close
+    je .pipes_info
 
     cmp rax, 0x13
-    je .sem_open
+    je .pipe_close
 
     cmp rax, 0x14
-    je .sem_close
+    je .sem_open
 
     cmp rax, 0x15
-    je .sem_post
+    je .sem_close
 
     cmp rax, 0x16
-    je .sem_wait
+    je .sem_post
 
     cmp rax, 0x17
-    je .sem_info
+    je .sem_wait
 
     cmp rax, 0x18
-    je .sem_count
+    je .sem_info
 
     cmp rax, 0x19
-    je .get_pid
+    je .sem_count
 
     cmp rax, 0x1A
-    je .kill
+    je .get_pid
 
     cmp rax, 0x1B
-    je .block
+    je .kill
 
     cmp rax, 0x1C
+    je .block
+
+    cmp rax, 0x1D
     je .unblock
+
+    cmp rax, 0x1E
+    je .yield
 
     jmp .end
 
@@ -381,6 +389,10 @@ syscallINTHandler:
         call sys_malloc
         jmp .end
 
+.free:
+        call sys_free
+        jmp .end
+
 .exec:
         call sys_exec
         jmp .end
@@ -435,6 +447,10 @@ syscallINTHandler:
 
 .unblock:
         call sys_unblock
+        jmp .end
+
+.yield:
+        call sys_yield
         jmp .end
 
 .end:

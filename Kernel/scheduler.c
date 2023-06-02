@@ -17,6 +17,7 @@ NodeP first = NULL;
 NodeP currentNode = NULL;
 
 uint64_t counter = 0;
+uint64_t force_yield = 0;
 
 typedef int (*EntryPoint)();
 
@@ -24,7 +25,7 @@ uint64_t scheduler(uint64_t sp){
     if(disable_count) {
         return currentNode->proc->sp = sp;
     }
-    
+
     if (counter == 1){
         return sp;
     }
@@ -43,7 +44,8 @@ uint64_t scheduler(uint64_t sp){
         return currentNode->proc->sp;
     }
 
-    if (currentNode->quantums > MAX_QUANTUM || currentNode->proc->state == BLOCKED){
+    if (currentNode->quantums > MAX_QUANTUM || currentNode->proc->state == BLOCKED || force_yield){
+        force_yield = 0;
         currentNode->proc->state = READY;
         currentNode = find_next_ready(currentNode->next);
         currentNode->proc->state = RUNNING;
@@ -184,4 +186,10 @@ void scheduler_disable() {
     do count = disable_count; 
     while(_cmpxchg(&disable_count, count+1, count) != count);
 }
+
+void force_current_yield(){
+    force_yield = 1;
+    _force_scheduler();
+}
+
 //TODO: ojo con la declaracion de xchg (libasm.h)

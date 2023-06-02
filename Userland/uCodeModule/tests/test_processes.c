@@ -10,6 +10,8 @@ typedef struct P_rq {
 } p_rq;
 
 int64_t test_processes(uint64_t argc, char *argv[]) {
+    printf("\n%s\n", argv[0]);
+
   uint8_t rq;
   uint8_t alive = 0;
   uint8_t action;

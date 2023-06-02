@@ -1,3 +1,4 @@
+#include "include/videoDriver.h"
 #include <stack.h>
 #include <scheduler.h>
 #include <process.h>
@@ -6,6 +7,9 @@
 uint64_t count_argv(char ** argv);
 
 StackFrame createStack(void * entryPoint, void * stackBase, char ** argv){
+    // for (int i = 0 ; i < count_argv(argv); i++){
+    //     printString(argv[i], WHITE);
+    // }
     StackFrame stackFrame;
 
     stackFrame.r15 = 0x0;
@@ -16,10 +20,10 @@ StackFrame createStack(void * entryPoint, void * stackBase, char ** argv){
     stackFrame.r10 = 0x0;
     stackFrame.r9 = 0x0;
     stackFrame.r8 = 0x0;
-    stackFrame.rsi = (uint64_t) argv;
-    stackFrame.rdi = count_argv(argv);
+    stackFrame.rsi = count_argv(argv);
+    stackFrame.rdi = entryPoint;
     stackFrame.rbp = 0x0;
-    stackFrame.rdx = 0x0;
+    stackFrame.rdx = argv;
     stackFrame.rcx = 0x0;
     stackFrame.rbx = 0x0;
     stackFrame.rax = 0x0;
