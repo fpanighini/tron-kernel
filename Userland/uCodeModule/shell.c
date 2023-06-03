@@ -309,13 +309,10 @@ int readBuffer(char *buf)
     else if (strchr(buf, '|') != 0)
     {
 
-        //TODO: Descomentar e implementar pipes
-
-        /*
-        char *substring1;
-        int length1;
-        char *substring2;
-        int length2;
+        char *left;
+        int lengthLeft;
+        char *right;
+        int lengthRight;
 
         int totalLength = strlen(buf);
 
@@ -333,35 +330,51 @@ int readBuffer(char *buf)
         // If delimiter '|' not found, return NULL for both substrings
         if (delimiterPos == -1)
         {
-            substring1 = NULL;
-            length1 = 0;
-            substring2 = NULL;
-            length2 = 0;
+            left = NULL;
+            lengthLeft = 0;
+            right = NULL;
+            lengthRight = 0;
             return -1;
         }
 
-        // Allocate memory for substring1 and copy characters before '|'
-        substring1 = malloc((delimiterPos + 1) * sizeof(char));
-        strncpy(substring1, buf, delimiterPos);
-        (substring1)[delimiterPos] = '\0';
-        length1 = delimiterPos;
+        // Allocate memory for left and copy characters before '|'
+        left = malloc((delimiterPos + 1) * sizeof(char));
+        strncpy(left, buf, delimiterPos);
+        (left)[delimiterPos] = '\0';
+        lengthLeft = delimiterPos;
 
-        // Allocate memory for substring2 and copy characters after '|'
-        substring2 = malloc((totalLength - delimiterPos) * sizeof(char));
-        strncpy(substring2, buf + delimiterPos + 1, totalLength - delimiterPos);
-        (substring2)[totalLength - delimiterPos - 1] = '\0';
-        length2 = totalLength - delimiterPos - 1;
+        // Allocate memory for right and copy characters after '|'
+        right = malloc((totalLength - delimiterPos) * sizeof(char));
+        strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
+        (right)[totalLength - delimiterPos - 1] = '\0';
+        lengthRight = totalLength - delimiterPos - 1;
 
-        //printf("Substring 1: %s\n", substring1);
-        //printf("Substring 1 length: %d\n", length1);
-        //printf("Substring 2: %s\n", substring2);
-        //printf("Substring 2 length: %d\n", length2);
+        //printf("Substring 1: %s\n", left);
+        //printf("Substring 1 length: %d\n", lengthLeft);
+        //printf("Substring 2: %s\n", right);
+        //printf("Substring 2 length: %d\n", lengthRight);
 
+        long leftPid = readBuffer(left);
+        long rightPid = readBuffer(right);
         
+        if (leftPid == -1 || rightPid == -1)
+        {
+            printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
+            printNewline();
+            return 1;
+        }
+
+        /*
+        int fdPipe = pipe_open("pipes");
+        sys_write(fdPipe, left, WHITE, lengthLeft - 1);
+
+
+
+        int fd_pipe[2] = {1, 0};
         fd_pipe[1] = sys_pipe_open("pipes");
         int fd_pipe_aux = fd_pipe[1];
 
-        input_read_size = len_l - 1;
+        input_read_size = lengthLeft - 1;
         fd_pipe[0] = 1; // stdin es keyboard
                         // stdout es el pipe
         sys_sem_open("pipe", 0);
@@ -370,9 +383,9 @@ int readBuffer(char *buf)
         sys_sem_wait("pipe");
         if (aux)
         {
-            sys_write(fd_pipe[1], left, len_l - 1);
+            sys_write(fd_pipe[1], left, WHITE ,lengthLeft - 1);
         }
-        input_read_size = len_r - 1;
+        input_read_size = lengthRight - 1;
 
         fd_pipe[0] = fd_pipe_aux; // stdin es el pipe
         fd_pipe[1] = 0;           // stdout es la shell
