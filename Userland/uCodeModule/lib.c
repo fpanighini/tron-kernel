@@ -434,8 +434,8 @@ void free(void * ptr){
     sys_free(ptr);
 }
 
-long exec(char * name, void * program, char ** argv, int priority) {
-    return sys_exec(name, program, argv, priority);
+long exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority) {
+    return sys_exec(name, program, argv, read_fd, write_fd, priority);
 }
 
 long get_pid(){
@@ -488,7 +488,7 @@ int pipe_open(char* name) {
 
 //TODO: ver index-2
 void pipe_close(int index) {
-	sys_pipe_close(index-2);
+	sys_pipe_close(index - 2);
 }
 
 void yield() {

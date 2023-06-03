@@ -292,19 +292,19 @@ int readBuffer(char *buf)
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
-        exec("test_processes", &test_processes, argv, 0);
+        exec("test_processes", &test_processes, argv, 0, 1, 0);
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
         char *argv[] = {"100000000000", 0};
-        exec("test_mm", &test_mm, argv, 1);
+        exec("test_mm", &test_mm, argv, 0, 1, 1);
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
         char *argv[] = {"20", "5", 0};
-        exec("test_sync", &test_sync, argv, 1);
+        exec("test_sync", &test_sync, argv, 0, 1, 1);
     }
     else if (strchr(buf, '|') != 0)
     {

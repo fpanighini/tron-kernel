@@ -1,3 +1,4 @@
+#include "include/pipe.h"
 #include "include/scheduler.h"
 #include "include/videoDriver.h"
 #include <syscallManager.h>
@@ -17,8 +18,14 @@ extern uint64_t registers[REGISTER_NUM];
 uint64_t sys_write(uint8_t fd, char *string, Color color) {
     if (fd == STDERR)
         color = RED;
-    
-    printString((uint8_t *)string, color);
+
+    uint64_t pipe_fd = get_current_write();
+
+    if (pipe_fd == 1){
+        printString((uint8_t *)string, color);
+    } else {
+        // pipe_write(pipe_fd, string, n);
+    }
     return 0;
 }
 
@@ -176,8 +183,8 @@ void sys_free(void * ptr){
     free(ptr);
 }
 
-uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t priority){
-    return add_process(name, program, argv, priority);
+uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
+    return add_process(name, program, argv, read_fd, write_fd, priority);
 }
 
 uint64_t sys_sem_open(char *name, int value) {
@@ -207,6 +214,7 @@ uint64_t sys_sem_info(int idx, p_sem buffer) {
 uint64_t sys_pipe_open(char* name) {
     return (uint64_t)pipe_open(name);
 }
+
 uint64_t sys_pipe_close(int id) {
     pipe_close(id);
     return 1;

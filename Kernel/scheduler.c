@@ -77,7 +77,7 @@ void init_scheduler(){
         return ;
     }
     char * argv[] = {NULL};
-    newNode->proc = newProcess("IDLE", &idle, argv, MAX_QUANTUM);
+    newNode->proc = newProcess("IDLE", &idle, argv, 0, 1, MAX_QUANTUM);
     newNode->quantums = MAX_QUANTUM;
     first = newNode;
     newNode->next = first;
@@ -87,8 +87,10 @@ void init_scheduler(){
     // add_process("IDLE", &idle);
 }
 
-uint64_t add_process(char * name, void * program, char ** argv, uint64_t priority){
-    ProcessP proc = newProcess(name, program, argv, priority);
+uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
+    printBase(read_fd, 10);
+    printBase(write_fd, 10);
+    ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
     add_node(proc);
     counter++;
     return proc->pid;
@@ -190,6 +192,14 @@ void scheduler_disable() {
 void force_current_yield(){
     force_yield = 1;
     _force_scheduler();
+}
+
+uint64_t get_current_read() {
+    return currentNode->proc->read_fd;
+}
+
+uint64_t get_current_write() {
+    return currentNode->proc->write_fd;
 }
 
 //TODO: ojo con la declaracion de xchg (libasm.h)

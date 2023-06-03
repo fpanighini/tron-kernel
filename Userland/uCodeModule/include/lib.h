@@ -40,7 +40,7 @@ void printBase(uint64_t value, uint32_t base);
 void beep(int frequency);
 void * malloc(unsigned int memSize);
 void free(void * ptr);
-long exec(char * name, void * program, char ** argv, int priority);
+long exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority);
 long get_pid();
 long kill(int pid);
 long block(int pid);
