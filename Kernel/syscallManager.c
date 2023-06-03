@@ -1,3 +1,4 @@
+#include "include/pipe.h"
 #include "include/scheduler.h"
 #include "include/videoDriver.h"
 #include <syscallManager.h>
@@ -14,12 +15,31 @@ void beep2();
 extern uint64_t registers[REGISTER_NUM];
 
 //TODO: checkear el uso de write con pipes
-uint64_t sys_write(uint8_t fd, char *string, Color color) {
+uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color) {
     if (fd == STDERR)
         color = RED;
-    
-    printString((uint8_t *)string, color);
-    return 0;
+
+    uint64_t pipe_fd = get_current_write();
+
+    // Attempting to write on stdin
+    if (fd == 0){
+        return 0;
+    }
+
+    // Attempting to write 0 bytes to a pipe
+    if (fd != 1 && n == 0){
+        return 0;
+    }
+
+    // Printing to stdout
+    if (pipe_fd == 1){
+        printString((uint8_t *)string, color);
+        return 0;
+    }
+
+    // Writing n bytes to pipe
+    uint64_t ret = pipe_write(pipe_fd - 2, string, n);
+    return ret;
 }
 
 int getKbdBuffer(char * buf, uint32_t count, int * pos){
@@ -33,9 +53,19 @@ int getKbdBuffer(char * buf, uint32_t count, int * pos){
 
 //TODO: checkear el uso de read con pipes
 uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
-    if (fd != 0)
-        return 0;
-    
+    uint64_t new_fd = 0;
+    if (fd == 0 || fd == 1){
+        new_fd = get_current_read();
+    } else {
+        new_fd = fd + 2;
+    }
+
+    if (new_fd != 0){
+        uint64_t ret = pipe_read(new_fd - 2, buf , count);
+        return ret;
+
+    }
+
     int i = 0;
     int read = 0;
     clearKeyboardBuffer();
@@ -176,8 +206,8 @@ void sys_free(void * ptr){
     free(ptr);
 }
 
-uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t priority){
-    return add_process(name, program, argv, priority);
+uint64_t sys_exec(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
+    return add_process(name, program, argv, read_fd, write_fd, priority);
 }
 
 uint64_t sys_sem_open(char *name, int value) {
@@ -207,6 +237,7 @@ uint64_t sys_sem_info(int idx, p_sem buffer) {
 uint64_t sys_pipe_open(char* name) {
     return (uint64_t)pipe_open(name);
 }
+
 uint64_t sys_pipe_close(int id) {
     pipe_close(id);
     return 1;

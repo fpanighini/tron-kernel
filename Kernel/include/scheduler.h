@@ -35,7 +35,7 @@ void killCurrentProcess(void);
 
 void init_scheduler();
 
-uint64_t add_process(char * name, void * program, char ** argv, uint64_t priority);
+uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
 
 uint64_t kill_process(uint64_t pid);
 
@@ -52,5 +52,10 @@ void scheduler_enable();
 void scheduler_disable();
 
 void force_current_yield();
+
+uint64_t get_current_read();
+
+uint64_t get_current_write();
+
 
 #endif

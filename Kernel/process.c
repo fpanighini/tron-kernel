@@ -9,7 +9,7 @@ char ** save_argv(int argc, char ** argv);
 uint64_t count_argv(char ** argv);
 void free_argv(char ** argv);
 
-ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t priority) {
+ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority) {
     ProcessP proc = malloc(sizeof(Process));
 
     int argc =  count_argv(argv);
@@ -32,6 +32,8 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t prior
     proc->bp = (uint64_t) stackBase;
     proc->state = NEW;
     proc->stack = stack;
+    proc->read_fd = read_fd;
+    proc->write_fd = write_fd;
     proc->priority = priority;
     return proc;
 }

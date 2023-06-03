@@ -21,12 +21,14 @@ typedef struct Process {
     uint64_t bp;
     states state;
     void * stack;
+    uint64_t read_fd;
+    uint64_t write_fd;
     uint64_t priority;
 } Process;
 
 typedef struct Process * ProcessP;
 
-ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t priority);
+ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
 
 void free_proc(ProcessP proc);
 

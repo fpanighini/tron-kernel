@@ -204,7 +204,7 @@ static void print(const char *fmt, va_list args) {
 				case 's':
 				{
 					char *s = va_arg(args, char *);
-					sys_write(STDOUT, s, WHITE);
+					sys_write(STDOUT, s, 0, WHITE);
 					break;
 				}
 				case 'i':
@@ -213,7 +213,7 @@ static void print(const char *fmt, va_list args) {
 					char buffer[27];
 					int num = va_arg(args, int);
 					numToBase(num, buffer, 10);
-					sys_write(STDOUT, buffer, WHITE);
+					sys_write(STDOUT, buffer, 0, WHITE);
 					break;
 				}
 				case 'o':
@@ -221,7 +221,7 @@ static void print(const char *fmt, va_list args) {
 					char buffer[27];
 					int num = va_arg(args, int);
 					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, WHITE);
+					sys_write(STDOUT, buffer, 0, WHITE);
 					break;
 				}
 				case 'x':
@@ -233,7 +233,7 @@ static void print(const char *fmt, va_list args) {
 					putChar('0');
 					putChar('x');
 					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, WHITE);
+					sys_write(STDOUT, buffer, 0, WHITE);
 					break;
 				}
 				case '%':
@@ -246,7 +246,7 @@ static void print(const char *fmt, va_list args) {
 					char buffer[27];
 					long num = va_arg(args, long);
 					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, WHITE);
+					sys_write(STDOUT, buffer, 0, WHITE);
 					break;
 				}
 			}
@@ -277,7 +277,7 @@ int putColorChar(int car, Color c) {
 	char str[2];
 	str[0] = car;
 	str[1] = '\0';
-	sys_write(STDOUT, (char *)str, c);
+	sys_write(STDOUT, (char *)str, 0, c);
 	return str[0];
 }
 
@@ -386,7 +386,7 @@ void printBase(uint64_t value, uint32_t base) {
     uint8_t buf[BUFF_SIZE] = {0};
     uint8_t * buffer = buf;
     uintToBase(value, buffer, base);
-    sys_write(STDOUT, (char *) buffer, WHITE);
+    sys_write(STDOUT, (char *) buffer, 0, WHITE);
 }
 
 uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base) {
@@ -416,11 +416,11 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base) {
 }
 
 void printError(char * str){
-    sys_write(STDERR, str, RED);
+    sys_write(STDERR, str,0, RED);
 }
 
 void printString(char * str, Color color){
-    sys_write(STDOUT, str, color);
+    sys_write(STDOUT, str,0, color);
 }
 void beep(int frequency) {
 	sys_beep(frequency);
@@ -434,8 +434,8 @@ void free(void * ptr){
     sys_free(ptr);
 }
 
-long exec(char * name, void * program, char ** argv, int priority) {
-    return sys_exec(name, program, argv, priority);
+long exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority) {
+    return sys_exec(name, program, argv, read_fd, write_fd, priority);
 }
 
 long get_pid(){
@@ -488,7 +488,7 @@ int pipe_open(char* name) {
 
 //TODO: ver index-2
 void pipe_close(int index) {
-	sys_pipe_close(index-2);
+	sys_pipe_close(index - 2);
 }
 
 void yield() {

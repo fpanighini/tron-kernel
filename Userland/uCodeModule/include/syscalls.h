@@ -3,9 +3,9 @@
 #include <color.h>
 #include <stdint.h>
 
-#define STDOUT 0
-#define STDERR 1
 #define STDIN 0
+#define STDOUT 1
+#define STDERR 2
 
 #define PROC_MAX 50
 #define NAME_LIMIT 1024
@@ -21,8 +21,8 @@ typedef struct semInfo {
     uint64_t blockedLast;
 } semInfo_t;
 
+long sys_write(unsigned char fd, char * s, uint64_t n, Color c);
 long sys_read(unsigned char fd, char * s, int count);
-long sys_write(unsigned char fd, char * s, Color c);
 long sys_writeAt(short x, short y, char * s, Color c);
 long sys_clearScreen();
 long sys_wait(int ticks);
@@ -37,7 +37,7 @@ long sys_inforeg(long * registers);
 long sys_changeFontSize(int diff);
 void * sys_malloc(int size);
 void sys_free(void * ptr);
-long sys_exec(char * name, void * program, char ** argv, int priority);
+long sys_exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority);
 long sys_pipe_open(char* name);
 long sys_pipes_info();
 long sys_pipe_close(int id);
