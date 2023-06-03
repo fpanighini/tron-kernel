@@ -35,6 +35,7 @@
 #define KILL_COMMAND "kill"
 #define BLOCK_COMMAND "block"
 #define UNBLOCK_COMMAND "unblock"
+#define NICE_COMMAND "nice"
 
 #define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -76,7 +77,7 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 void shell(int argc, char **argv);
 void bufferRead(char **buf);
-void readPID(char **buf);
+void readNumber(char **buf);
 int readBuffer(char *buf, int fd_read, int fd_write);
 int pipedBuffer(char *buf);
 void printLine(char *str);
@@ -332,9 +333,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         // TODO: Ojo que no vuelve a la shell si la matamos
 
         int pid;
-        printf("Enter PID: ");
+        printf("Enter PID:  ");
         char * pidString = (char *) malloc(10);
-        readPID(&pidString);
+        readNumber(&pidString);
         pid = atoi(pidString);
 
         if (kill(pid) == pid)
@@ -345,9 +346,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, BLOCK_COMMAND))
     {
         int pid;
-        printf("Enter PID: ");
+        printf("Enter PID:  ");
         char * pidString = (char *) malloc(10);
-        readPID(&pidString);
+        readNumber(&pidString);
         pid = atoi(pidString);
 
         if (block(pid) == pid)
@@ -358,15 +359,43 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, UNBLOCK_COMMAND))
     {
         int pid;
-        printf("Enter PID: ");
+        printf("Enter PID:  ");
         char * pidString = (char *) malloc(10);
-        readPID(&pidString);
+        readNumber(&pidString);
         pid = atoi(pidString);
 
         if (unblock(pid) == pid)
             printf("\nPID %d unblocked successfully\n", pid);
         else
             printf("\nFailed to unblock PID %d\n", pid);
+    }
+    else if (!strcmp(buf, NICE_COMMAND))
+    {
+        int pid, priority;
+
+        printf("Enter PID:  ");
+        char * pidString = (char *) malloc(10);
+        readNumber(&pidString);
+        pid = atoi(pidString);
+        
+        char * priorityString = (char *) malloc(10);
+        do
+        {
+            printf("\nPriorities are: 0 (low), 1 (medium) or 2 (high)");
+            printf("\nEnter priority number:  ");
+            readNumber(&priorityString);
+            priority = atoi(priorityString);
+        } while (priority < 0 || priority > 2);
+
+        printf("\nSelected PID: %d\n", pid);
+        printf("Selected priority: %d\n", priority);
+
+        /*
+        if (nice(pid, priority) == pid) // ???
+            printf("\nPID %d had its priority modified successfully\n", pid);
+        else
+            printf("\nFailed to modify priority of PID %d\n", pid);
+        */
     }
     else
     {
@@ -495,7 +524,7 @@ int pipedBuffer(char *buf)
     return 1;
 }
 
-void readPID(char **buf)
+void readNumber(char **buf)
 {
     int c = 1, i = 0;
     while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
