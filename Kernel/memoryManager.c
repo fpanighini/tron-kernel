@@ -1,4 +1,6 @@
-#include "./include/memoryManager.h"
+#include "memoryManager.h"
+
+#ifndef BUDDY
 
 typedef struct BlockData {
     size_t size;
@@ -54,7 +56,7 @@ void *malloc(size_t size) {
     // If it's bigger than necessary, split
     if (block->size >= size + sizeof(BlockData) + sizeof(size_t)) {
         char *free_space = (char *)(block + 1);
-        BlockData *new_block = (BlockData*)(free_space + size);
+        BlockData *new_block = (BlockData *)(free_space + size);
 
         new_block->size = block->size - sizeof(BlockData) - size;
         new_block->next = block->next;
@@ -74,18 +76,18 @@ void *malloc(size_t size) {
     block->next = alloc_list;
     alloc_list = block;
 
-    return (void*)(block + 1);
+    return (void *)(block + 1);
 }
 
 int isContiguous(BlockData *left_block, BlockData *right_block) {
-    char *left_data = (char*)(left_block + 1);
-    BlockData *next_block = (BlockData*)(left_data + left_block->size);
+    char *left_data = (char *)(left_block + 1);
+    BlockData *next_block = (BlockData *)(left_data + left_block->size);
     return next_block == right_block;
 }
 
 void free(void *ptr) {
     // Is it a valid allocated block?
-    BlockData *block = (BlockData*)ptr - 1;
+    BlockData *block = (BlockData *)ptr - 1;
 
     // Search for that block
     BlockData *next = alloc_list;
@@ -113,7 +115,7 @@ void free(void *ptr) {
         previous = next;
         next = next->next;
     }
-    
+
     // Add block to free list, in the corresponding position
     if (previous == NULL) {
         block->next = free_list;
@@ -122,16 +124,18 @@ void free(void *ptr) {
         block->next = next;
         previous->next = block;
     }
-    
+
     // Check contiguity with next free block and merge
     if (next != NULL && isContiguous(block, next)) {
         block->next = next->next;
         block->size += sizeof(BlockData) + next->size;
     }
-    
+
     // Check contiguity with previous free block and merge
     if (previous != NULL && isContiguous(previous, block)) {
         previous->next = block->next;
         previous->size += sizeof(BlockData) + block->size;
     }
 }
+
+#endif
