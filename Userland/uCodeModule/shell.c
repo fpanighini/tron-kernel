@@ -10,6 +10,8 @@
 #define BACKSPACE '\b'
 #define MAX_KBD_BUF 55
 
+#define COMMAND_NOT_FOUND -1
+
 #define SHELL_NAME "Shell"
 
 #define HELP_COMMAND "help"
@@ -69,7 +71,8 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 void shell(int argc, char **argv);
 void bufferRead(char **buf);
-int readBuffer(char *buf);
+int readBuffer(char *buf, int fd_read, int fd_write);
+int pipedBuffer(char *buf);
 void printLine(char *str);
 void helpCommand(void);
 void printNewline(void);
@@ -96,7 +99,9 @@ void shell(int argc, char **argv)
         bufferRead(&string);
         printf("\b");
         printNewline();
-        out = readBuffer(string);
+        out = pipedBuffer(string);
+        if (out == -1)
+            out = readBuffer(string, 0, 1);
     }
 }
 
@@ -194,7 +199,7 @@ void printmem(char *buf)
     }
 }
 
-int readBuffer(char *buf)
+int readBuffer(char *buf, int fd_read, int fd_write)
 {
     int l;
     if (!strcmp(buf, ""))
@@ -205,7 +210,7 @@ int readBuffer(char *buf)
         {
             printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
-            return 1;
+            return COMMAND_NOT_FOUND;
         }
         printmem(buf + l);
     }
@@ -292,117 +297,29 @@ int readBuffer(char *buf)
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
-        exec("test_processes", &test_processes, argv, 0, 1, 0);
+        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 0);
+        return ret_pid;
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
         char *argv[] = {"100000000000", 0};
-        exec("test_mm", &test_mm, argv, 0, 1, 1);
+        int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1);
+        return ret_pid;
+
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
         char *argv[] = {"20", "5", 0};
-        exec("test_sync", &test_sync, argv, 0, 1, 1);
-    }
-    else if (strchr(buf, '|') != 0)
-    {
-
-        char *left;
-        int lengthLeft;
-        char *right;
-        int lengthRight;
-
-        int totalLength = strlen(buf);
-
-        // Find the position of '|'
-        int delimiterPos = -1;
-        for (int i = 0; i < totalLength; i++)
-        {
-            if (buf[i] == '|')
-            {
-                delimiterPos = i;
-                break;
-            }
-        }
-
-        // If delimiter '|' not found, return NULL for both substrings
-        if (delimiterPos == -1)
-        {
-            left = NULL;
-            lengthLeft = 0;
-            right = NULL;
-            lengthRight = 0;
-            return -1;
-        }
-
-        // Allocate memory for left and copy characters before '|'
-        left = malloc((delimiterPos + 1) * sizeof(char));
-        strncpy(left, buf, delimiterPos);
-        (left)[delimiterPos] = '\0';
-        lengthLeft = delimiterPos;
-
-        // Allocate memory for right and copy characters after '|'
-        right = malloc((totalLength - delimiterPos) * sizeof(char));
-        strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
-        (right)[totalLength - delimiterPos - 1] = '\0';
-        lengthRight = totalLength - delimiterPos - 1;
-
-        //printf("Substring 1: %s\n", left);
-        //printf("Substring 1 length: %d\n", lengthLeft);
-        //printf("Substring 2: %s\n", right);
-        //printf("Substring 2 length: %d\n", lengthRight);
-
-        long leftPid = readBuffer(left);
-        long rightPid = readBuffer(right);
-        
-        if (leftPid == -1 || rightPid == -1)
-        {
-            printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
-            printNewline();
-            return 1;
-        }
-
-        /*
-        int fdPipe = pipe_open("pipes");
-        sys_write(fdPipe, left, WHITE, lengthLeft - 1);
-
-
-
-        int fd_pipe[2] = {1, 0};
-        fd_pipe[1] = sys_pipe_open("pipes");
-        int fd_pipe_aux = fd_pipe[1];
-
-        input_read_size = lengthLeft - 1;
-        fd_pipe[0] = 1; // stdin es keyboard
-                        // stdout es el pipe
-        sys_sem_open("pipe", 0);
-        int aux = console_finish_handler(left);
-        strcpy(left, input);
-        sys_sem_wait("pipe");
-        if (aux)
-        {
-            sys_write(fd_pipe[1], left, WHITE ,lengthLeft - 1);
-        }
-        input_read_size = lengthRight - 1;
-
-        fd_pipe[0] = fd_pipe_aux; // stdin es el pipe
-        fd_pipe[1] = 0;           // stdout es la shell
-        console_finish_handler(right);
-        sys_sem_wait("pipe");
-        fd_pipe[0] = 1; // stdin es keyboard
-        fd_pipe[1] = 0; // stdout es shell
-
-        sys_pipe_close(fd_pipe_aux);
-        sys_sem_close("pipe");
-        return 0;
-        */
+        int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
+        return ret_pid;
     }
     else
     {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
+        return COMMAND_NOT_FOUND;
     }
     return 1;
 }
@@ -457,4 +374,70 @@ int increaseFontSize()
 int decreaseFontSize()
 {
     return sys_changeFontSize(DECREASE);
+}
+
+int pipedBuffer(char *buf)
+{
+    if (!strchr(buf, '|') != 0)
+        return -1;
+
+    char *left;
+    // int lengthLeft;
+    char *right;
+    // int lengthRight;
+
+    int totalLength = strlen(buf);
+
+    // Find the position of '|'
+    int delimiterPos = -1;
+    for (int i = 0; i < totalLength; i++)
+    {
+        if (buf[i] == '|')
+        {
+            delimiterPos = i;
+            break;
+        }
+    }
+
+    // If delimiter '|' not found, return NULL for both substrings
+    if (delimiterPos == -1)
+    {
+        left = NULL;
+        // lengthLeft = 0;
+        right = NULL;
+        // lengthRight = 0;
+        return -1;
+    }
+
+    // Allocate memory for left and copy characters before '|'
+    left = malloc((delimiterPos + 1) * sizeof(char));
+    strncpy(left, buf, delimiterPos);
+    (left)[delimiterPos] = '\0';
+    // lengthLeft = delimiterPos;
+
+    // Allocate memory for right and copy characters after '|'
+    right = malloc((totalLength - delimiterPos) * sizeof(char));
+    strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
+    (right)[totalLength - delimiterPos - 1] = '\0';
+    // lengthRight = totalLength - delimiterPos - 1;
+
+    // printf("Substring 1: %s\n", left);
+    // printf("Substring 1 length: %d\n", lengthLeft);
+    // printf("Substring 2: %s\n", right);
+    // printf("Substring 2 length: %d\n", lengthRight);
+
+    int fd = pipe_open("pipes");
+
+    long leftPid = readBuffer(left, 0, fd);
+    if (leftPid == -1)
+        return 2;
+
+    long rightPid = readBuffer(right, fd, 1);
+    if (rightPid == -1)
+    {
+        sys_kill(leftPid);
+        return 3;
+    }
+
+    return 1;
 }
