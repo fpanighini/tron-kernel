@@ -29,7 +29,7 @@
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
 
-#define MAX_TERMINAL_CHARS 124          // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
+#define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
 The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
 \
@@ -54,7 +54,10 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 #define DECREASE -1
 
 #define REGISTER_NUM 17
-#define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"}
+#define REGISTER_NAMES                                                                                                        \
+    {                                                                                                                         \
+        "RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15" \
+    }
 
 #define PRINT_BYTES 32
 
@@ -64,7 +67,7 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 #define NEWLINE "\n"
 
-void shell(int argc, char ** argv);
+void shell(int argc, char **argv);
 void bufferRead(char **buf);
 int readBuffer(char *buf);
 void printLine(char *str);
@@ -74,7 +77,7 @@ void testInvalidOpException();
 void testDivideByZeroException();
 
 void printInforeg();
-void printErrorMessage(char * program, char * errorMessage);
+void printErrorMessage(char *program, char *errorMessage);
 
 int increaseFontSize();
 int decreaseFontSize();
@@ -82,10 +85,12 @@ int decreaseFontSize();
 extern void invalidOpcode();
 extern void divideZero();
 
-void shell(int argc, char ** argv) {
+void shell(int argc, char **argv)
+{
     int out = 1;
 
-    while (out) {
+    while (out)
+    {
         char str[MAX_TERMINAL_CHARS] = {0};
         char *string = str;
         bufferRead(&string);
@@ -95,23 +100,29 @@ void shell(int argc, char ** argv) {
     }
 }
 
-void bufferRead(char **buf) {
+void bufferRead(char **buf)
+{
     int c = 1;
     int i = 0;
     (*buf)[i] = 0;
     printString(COMMAND_CHAR, GREEN);
     printf(CURSOR);
-    while (c != 0 && i < MAX_TERMINAL_CHARS - 1) {
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+    {
         c = getChar();
-        if (c == BACKSPACE) {
-            if (i > 0) {
+        if (c == BACKSPACE)
+        {
+            if (i > 0)
+            {
                 (*buf)[--i] = 0;
                 printf("\b");
                 printf("\b");
                 printf(CURSOR);
             }
-        } else if (c >= ' ') {
-            (*buf)[i++] = (char) c;
+        }
+        else if (c >= ' ')
+        {
+            (*buf)[i++] = (char)c;
             (*buf)[i] = 0;
             printf("\b");
             printf(*buf + i - 1);
@@ -120,66 +131,78 @@ void bufferRead(char **buf) {
     }
 }
 
-void printmem(char * buf) {
+void printmem(char *buf)
+{
     int i = 0;
     while (buf[i] != 0 && buf[i] == ' ')
         i++;
-    if (buf[i] == 0){
+    if (buf[i] == 0)
+    {
         printErrorMessage(PRINTMEM_COMMAND, "No argument received");
         printNewline();
-        return ;
+        return;
     }
     if (buf[i] == '0')
         i++;
-    else {
+    else
+    {
         printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
-        return ;
+        return;
     }
     if (buf[i] == 'x')
         i++;
-    else {
+    else
+    {
         printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
-        return ;
+        return;
     }
-    if (buf[i] == 0){
+    if (buf[i] == 0)
+    {
         printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
         printNewline();
-        return ;
+        return;
     }
     long long accum = 0;
-    for (; buf[i] != 0 ; i++){
+    for (; buf[i] != 0; i++)
+    {
         if (buf[i] >= 'a' && buf[i] <= 'f')
-            accum = 16*accum + buf[i] - 'a' + 10;
+            accum = 16 * accum + buf[i] - 'a' + 10;
         else if (buf[i] >= '0' && buf[i] <= '9')
-            accum = 16*accum + buf[i] - '0';
-        else {
+            accum = 16 * accum + buf[i] - '0';
+        else
+        {
             printErrorMessage(PRINTMEM_COMMAND, "Argument must be a hexadecimal value");
             printNewline();
-            return ;
+            return;
         }
     }
-    long long * pointer = (long long *) accum;
-    if (0xFFFFFFFF - accum <= 32){
+    long long *pointer = (long long *)accum;
+    if (0xFFFFFFFF - accum <= 32)
+    {
         printErrorMessage(PRINTMEM_COMMAND, "Input number is too big, limit is 0xFFFFFFDE");
         printNewline();
-        return ;
+        return;
     }
-    for (long long j = 0 ; j < PRINT_BYTES && accum + j + 2 < 0xFFFFFFFFFFFFFFFF; j++){
-        printBase((int) j,10);
+    for (long long j = 0; j < PRINT_BYTES && accum + j + 2 < 0xFFFFFFFFFFFFFFFF; j++)
+    {
+        printBase((int)j, 10);
         printf("d\n");
         printBase(pointer[j], 2);
         printf("b\n");
     }
 }
 
-
-int readBuffer(char *buf) {
+int readBuffer(char *buf)
+{
     int l;
-    if (!strcmp(buf, ""));
-    else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND))){
-        if (buf[l] != ' ' && buf[l] != 0){
+    if (!strcmp(buf, ""))
+        ;
+    else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND)))
+    {
+        if (buf[l] != ' ' && buf[l] != 0)
+        {
             printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
             return 1;
@@ -190,119 +213,235 @@ int readBuffer(char *buf) {
         helpCommand();
     else if (!strcmp(buf, CLEAR_COMMAND))
         clear();
-    else if (!strcmp(buf, TRON_COMMAND)){
+    else if (!strcmp(buf, TRON_COMMAND))
+    {
         clear();
 
         // Lower font size
         int count = 0;
-        for (; decreaseFontSize() ;count++);
+        for (; decreaseFontSize(); count++)
+            ;
 
-        mainTron();             // Call tron game
+        mainTron(); // Call tron game
 
         // Reset font size to previous value
-        for (int i = 0 ; i < count ; i++)
+        for (int i = 0; i < count; i++)
             increaseFontSize();
         clear();
-    } else if (!strcmp(buf, DATE_COMMAND)){
+    }
+    else if (!strcmp(buf, DATE_COMMAND))
+    {
         char str[MAX_TERMINAL_CHARS] = {0};
-        char * string = str;
+        char *string = str;
         getDateFormat(string);
-        printf("%s\n",string);
-    } else if (!strcmp(buf, TIME_COMMAND)){
+        printf("%s\n", string);
+    }
+    else if (!strcmp(buf, TIME_COMMAND))
+    {
         char str[MAX_TERMINAL_CHARS] = {0};
-        char * string = str;
+        char *string = str;
         getTimeFormat(string);
-        printf("%s\n",string);
-    } else if (!strcmp(buf, DATE_TIME_COMMAND)){
+        printf("%s\n", string);
+    }
+    else if (!strcmp(buf, DATE_TIME_COMMAND))
+    {
         char str[MAX_TERMINAL_CHARS] = {0};
-        char * string = str;
+        char *string = str;
         getDateAndTime(string);
-        printf("%s\n",string);
-    } else if (!strcmp(buf, INC_FONT_SIZE_COMMAND)){
+        printf("%s\n", string);
+    }
+    else if (!strcmp(buf, INC_FONT_SIZE_COMMAND))
+    {
         int check = increaseFontSize();
-        if (!check){
+        if (!check)
+        {
             printErrorMessage(buf, INCREASE_FONT_FAIL);
             printNewline();
-        } else
+        }
+        else
             clear();
     }
-    else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND)){
+    else if (!strcmp(buf, DEC_FONT_SIZE_COMMAND))
+    {
         int check = decreaseFontSize();
-        if (!check){
+        if (!check)
+        {
             printErrorMessage(buf, DECREASE_FONT_FAIL);
             printNewline();
-        } else
+        }
+        else
             clear();
     }
     else if (!strcmp(buf, INFOREG_COMMAND))
         printInforeg();
-    else if (!strcmp(buf, DIVIDE_BY_ZERO)){
+    else if (!strcmp(buf, DIVIDE_BY_ZERO))
+    {
         testDivideByZeroException();
         return 0;
-    } else if (!strcmp(buf, INVALID_OP)){
+    }
+    else if (!strcmp(buf, INVALID_OP))
+    {
         testInvalidOpException();
         return 0;
-    } else if (!strcmp(buf, EXIT_COMMAND)){
+    }
+    else if (!strcmp(buf, EXIT_COMMAND))
+    {
         clear();
         return 0;
-    } else if (!strcmp(buf, TEST_PROCESSES_COMMAND)){
-        char * argv[] = {"2", 0};
+    }
+    else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
+    {
+        char *argv[] = {"2", 0};
         exec("test_processes", &test_processes, argv, 0);
         // test_processes(1,argv);
-    } else if (!strcmp(buf, TEST_MM_COMMAND)){
-        char * argv[] = {"100000000000", 0};
+    }
+    else if (!strcmp(buf, TEST_MM_COMMAND))
+    {
+        char *argv[] = {"100000000000", 0};
         exec("test_mm", &test_mm, argv, 1);
         // test_processes(1,argv);
-    } else if (!strcmp(buf, TEST_SYNC_COMMAND)){
-        char * argv[] = {"10", "1", 0};
+    }
+    else if (!strcmp(buf, TEST_SYNC_COMMAND))
+    {
+        char *argv[] = {"20", "5", 0};
         exec("test_sync", &test_sync, argv, 1);
-    } else {
+    }
+    else if (strchr(buf, '|') != 0)
+    {
+
+        //TODO: Descomentar e implementar pipes
+
+        /*
+        char *substring1;
+        int length1;
+        char *substring2;
+        int length2;
+
+        int totalLength = strlen(buf);
+
+        // Find the position of '|'
+        int delimiterPos = -1;
+        for (int i = 0; i < totalLength; i++)
+        {
+            if (buf[i] == '|')
+            {
+                delimiterPos = i;
+                break;
+            }
+        }
+
+        // If delimiter '|' not found, return NULL for both substrings
+        if (delimiterPos == -1)
+        {
+            substring1 = NULL;
+            length1 = 0;
+            substring2 = NULL;
+            length2 = 0;
+            return -1;
+        }
+
+        // Allocate memory for substring1 and copy characters before '|'
+        substring1 = malloc((delimiterPos + 1) * sizeof(char));
+        strncpy(substring1, buf, delimiterPos);
+        (substring1)[delimiterPos] = '\0';
+        length1 = delimiterPos;
+
+        // Allocate memory for substring2 and copy characters after '|'
+        substring2 = malloc((totalLength - delimiterPos) * sizeof(char));
+        strncpy(substring2, buf + delimiterPos + 1, totalLength - delimiterPos);
+        (substring2)[totalLength - delimiterPos - 1] = '\0';
+        length2 = totalLength - delimiterPos - 1;
+
+        //printf("Substring 1: %s\n", substring1);
+        //printf("Substring 1 length: %d\n", length1);
+        //printf("Substring 2: %s\n", substring2);
+        //printf("Substring 2 length: %d\n", length2);
+
+        
+        fd_pipe[1] = sys_pipe_open("pipes");
+        int fd_pipe_aux = fd_pipe[1];
+
+        input_read_size = len_l - 1;
+        fd_pipe[0] = 1; // stdin es keyboard
+                        // stdout es el pipe
+        sys_sem_open("pipe", 0);
+        int aux = console_finish_handler(left);
+        strcpy(left, input);
+        sys_sem_wait("pipe");
+        if (aux)
+        {
+            sys_write(fd_pipe[1], left, len_l - 1);
+        }
+        input_read_size = len_r - 1;
+
+        fd_pipe[0] = fd_pipe_aux; // stdin es el pipe
+        fd_pipe[1] = 0;           // stdout es la shell
+        console_finish_handler(right);
+        sys_sem_wait("pipe");
+        fd_pipe[0] = 1; // stdin es keyboard
+        fd_pipe[1] = 0; // stdout es shell
+
+        sys_pipe_close(fd_pipe_aux);
+        sys_sem_close("pipe");
+        return 0;
+        */
+    }
+    else
+    {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
     }
     return 1;
 }
 
-void printErrorMessage(char * program, char * errorMessage){
+void printErrorMessage(char *program, char *errorMessage)
+{
     printString(SHELL_NAME, GREEN);
     printf(" : %s : ", program);
     printError(errorMessage);
 }
 
-void helpCommand(){
+void helpCommand()
+{
     printf(HELP_MESSAGE);
     printNewline();
 }
 
-void printNewline(){
-    printString(NEWLINE,WHITE);
+void printNewline()
+{
+    printString(NEWLINE, WHITE);
 }
 
-void testDivideByZeroException(){
+void testDivideByZeroException()
+{
     divideZero();
 }
 
-
-void testInvalidOpException(){
+void testInvalidOpException()
+{
     invalidOpcode();
 }
 
-void printInforeg(){
+void printInforeg()
+{
     long array[REGISTER_NUM] = {0};
-    long * arr = (long *) &array;
+    long *arr = (long *)&array;
     sys_inforeg(arr);
-    char * registerNames[] = REGISTER_NAMES;
-    for (int i = 0 ; i < REGISTER_NUM; i++){
-        printf("%s : ",registerNames[i]);
+    char *registerNames[] = REGISTER_NAMES;
+    for (int i = 0; i < REGISTER_NUM; i++)
+    {
+        printf("%s : ", registerNames[i]);
         printBase(arr[i], 2);
         printf("b\n");
     }
 }
 
-int increaseFontSize(){
+int increaseFontSize()
+{
     return sys_changeFontSize(INCREASE);
 }
 
-int decreaseFontSize(){
+int decreaseFontSize()
+{
     return sys_changeFontSize(DECREASE);
 }

@@ -11,11 +11,14 @@ typedef uint8_t bool;
 #define true 1
 #define false 0
 
+#define NULL ((void *)0)
+
 int strcmp(const char *str1, const char *str2);
 int strncmp (const char *str1, const char *str2, int n);
 int strlen(const char *str1);
 char * strcat(char *dest, const char *src);
 char *strcpy(char *dest, const char *src);
+char* strchr(const char* str, int c);
 long itoa(long number, char *str);
 int getChar(void);
 void printf(const char *fmt, ...);

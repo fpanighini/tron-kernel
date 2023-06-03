@@ -9,7 +9,7 @@ char ** save_argv(int argc, char ** argv);
 uint64_t count_argv(char ** argv);
 void free_argv(char ** argv);
 
-ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t priority){
+ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t priority) {
     ProcessP proc = malloc(sizeof(Process));
 
     int argc =  count_argv(argv);

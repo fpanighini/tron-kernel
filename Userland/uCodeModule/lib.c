@@ -92,6 +92,18 @@ char *strcpy(char *dest, const char *src) {
 	return aux;
 }
 
+char* strchr(const char* str, int c) {
+    while (*str != '\0') {
+        if (*str == c) {
+            return (char*)str;
+        }
+        str++;
+    }
+    
+    // If the character is not found, return NULL
+    return NULL;
+}
+
 /**
  * @brief
  *  Copy first n characters from src into dest.
