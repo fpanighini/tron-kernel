@@ -88,8 +88,6 @@ void init_scheduler(){
 }
 
 uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
-    printBase(read_fd, 10);
-    printBase(write_fd, 10);
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
     add_node(proc);
     counter++;

@@ -12,15 +12,15 @@
 #include <semaphore.h>
 
 #define STDIN 0
-#define STDERR 1
-#define STDOUT 0
+#define STDOUT 1
+#define STDERR 2
 
 
 #define REGISTER_NUM 17
 #define REGISTER_NAMES {"RIP", "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "RSP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"}
 
 
-uint64_t sys_write(uint8_t fd, char *string, Color color);
+uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color);
 uint64_t sys_read(uint8_t fd, char * buf, uint32_t count);
 uint64_t sys_writeAt(uint16_t x, uint16_t y, char *string, Color color);
 uint64_t sys_time();
