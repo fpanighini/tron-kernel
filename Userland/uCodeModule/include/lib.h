@@ -21,6 +21,8 @@ char *strcpy(char *dest, const char *src);
 char *strncpy(char *dest, const char *src, int n);
 char* strchr(const char* str, int c);
 long itoa(long number, char *str);
+int atoi(const char *str);
+
 int getChar(void);
 void printf(const char *fmt, ...);
 int putColorChar(int car, Color c);

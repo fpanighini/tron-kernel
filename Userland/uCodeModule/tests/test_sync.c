@@ -47,7 +47,7 @@ uint64_t my_process_inc(uint64_t argc, char *argv[])
     uint64_t i;
     for (i = 0; i < n; i++)
     {
-        printf("INSIDE FOR (test_sync.c 46)\n");
+        //printf("INSIDE FOR (test_sync.c 46)\n");
         if (use_sem)
             sem_wait(SEM_ID);
         slowInc(&global, inc);

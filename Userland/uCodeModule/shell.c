@@ -4,6 +4,7 @@
 #include <lib.h>
 #include <tron.h>
 #include <tests.h>
+#include <loop.h>
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
@@ -30,6 +31,10 @@
 #define TEST_PROCESSES_COMMAND "test-processes"
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
+#define LOOP_COMMAND "loop"
+#define KILL_COMMAND "kill"
+#define BLOCK_COMMAND "block"
+#define UNBLOCK_COMMAND "unblock"
 
 #define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -71,6 +76,7 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 void shell(int argc, char **argv);
 void bufferRead(char **buf);
+void readPID(char **buf);
 int readBuffer(char *buf, int fd_read, int fd_write);
 int pipedBuffer(char *buf);
 void printLine(char *str);
@@ -315,6 +321,53 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
         return ret_pid;
     }
+    else if (!strcmp(buf, LOOP_COMMAND))
+    {
+        char *argv[] = {"Hola", "Como Estas", NULL};
+        int ret_pid = exec("loop", &loop, argv, fd_read, fd_write, 1);
+        return ret_pid;
+    }
+    else if (!strcmp(buf, KILL_COMMAND))
+    {
+        // TODO: Ojo que no vuelve a la shell si la matamos
+
+        int pid;
+        printf("Enter PID: ");
+        char * pidString = (char *) malloc(10);
+        readPID(&pidString);
+        pid = atoi(pidString);
+
+        if (kill(pid) == pid)
+            printf("\nPID %d killed successfully\n", pid);
+        else
+            printf("\nFailed to kill PID %d\n", pid);
+    }
+    else if (!strcmp(buf, BLOCK_COMMAND))
+    {
+        int pid;
+        printf("Enter PID: ");
+        char * pidString = (char *) malloc(10);
+        readPID(&pidString);
+        pid = atoi(pidString);
+
+        if (block(pid) == pid)
+            printf("\nPID %d blocked successfully\n", pid);
+        else
+            printf("\nFailed to block PID %d\n", pid);
+    }
+    else if (!strcmp(buf, UNBLOCK_COMMAND))
+    {
+        int pid;
+        printf("Enter PID: ");
+        char * pidString = (char *) malloc(10);
+        readPID(&pidString);
+        pid = atoi(pidString);
+
+        if (unblock(pid) == pid)
+            printf("\nPID %d unblocked successfully\n", pid);
+        else
+            printf("\nFailed to unblock PID %d\n", pid);
+    }
     else
     {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
@@ -440,4 +493,32 @@ int pipedBuffer(char *buf)
     }
 
     return 1;
+}
+
+void readPID(char **buf)
+{
+    int c = 1, i = 0;
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+    {
+        c = getChar();
+        if (c == BACKSPACE)
+        {
+            if (i > 0)
+            {
+                (*buf)[--i] = 0;
+                printf("\b");
+                printf("\b");
+                printf(CURSOR);
+            }
+        }
+        else if (c >= ' ')
+        {
+            (*buf)[i++] = (char)c;
+            (*buf)[i] = 0;
+            printf("\b");
+            printf(*buf + i - 1);
+            printf(CURSOR);
+        }
+    }
+    printf("\b");
 }

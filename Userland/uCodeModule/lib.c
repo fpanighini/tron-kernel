@@ -120,6 +120,32 @@ char *strncpy(char *dest, const char *src, int n) {
 	return aux;
 }
 
+int atoi(const char *str) {
+    int result = 0;
+    int sign = 1;
+    int i = 0;
+
+    // Check for a sign character (+/-)
+    if (str[0] == '-' || str[0] == '+') {
+        if (str[0] == '-')
+            sign = -1;
+        i++;
+    }
+
+    // Parse the digits and build the integer value
+    while (str[i] != '\0') {
+        if (str[i] >= '0' && str[i] <= '9') {
+            result = result * 10 + (str[i] - '0');
+            i++;
+        } else {
+            // Stop parsing if a non-digit character is encountered
+            break;
+        }
+    }
+
+    return result * sign;
+}
+
 /**
  * @brief
  *  Transform integer into string.
@@ -345,10 +371,10 @@ static void scan(const char *fmt, va_list args, int length) {
  * @param ...
  * @return int
  */
-void scanf(int lenght, const char *fmt, ...) {
+void scanf(int length, const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	scan(fmt, args, lenght);
+	scan(fmt, args, length);
 	va_end(args);
 }
 

@@ -24,6 +24,7 @@ void start_shell(int argc, char ** argv){
     }
 }
 
+//TODO: Eliminar esto
 void procA(){
     sem_wait("semA");
     while (1){
