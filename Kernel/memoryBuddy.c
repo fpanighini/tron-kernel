@@ -168,7 +168,6 @@ void mergeBuddy(BlockData *block_ptr) {
     mergeBuddy(block_ptr);
 }
 
-// malloc but with a funny name so the compiler doesn't go crazy
 void *malloc(size_t size) {
     // Get minimum level
     size_t level = log2n(size / BLOCK_UNIT);
@@ -196,7 +195,6 @@ void *malloc(size_t size) {
     return getAddress(block_ptr);
 }
 
-// free but with a funny name so the compiler doesn't go crazy
 void free(void *ptr) {
     size_t offset = ptr - base_address;
     if (offset % BLOCK_UNIT)
