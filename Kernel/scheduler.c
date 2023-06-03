@@ -1,6 +1,8 @@
+#include "include/scheduler.h"
 #include "include/timer.h"
 #include "include/videoDriver.h"
 #include <scheduler.h>
+#include <semaphore.h>
 #include <stdint.h>
 
 
@@ -15,6 +17,8 @@ uint64_t disable_count = 0;
 
 NodeP first = NULL;
 NodeP currentNode = NULL;
+
+NodeP currentForegound = NULL;
 
 uint64_t counter = 0;
 uint64_t force_yield = 0;
@@ -37,7 +41,11 @@ uint64_t scheduler(uint64_t sp){
     if (currentNode->proc->state == RUNNING){
         currentNode->quantums++;
     } else if (currentNode->proc->state == KILLED){ // If process is DEAD destroy the currentNode (replaced by the next ready process)
+        printString("\nKILLING PID: ", BLUE);
+        printBase(currentNode->proc->pid, 10);
         destroy_current_node();
+        printString("\nNEW PROC PID: ", BLUE);
+        printBase(currentNode->proc->pid, 10);
         currentNode = find_next_ready(currentNode);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
@@ -84,6 +92,7 @@ void init_scheduler(){
     currentNode = first;
     counter++;
     currentNode->proc->state = RUNNING;
+    sem_open(PIDC_MUTEX, 1);
     // add_process("IDLE", &idle);
 }
 
@@ -110,6 +119,13 @@ void add_node(ProcessP process){
 
 
 void killCurrentProcess(){
+    printString("KILLING", RED);
+    printBase(currentNode->proc->pid, 10);
+    printString("\n", RED);
+
+
+
+
     currentNode->proc->state = KILLED;
     _force_scheduler();
     return;
@@ -129,12 +145,19 @@ NodeP find_node(uint64_t pid){
     return NULL;
 }
 
+void notFound(){
+        printString("PID NOT FOUND", RED);
+}
+
 uint64_t kill_process(uint64_t pid){
     NodeP node = find_node(pid);
     if (node == NULL){
+        notFound();
         return -1;
     }
     node->proc->state = KILLED;
+    currentNode = node;
+    _force_scheduler();
     return node->proc->pid;
 }
 
@@ -198,6 +221,46 @@ uint64_t get_current_read() {
 
 uint64_t get_current_write() {
     return currentNode->proc->write_fd;
+}
+
+void printNode(NodeP node){
+    ProcessP proc = node->proc;
+    printString((uint8_t *) proc->name, WHITE);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->pid, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->ppid, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->priority, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->bp, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->sp, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    printBase(proc->state, 10);
+    printString((uint8_t *) "\t", WHITE);
+
+    // FOREGROUND
+    // printString(, WHITE);
+    printString((uint8_t *) "\n", WHITE);
+}
+
+void print_all_nodes(void){
+    printString((uint8_t *) "\n", WHITE);
+    NodeP cur = first;
+    printNode(cur);
+    cur = cur->next;
+
+    while(cur != first){
+        printNode(cur);
+        cur = cur->next;
+    }
 }
 
 //TODO: ojo con la declaracion de xchg (libasm.h)

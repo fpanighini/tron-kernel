@@ -29,6 +29,7 @@ GLOBAL sys_kill
 GLOBAL sys_block
 GLOBAL sys_unblock
 GLOBAL sys_yield
+GLOBAL sys_ps
 
 ; syscall 0x00
 sys_write:
@@ -217,6 +218,12 @@ sys_unblock:
 
 sys_yield:
     mov rax, 0x1E
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_ps:
+    mov rax, 0x1F
     mov r10, rcx
     int 0x80
     ret

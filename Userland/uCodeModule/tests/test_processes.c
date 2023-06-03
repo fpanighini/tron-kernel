@@ -28,7 +28,7 @@ uint64_t test_processes(uint64_t argc, char *argv[]) {
 
     // Create max_processes processes
     for (rq = 0; rq < max_processes; rq++) {
-      p_rqs[rq].pid = exec("endless_loop", &endless_loop, argvAux, 0, 1, 3);
+      p_rqs[rq].pid = exec("endless_loop", &endless_loop, argvAux, 0, 1, 5);
 
       if (p_rqs[rq].pid == -1) {
         printf("test_processes: ERROR creating process\n");
@@ -52,6 +52,7 @@ uint64_t test_processes(uint64_t argc, char *argv[]) {
                 printf("test_processes: ERROR killing process\n");
                 return -1;
               }
+              printf("TEST KILL\n");
               p_rqs[rq].state = KILLED;
               alive--;
             }

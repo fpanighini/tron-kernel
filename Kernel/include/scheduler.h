@@ -9,6 +9,7 @@
 #include <stdint.h>
 // #include <codeModules.h>
 #include <videoDriver.h>
+#include <semaphore.h>
 
 #define MAX_QUANTUM 5
 
@@ -57,5 +58,6 @@ uint64_t get_current_read();
 
 uint64_t get_current_write();
 
+void print_all_nodes();
 
 #endif

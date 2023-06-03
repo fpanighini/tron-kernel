@@ -57,6 +57,7 @@ EXTERN sys_kill
 EXTERN sys_block
 EXTERN sys_unblock
 EXTERN sys_yield
+EXTERN sys_ps
 
 
 SECTION .text
@@ -327,6 +328,9 @@ syscallINTHandler:
     cmp rax, 0x1E
     je .yield
 
+    cmp rax, 0x1F
+    je .ps
+
     jmp .end
 
 .write:
@@ -451,6 +455,10 @@ syscallINTHandler:
 
 .yield:
         call sys_yield
+        jmp .end
+
+.ps:
+        call sys_ps
         jmp .end
 
 .end:

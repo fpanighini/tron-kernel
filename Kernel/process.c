@@ -1,7 +1,10 @@
 #include "include/scheduler.h"
+#include "include/videoDriver.h"
 #include <process.h>
 #include <scheduler.h>
 #include <lib.h>
+#include <semaphore.h>
+
 
 uint64_t pidc = 0;
 
@@ -26,7 +29,14 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_
 
     proc->name = name;
     proc->argv = saved_argv;
+
+    sem_wait(PIDC_MUTEX);
     proc->pid = pidc++;
+    printString("CREATEING: ", GREEN);
+    printBase(proc->pid, 10);
+    printString("\n", WHITE);
+    sem_post(PIDC_MUTEX);
+
     proc->ppid = get_running_pid();
     proc->sp = (uint64_t) stack + STACK_FRAME_SIZE - sizeof(StackFrame);
     proc->bp = (uint64_t) stackBase;

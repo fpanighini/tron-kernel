@@ -253,10 +253,12 @@ uint64_t sys_get_pid(){
 }
 
 uint64_t sys_kill(uint64_t pid){
+    printString("LLEGE SYS KILL\n", MAGENTA);
     return kill_process(pid);
 }
 
 uint64_t sys_block(uint64_t pid){
+    printString("ARRIVED\n", BLUE);
     return block_process(pid);
 }
 
@@ -266,5 +268,9 @@ uint64_t sys_unblock(uint64_t pid){
 
 void sys_yield(void){
     force_current_yield();
+}
+
+void sys_ps(void){
+    print_all_nodes();
 }
 

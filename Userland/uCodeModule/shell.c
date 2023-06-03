@@ -1,3 +1,4 @@
+#include "include/syscalls.h"
 #include <syscalls.h>
 #include <color.h>
 #include <timer.h>
@@ -25,9 +26,11 @@
 #define DEC_FONT_SIZE_COMMAND "dec-font"
 #define INFOREG_COMMAND "inforeg"
 #define PRINTMEM_COMMAND "printmem"
-#define TEST_PROCESSES_COMMAND "test-processes"
+#define TEST_PROCESSES_COMMAND "t"
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
+#define PS_COMMAND "ps"
+
 
 #define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -289,15 +292,21 @@ int readBuffer(char *buf)
         clear();
         return 0;
     }
+    else if (!strcmp(buf, PS_COMMAND))
+    {
+        char *argv[] = {"10", 0};
+        exec("ps", &sys_exec, argv, 0, 1, 0);
+        return 0;
+    }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
-        char *argv[] = {"2", 0};
+        char *argv[] = {"10", 0};
         exec("test_processes", &test_processes, argv, 0, 1, 0);
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
-        char *argv[] = {"100000000000", 0};
+        char *argv[] = {"10000", 0};
         exec("test_mm", &test_mm, argv, 0, 1, 1);
         // test_processes(1,argv);
     }
@@ -305,86 +314,6 @@ int readBuffer(char *buf)
     {
         char *argv[] = {"20", "5", 0};
         exec("test_sync", &test_sync, argv, 0, 1, 1);
-    }
-    else if (strchr(buf, '|') != 0)
-    {
-
-        //TODO: Descomentar e implementar pipes
-
-        /*
-        char *substring1;
-        int length1;
-        char *substring2;
-        int length2;
-
-        int totalLength = strlen(buf);
-
-        // Find the position of '|'
-        int delimiterPos = -1;
-        for (int i = 0; i < totalLength; i++)
-        {
-            if (buf[i] == '|')
-            {
-                delimiterPos = i;
-                break;
-            }
-        }
-
-        // If delimiter '|' not found, return NULL for both substrings
-        if (delimiterPos == -1)
-        {
-            substring1 = NULL;
-            length1 = 0;
-            substring2 = NULL;
-            length2 = 0;
-            return -1;
-        }
-
-        // Allocate memory for substring1 and copy characters before '|'
-        substring1 = malloc((delimiterPos + 1) * sizeof(char));
-        strncpy(substring1, buf, delimiterPos);
-        (substring1)[delimiterPos] = '\0';
-        length1 = delimiterPos;
-
-        // Allocate memory for substring2 and copy characters after '|'
-        substring2 = malloc((totalLength - delimiterPos) * sizeof(char));
-        strncpy(substring2, buf + delimiterPos + 1, totalLength - delimiterPos);
-        (substring2)[totalLength - delimiterPos - 1] = '\0';
-        length2 = totalLength - delimiterPos - 1;
-
-        //printf("Substring 1: %s\n", substring1);
-        //printf("Substring 1 length: %d\n", length1);
-        //printf("Substring 2: %s\n", substring2);
-        //printf("Substring 2 length: %d\n", length2);
-
-        
-        fd_pipe[1] = sys_pipe_open("pipes");
-        int fd_pipe_aux = fd_pipe[1];
-
-        input_read_size = len_l - 1;
-        fd_pipe[0] = 1; // stdin es keyboard
-                        // stdout es el pipe
-        sys_sem_open("pipe", 0);
-        int aux = console_finish_handler(left);
-        strcpy(left, input);
-        sys_sem_wait("pipe");
-        if (aux)
-        {
-            sys_write(fd_pipe[1], left, len_l - 1);
-        }
-        input_read_size = len_r - 1;
-
-        fd_pipe[0] = fd_pipe_aux; // stdin es el pipe
-        fd_pipe[1] = 0;           // stdout es la shell
-        console_finish_handler(right);
-        sys_sem_wait("pipe");
-        fd_pipe[0] = 1; // stdin es keyboard
-        fd_pipe[1] = 0; // stdout es shell
-
-        sys_pipe_close(fd_pipe_aux);
-        sys_sem_close("pipe");
-        return 0;
-        */
     }
     else
     {
