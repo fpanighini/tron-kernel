@@ -151,10 +151,11 @@ uint64_t kill_process(uint64_t pid){
         return -1;
     }
     node->proc->state = KILLED;
+    uint64_t removedPid = node->proc->pid;
     destroy_node(node);
     // currentNode = node;
     // _force_scheduler();
-    return node->proc->pid;
+    return removedPid;
 }
 
 uint64_t change_priority(uint64_t pid, uint64_t priority){
