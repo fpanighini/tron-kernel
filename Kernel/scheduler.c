@@ -1,7 +1,12 @@
+#include "include/scheduler.h"
+#include "include/process.h"
 #include "include/timer.h"
 #include "include/videoDriver.h"
 #include <scheduler.h>
+#include <semaphore.h>
 #include <stdint.h>
+
+#define TAB "    "
 
 
 void add_node(ProcessP process);
@@ -9,12 +14,15 @@ NodeP find_next_ready(NodeP current);
 NodeP find_node(uint64_t pid);
 
 void destroy_current_node();
+void destroy_node(NodeP node);
 void free_node(NodeP node);
 
 uint64_t disable_count = 0;
 
 NodeP first = NULL;
 NodeP currentNode = NULL;
+
+NodeP currentForegound = NULL;
 
 uint64_t counter = 0;
 uint64_t force_yield = 0;
@@ -37,7 +45,7 @@ uint64_t scheduler(uint64_t sp){
     if (currentNode->proc->state == RUNNING){
         currentNode->quantums++;
     } else if (currentNode->proc->state == KILLED){ // If process is DEAD destroy the currentNode (replaced by the next ready process)
-        destroy_current_node();
+        destroy_node(currentNode);
         currentNode = find_next_ready(currentNode);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
@@ -84,13 +92,16 @@ void init_scheduler(){
     currentNode = first;
     counter++;
     currentNode->proc->state = RUNNING;
+    sem_open(PIDC_MUTEX, 1);
     // add_process("IDLE", &idle);
 }
 
 uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
+    scheduler_disable();
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
     add_node(proc);
     counter++;
+    scheduler_enable();
     return proc->pid;
 }
 
@@ -129,13 +140,22 @@ NodeP find_node(uint64_t pid){
     return NULL;
 }
 
+void notFound(){
+        printString((uint8_t *) "PID NOT FOUND", RED);
+}
+
 uint64_t kill_process(uint64_t pid){
     NodeP node = find_node(pid);
     if (node == NULL){
+        notFound();
         return -1;
     }
     node->proc->state = KILLED;
-    return node->proc->pid;
+    uint64_t removedPid = node->proc->pid;
+    destroy_node(node);
+    // currentNode = node;
+    // _force_scheduler();
+    return removedPid;
 }
 
 uint64_t change_priority(uint64_t pid, uint64_t priority){
@@ -158,6 +178,7 @@ uint64_t block_process(uint64_t pid){
         return -1;
     }
     node->proc->state = BLOCKED;
+    _force_scheduler();
     return node->proc->pid;
 }
 
@@ -174,10 +195,34 @@ uint64_t get_running_pid(void){
     return currentNode == NULL ? 0 : currentNode->proc->pid;
 }
 
+void destroy_node(NodeP node){
+
+    NodeP aux = node->next;
+    free_proc(node->proc);
+    node->proc = node->next->proc;
+
+    node->next = node->next->next;
+
+    if (node->proc->pid == 0){
+        first = node;
+    }
+
+    free(aux);
+}
+
 void destroy_current_node(){
+
+    NodeP aux = currentNode->next;
+    free_proc(currentNode->proc);
     currentNode->proc = currentNode->next->proc;
+
     currentNode->next = currentNode->next->next;
-    free_node(currentNode->next);
+
+    if (currentNode->proc->pid == 0){
+        first = currentNode;
+    }
+
+    free(aux);
 }
 
 void free_node(NodeP node){
@@ -207,6 +252,43 @@ uint64_t get_current_read() {
 
 uint64_t get_current_write() {
     return currentNode->proc->write_fd;
+}
+
+void printNode(NodeP node){
+    ProcessP proc = node->proc;
+    printString((uint8_t *) proc->name, WHITE);
+    printString((uint8_t *) TAB, WHITE);
+
+    printBase(proc->pid, 10);
+    printString((uint8_t *) TAB, WHITE);
+
+    printBase(proc->priority, 10);
+    printString((uint8_t *) TAB, WHITE);
+
+    printBase(proc->bp, 10);
+    printString((uint8_t *) TAB, WHITE);
+
+    printBase(proc->sp, 10);
+    printString((uint8_t *) TAB, WHITE);
+
+    printBase(proc->state, 10);
+    printString((uint8_t *) TAB, WHITE);
+
+    // FOREGROUND
+    // printString(, WHITE);
+    printString((uint8_t *) "\n", WHITE);
+}
+
+void print_all_nodes(void){
+    printString((uint8_t *) "\nNAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
+    NodeP cur = first;
+    printNode(cur);
+    cur = cur->next;
+
+    while(cur != first){
+        printNode(cur);
+        cur = cur->next;
+    }
 }
 
 //TODO: ojo con la declaracion de xchg (libasm.h)

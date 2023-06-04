@@ -26,10 +26,11 @@ GLOBAL sys_sem_info
 GLOBAL sys_sem_count
 GLOBAL sys_get_pid
 GLOBAL sys_kill
-GLOBAL sys_change_priority
 GLOBAL sys_block
 GLOBAL sys_unblock
 GLOBAL sys_yield
+GLOBAL sys_change_priority
+GLOBAL sys_ps
 
 ; syscall 0x00
 sys_write:
@@ -134,7 +135,7 @@ sys_free:
 ; syscall 0x10
 sys_exec:
     mov rax, 0x10
-    mov r10, rcx
+    ;mov r10, [rsp+8]
     int 0x80
     ret
 
@@ -224,6 +225,12 @@ sys_yield:
 
 sys_change_priority:
     mov rax, 0x1F
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_ps:
+    mov rax, 0x20
     mov r10, rcx
     int 0x80
     ret

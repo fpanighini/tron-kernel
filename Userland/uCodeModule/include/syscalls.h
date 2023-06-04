@@ -53,5 +53,6 @@ long sys_change_priority(int pid, int priority);
 long sys_block(int pid);
 long sys_unblock(int pid);
 void sys_yield(void);
+void sys_ps(void);
 
 #endif

@@ -8,6 +8,8 @@
 #include <stack.h>
 
 
+#define PIDC_MUTEX "PROCESSES_MUTEX"
+
 #define STACK_FRAME_SIZE 4000
 
 typedef enum {READY = 0, RUNNING, BLOCKED, NEW, KILLED} states;

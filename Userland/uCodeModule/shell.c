@@ -1,3 +1,4 @@
+#include "include/syscalls.h"
 #include <syscalls.h>
 #include <color.h>
 #include <timer.h>
@@ -32,6 +33,7 @@
 #define TEST_PROCESSES_COMMAND "test-processes"
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
+#define PS_COMMAND "ps"
 #define LOOP_COMMAND "loop"
 #define KILL_COMMAND "kill"
 #define BLOCK_COMMAND "block"
@@ -306,6 +308,11 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         clear();
         return 0;
     }
+    else if (!strcmp(buf, PS_COMMAND))
+    {
+        char *argv[] = {"10", 0};
+        return exec("ps", &sys_ps, argv, 0, 1, 5);
+    }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
@@ -317,10 +324,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
-        char *argv[] = {"100000000000", 0};
+        char *argv[] = {"10000", 0};
         int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1);
         return ret_pid;
-
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))

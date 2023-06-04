@@ -58,6 +58,7 @@ EXTERN sys_change_priority
 EXTERN sys_block
 EXTERN sys_unblock
 EXTERN sys_yield
+EXTERN sys_ps
 
 
 SECTION .text
@@ -232,7 +233,7 @@ _irq01Handler:
 syscallINTHandler:
     cli
     mov rcx, r10
-    mov r9, rax
+    ; mov r9, rax ; <== ??
     sti
 
     cmp rax, 0x00
@@ -327,6 +328,12 @@ syscallINTHandler:
 
     cmp rax, 0x1E
     je .yield
+
+    cmp rax, 0x1F
+    je .change_priority
+
+    cmp rax, 0x20
+    je .ps
 
     jmp .end
 
@@ -456,6 +463,10 @@ syscallINTHandler:
 
 .change_priority:
         call sys_change_priority
+        jmp .end
+
+.ps:
+        call sys_ps
         jmp .end
 
 .end:

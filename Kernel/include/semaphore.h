@@ -29,7 +29,7 @@ typedef struct {
 typedef sem_ts *p_sem;
 
 int sem_open(char *name, int value);
-int	sem_wait(char *name);
+int sem_wait(char *name);
 int sem_post(char *name);
 int sem_close(char *name);
 int get_sem_count();
