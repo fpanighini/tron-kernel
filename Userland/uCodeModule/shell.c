@@ -33,6 +33,7 @@
 #define TEST_PROCESSES_COMMAND "test-processes"
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
+#define TEST_PRIO_COMMAND "test-prio"
 #define PS_COMMAND "ps"
 #define LOOP_COMMAND "loop"
 #define KILL_COMMAND "kill"
@@ -333,6 +334,12 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"20", "5", 0};
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
+        return ret_pid;
+    }
+    else if (!strcmp(buf, TEST_PRIO_COMMAND))
+    {
+        char *argv[] = {0};
+        int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1);
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
