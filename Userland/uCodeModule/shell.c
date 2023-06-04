@@ -394,11 +394,11 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         char * priorityString = (char *) malloc(10);
         do
         {
-            printf("\nPriorities are: 0 (low), 1 (medium) or 2 (high)");
+            printf("\nPriorities are: 0 (high) to 5 (low)");
             printf("\nEnter priority number:  ");
             readNumber(&priorityString);
             priority = atoi(priorityString);
-        } while (priority < 0 || priority > 2);
+        } while (priority < 0 || priority > 5);
 
         printf("\nSelected PID: %d\n", pid);
         printf("Selected priority: %d\n", priority);
@@ -411,17 +411,16 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         else
             printf("\nFailed to modify priority of PID %d\n", pid);
     }
-    /*
     else if (!strcmp(buf, CAT_COMMAND))
     {
         char *argv[] = {"2", 0};
         
         //sem_open("cat_sem", 1);
         //sem_wait("cat_sem");
-        exec("cat", &cat, argv, fd_read, fd_write, 1);
+        return exec("cat", &cat, argv, fd_read, fd_write, 1);
         //sem_post("cat_sem");
         //sem_close("cat_sem");
-    }*/
+    }
     else
     {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);

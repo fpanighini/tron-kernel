@@ -1,6 +1,4 @@
 #include <cat.h>
-//#define CURSOR "|"
-//#define BACKSPACE '\b'
 
 void cat(int argc, char *args[]) {
 
@@ -19,6 +17,8 @@ void cat(int argc, char *args[]) {
 	int cant = sys_read(0, buff, MAX_BUFFER_SIZE);
 
     printf("CAT length: %d\n", cant);
+
+    //printf("%s\n", buff);
     
     for(int i = 0; buff[i]!=0 && i<cant; i++){
             printf("%c", buff[i]);
