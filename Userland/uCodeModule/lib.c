@@ -490,7 +490,7 @@ int pipe_open(char* name) {
 
 //TODO: ver index-2
 void pipe_close(int index) {
-	sys_pipe_close(index - 2);
+	sys_pipe_close(index - 3);
 }
 
 void yield() {

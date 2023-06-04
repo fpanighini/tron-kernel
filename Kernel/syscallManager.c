@@ -16,8 +16,10 @@ extern uint64_t registers[REGISTER_NUM];
 
 //TODO: checkear el uso de write con pipes
 uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color) {
-    if (fd == STDERR)
+    if (fd == STDERR) {
         color = RED;
+        fd = 1;
+    }
 
     uint64_t pipe_fd = get_current_write();
 
@@ -38,7 +40,7 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color) {
     }
 
     // Writing n bytes to pipe
-    uint64_t ret = pipe_write(pipe_fd - 2, string, n);
+    uint64_t ret = pipe_write(pipe_fd - 3, string, n);
     return ret;
 }
 
@@ -54,14 +56,14 @@ int getKbdBuffer(char * buf, uint32_t count, int * pos){
 //TODO: checkear el uso de read con pipes
 uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
     uint64_t new_fd = 0;
-    if (fd == 0 || fd == 1){
+    if (fd == 0 || fd == 1 || fd == 2){
         new_fd = get_current_read();
     } else {
-        new_fd = fd + 2;
+        new_fd = fd;
     }
 
     if (new_fd != 0){
-        uint64_t ret = pipe_read(new_fd - 2, buf , count);
+        uint64_t ret = pipe_read(new_fd - 3, buf , count);
         return ret;
 
     }

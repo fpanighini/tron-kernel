@@ -5,6 +5,8 @@
 #include <semaphore.h>
 #include <stdint.h>
 
+#define TAB "    "
+
 
 void add_node(ProcessP process);
 NodeP find_next_ready(NodeP current);
@@ -172,6 +174,7 @@ uint64_t block_process(uint64_t pid){
         return -1;
     }
     node->proc->state = BLOCKED;
+    _force_scheduler();
     return node->proc->pid;
 }
 
@@ -226,25 +229,22 @@ uint64_t get_current_write() {
 void printNode(NodeP node){
     ProcessP proc = node->proc;
     printString((uint8_t *) proc->name, WHITE);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     printBase(proc->pid, 10);
-    printString((uint8_t *) "\t", WHITE);
-
-    printBase(proc->ppid, 10);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     printBase(proc->priority, 10);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     printBase(proc->bp, 10);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     printBase(proc->sp, 10);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     printBase(proc->state, 10);
-    printString((uint8_t *) "\t", WHITE);
+    printString((uint8_t *) TAB, WHITE);
 
     // FOREGROUND
     // printString(, WHITE);
@@ -252,7 +252,7 @@ void printNode(NodeP node){
 }
 
 void print_all_nodes(void){
-    printString((uint8_t *) "\n", WHITE);
+    printString((uint8_t *) "\nNAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
     NodeP cur = first;
     printNode(cur);
     cur = cur->next;

@@ -232,7 +232,7 @@ _irq01Handler:
 syscallINTHandler:
     cli
     mov rcx, r10
-    mov r9, rax
+    ; mov r9, rax ; <== ??
     sti
 
     cmp rax, 0x00

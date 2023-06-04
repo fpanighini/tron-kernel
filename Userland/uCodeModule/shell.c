@@ -295,13 +295,12 @@ int readBuffer(char *buf)
     else if (!strcmp(buf, PS_COMMAND))
     {
         char *argv[] = {"10", 0};
-        exec("ps", &sys_exec, argv, 0, 1, 0);
-        return 0;
+        return exec("ps", &sys_ps, argv, 0, 1, 5);
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"10", 0};
-        exec("test_processes", &test_processes, argv, 0, 1, 0);
+        exec("test_processes", &test_processes, argv, 0, 1, 5);
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))

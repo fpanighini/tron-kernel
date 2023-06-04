@@ -109,7 +109,7 @@ int pipe_open(char *name)
     int first_free = next_pipe();
     if (first_free == -1)
         return -1;
-    pipes[first_free].fd = first_free + 2;
+    pipes[first_free].fd = first_free + 3;
     pipes[first_free].created = 1;
     pipes[first_free].usingPipe = 0;
     pipes[first_free].waitingPid = -1;
