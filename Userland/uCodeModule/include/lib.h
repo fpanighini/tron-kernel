@@ -46,6 +46,7 @@ void free(void * ptr);
 long exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority);
 long get_pid();
 long kill(int pid);
+long change_priority(int pid, int priority);
 long block(int pid);
 long unblock(int pid);
 int sem_open(char *semName, int initValue);

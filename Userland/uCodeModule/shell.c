@@ -5,6 +5,7 @@
 #include <tron.h>
 #include <tests.h>
 #include <loop.h>
+#include <cat.h>
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
@@ -36,6 +37,7 @@
 #define BLOCK_COMMAND "block"
 #define UNBLOCK_COMMAND "unblock"
 #define NICE_COMMAND "nice"
+#define CAT_COMMAND "cat"
 
 #define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -304,7 +306,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
+
         int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 0);
+
         return ret_pid;
         // test_processes(1,argv);
     }
@@ -390,13 +394,25 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         printf("\nSelected PID: %d\n", pid);
         printf("Selected priority: %d\n", priority);
 
-        /*
-        if (nice(pid, priority) == pid) // ???
+        int new_pid = change_priority(pid, priority);
+        printf("New PID: %d\n", new_pid);
+
+        if (new_pid == pid)
             printf("\nPID %d had its priority modified successfully\n", pid);
         else
             printf("\nFailed to modify priority of PID %d\n", pid);
-        */
     }
+    /*
+    else if (!strcmp(buf, CAT_COMMAND))
+    {
+        char *argv[] = {"2", 0};
+        
+        //sem_open("cat_sem", 1);
+        //sem_wait("cat_sem");
+        exec("cat", &cat, argv, fd_read, fd_write, 1);
+        //sem_post("cat_sem");
+        //sem_close("cat_sem");
+    }*/
     else
     {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);

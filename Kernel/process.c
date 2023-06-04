@@ -1,4 +1,3 @@
-#include "include/scheduler.h"
 #include <process.h>
 #include <scheduler.h>
 #include <lib.h>

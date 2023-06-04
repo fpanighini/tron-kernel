@@ -48,6 +48,7 @@ uint64_t sys_sem_info(int idx, p_sem buffer);
 uint64_t sys_sem_count();
 uint64_t sys_get_pid();
 uint64_t sys_kill(uint64_t pid);
+uint64_t sys_change_priority(uint64_t pid, uint64_t priority);
 uint64_t sys_block(uint64_t pid);
 uint64_t sys_unblock(uint64_t pid);
 void sys_yield(void);

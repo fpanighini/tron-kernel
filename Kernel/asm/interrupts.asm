@@ -54,6 +54,7 @@ EXTERN sys_sem_info
 EXTERN sys_sem_count
 EXTERN sys_get_pid
 EXTERN sys_kill
+EXTERN sys_change_priority
 EXTERN sys_block
 EXTERN sys_unblock
 EXTERN sys_yield
@@ -451,6 +452,10 @@ syscallINTHandler:
 
 .yield:
         call sys_yield
+        jmp .end
+
+.change_priority:
+        call sys_change_priority
         jmp .end
 
 .end:

@@ -56,6 +56,9 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
     uint64_t new_fd = 0;
     if (fd == 0 || fd == 1){
         new_fd = get_current_read();
+        //TODO: ver CAT
+        //printString("new_fd: ", WHITE);
+        //printBase(count, 10);
     } else {
         new_fd = fd + 2;
     }
@@ -254,6 +257,10 @@ uint64_t sys_get_pid(){
 
 uint64_t sys_kill(uint64_t pid){
     return kill_process(pid);
+}
+
+uint64_t sys_change_priority(uint64_t pid, uint64_t priority){
+    return change_priority(pid, priority);
 }
 
 uint64_t sys_block(uint64_t pid){

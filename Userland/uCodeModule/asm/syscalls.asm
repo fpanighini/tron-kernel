@@ -26,6 +26,7 @@ GLOBAL sys_sem_info
 GLOBAL sys_sem_count
 GLOBAL sys_get_pid
 GLOBAL sys_kill
+GLOBAL sys_change_priority
 GLOBAL sys_block
 GLOBAL sys_unblock
 GLOBAL sys_yield
@@ -217,6 +218,12 @@ sys_unblock:
 
 sys_yield:
     mov rax, 0x1E
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_change_priority:
+    mov rax, 0x1F
     mov r10, rcx
     int 0x80
     ret

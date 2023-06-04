@@ -28,6 +28,7 @@ void printString(uint8_t * string, Color color);
 void printHex(uint64_t value);
 void printDec(uint64_t value);
 void printBin(uint64_t value);
+void printBase(uint64_t value, uint32_t base);
 uint16_t getHeight();
 uint16_t getWidth();
 int changeFontSize(uint32_t size);

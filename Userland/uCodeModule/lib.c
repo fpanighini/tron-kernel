@@ -472,6 +472,10 @@ long kill(int pid){
     return sys_kill(pid);
 }
 
+long change_priority(int pid, int priority){
+	return sys_change_priority(pid, priority);
+}
+
 long block(int pid){
     return sys_block(pid);
 }
