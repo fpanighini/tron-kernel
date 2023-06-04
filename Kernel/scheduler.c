@@ -1,4 +1,5 @@
 #include "include/scheduler.h"
+#include "include/process.h"
 #include "include/timer.h"
 #include "include/videoDriver.h"
 #include <scheduler.h>
@@ -99,9 +100,11 @@ void init_scheduler(){
 }
 
 uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
+    scheduler_disable();
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
     add_node(proc);
     counter++;
+    scheduler_enable();
     return proc->pid;
 }
 
@@ -192,9 +195,18 @@ uint64_t get_running_pid(void){
 }
 
 void destroy_current_node(){
+
+    NodeP aux = currentNode->next;
+    free_proc(currentNode->proc);
     currentNode->proc = currentNode->next->proc;
+
     currentNode->next = currentNode->next->next;
-    free_node(currentNode->next);
+
+    if (currentNode->proc->pid == 0){
+        first = currentNode;
+    }
+
+    free(aux);
 }
 
 void free_node(NodeP node){
