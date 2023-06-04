@@ -255,12 +255,10 @@ uint64_t sys_get_pid(){
 }
 
 uint64_t sys_kill(uint64_t pid){
-    printString("LLEGE SYS KILL\n", MAGENTA);
     return kill_process(pid);
 }
 
 uint64_t sys_block(uint64_t pid){
-    printString("ARRIVED\n", BLUE);
     return block_process(pid);
 }
 

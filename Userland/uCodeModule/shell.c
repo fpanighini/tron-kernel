@@ -26,7 +26,7 @@
 #define DEC_FONT_SIZE_COMMAND "dec-font"
 #define INFOREG_COMMAND "inforeg"
 #define PRINTMEM_COMMAND "printmem"
-#define TEST_PROCESSES_COMMAND "t"
+#define TEST_PROCESSES_COMMAND "test-processes"
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
 #define PS_COMMAND "ps"
@@ -300,7 +300,7 @@ int readBuffer(char *buf)
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"10", 0};
-        exec("test_processes", &test_processes, argv, 0, 1, 5);
+        exec("test_processes", &test_processes, argv, 0, 1, 1);
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))

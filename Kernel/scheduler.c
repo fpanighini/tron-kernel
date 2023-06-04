@@ -14,6 +14,7 @@ NodeP find_next_ready(NodeP current);
 NodeP find_node(uint64_t pid);
 
 void destroy_current_node();
+void destroy_node(NodeP node);
 void free_node(NodeP node);
 
 uint64_t disable_count = 0;
@@ -44,11 +45,7 @@ uint64_t scheduler(uint64_t sp){
     if (currentNode->proc->state == RUNNING){
         currentNode->quantums++;
     } else if (currentNode->proc->state == KILLED){ // If process is DEAD destroy the currentNode (replaced by the next ready process)
-        printString("\nKILLING PID: ", BLUE);
-        printBase(currentNode->proc->pid, 10);
-        destroy_current_node();
-        printString("\nNEW PROC PID: ", BLUE);
-        printBase(currentNode->proc->pid, 10);
+        destroy_node(currentNode);
         currentNode = find_next_ready(currentNode);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
@@ -124,13 +121,6 @@ void add_node(ProcessP process){
 
 
 void killCurrentProcess(){
-    printString("KILLING", RED);
-    printBase(currentNode->proc->pid, 10);
-    printString("\n", RED);
-
-
-
-
     currentNode->proc->state = KILLED;
     _force_scheduler();
     return;
@@ -151,7 +141,7 @@ NodeP find_node(uint64_t pid){
 }
 
 void notFound(){
-        printString("PID NOT FOUND", RED);
+        printString((uint8_t *) "PID NOT FOUND", RED);
 }
 
 uint64_t kill_process(uint64_t pid){
@@ -161,8 +151,9 @@ uint64_t kill_process(uint64_t pid){
         return -1;
     }
     node->proc->state = KILLED;
-    currentNode = node;
-    _force_scheduler();
+    destroy_node(node);
+    // currentNode = node;
+    // _force_scheduler();
     return node->proc->pid;
 }
 
@@ -192,6 +183,21 @@ uint64_t ready_process(uint64_t pid){
 
 uint64_t get_running_pid(void){
     return currentNode == NULL ? 0 : currentNode->proc->pid;
+}
+
+void destroy_node(NodeP node){
+
+    NodeP aux = node->next;
+    free_proc(node->proc);
+    node->proc = node->next->proc;
+
+    node->next = node->next->next;
+
+    if (node->proc->pid == 0){
+        first = node;
+    }
+
+    free(aux);
 }
 
 void destroy_current_node(){

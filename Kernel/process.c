@@ -32,9 +32,6 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_
 
     sem_wait(PIDC_MUTEX);
     proc->pid = pidc++;
-    printString("CREATEING: ", GREEN);
-    printBase(proc->pid, 10);
-    printString("\n", WHITE);
     sem_post(PIDC_MUTEX);
 
     proc->ppid = get_running_pid();

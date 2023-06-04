@@ -443,12 +443,10 @@ long get_pid(){
 }
 
 long kill(int pid){
-    printf("LIB KILL\n");
     return sys_kill(pid);
 }
 
 long block(int pid){
-    printf("BLOCKING %d\n", pid);
     return sys_block(pid);
 }
 
