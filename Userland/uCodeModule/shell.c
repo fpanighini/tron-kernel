@@ -88,7 +88,7 @@ void printNewline(void);
 void testInvalidOpException();
 void testDivideByZeroException();
 
-void printInforeg();
+void printInfoReg();
 void printErrorMessage(char *program, char *errorMessage);
 
 int increaseFontSize();
@@ -145,7 +145,7 @@ void bufferRead(char **buf)
     }
 }
 
-void printmem(char *buf)
+void printMem(char *buf)
 {
     int i = 0;
     while (buf[i] != 0 && buf[i] == ' ')
@@ -221,12 +221,14 @@ int readBuffer(char *buf, int fd_read, int fd_write)
             printNewline();
             return COMMAND_NOT_FOUND;
         }
-        printmem(buf + l);
+        printMem(buf + l);
     }
-    else if (!strcmp(buf, HELP_COMMAND))
+    else if (!strcmp(buf, HELP_COMMAND)) {
         helpCommand();
-    else if (!strcmp(buf, CLEAR_COMMAND))
+    }
+    else if (!strcmp(buf, CLEAR_COMMAND)) {
         clear();
+    }
     else if (!strcmp(buf, TRON_COMMAND))
     {
         clear();
@@ -286,8 +288,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         else
             clear();
     }
-    else if (!strcmp(buf, INFOREG_COMMAND))
-        printInforeg();
+    else if (!strcmp(buf, INFOREG_COMMAND)) {
+        printInfoReg();
+    }
     else if (!strcmp(buf, DIVIDE_BY_ZERO))
     {
         testDivideByZeroException();
@@ -450,7 +453,7 @@ void testInvalidOpException()
     invalidOpcode();
 }
 
-void printInforeg()
+void printInfoReg()
 {
     long array[REGISTER_NUM] = {0};
     long *arr = (long *)&array;
