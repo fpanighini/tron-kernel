@@ -10,6 +10,8 @@ typedef struct BlockData {
 static BlockData *free_list = NULL;
 static BlockData *alloc_list = NULL;
 
+static MemoryInfo memory_info;
+
 int initMemoryManager(void *address, size_t size) {
     // Misaligned address
     if ((size_t)address % sizeof(size_t) != 0)
@@ -29,6 +31,10 @@ int initMemoryManager(void *address, size_t size) {
     initial_block->next = NULL;
 
     free_list = initial_block;
+
+    memory_info.allocated = sizeof(BlockData);
+    memory_info.free = size - sizeof(BlockData);
+    memory_info.total = size;
 
     return 0;
 }
@@ -63,6 +69,9 @@ void *malloc(size_t size) {
 
         block->next = new_block;
         block->size = size;
+
+        memory_info.allocated += sizeof(BlockData);
+        memory_info.free -= sizeof(BlockData);
     }
 
     // Extract block from free list
@@ -71,10 +80,12 @@ void *malloc(size_t size) {
     } else {
         free_list = block->next;
     }
+    memory_info.free -= block->size;
 
     // Add block to alloc list
     block->next = alloc_list;
     alloc_list = block;
+    memory_info.allocated += block->size;
 
     return (void *)(block + 1);
 }
@@ -107,6 +118,7 @@ void free(void *ptr) {
     } else {
         alloc_list = next->next;
     }
+    memory_info.allocated -= block->size;
 
     // Search for its place in the free list, order by address
     next = free_list;
@@ -124,18 +136,27 @@ void free(void *ptr) {
         block->next = next;
         previous->next = block;
     }
+    memory_info.free += block->size;
 
     // Check contiguity with next free block and merge
     if (next != NULL && isContiguous(block, next)) {
         block->next = next->next;
         block->size += sizeof(BlockData) + next->size;
+        memory_info.allocated -= sizeof(BlockData);
+        memory_info.free += sizeof(BlockData);
     }
 
     // Check contiguity with previous free block and merge
     if (previous != NULL && isContiguous(previous, block)) {
         previous->next = block->next;
         previous->size += sizeof(BlockData) + block->size;
+        memory_info.allocated -= sizeof(BlockData);
+        memory_info.free += sizeof(BlockData);
     }
+}
+
+void getMemoryInfo(MemoryInfo *memory_info_ptr) {
+    *memory_info_ptr = memory_info;
 }
 
 #endif

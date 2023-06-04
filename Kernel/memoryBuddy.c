@@ -11,6 +11,8 @@
 // Block size can be a power of 2 multiplied by BLOCK_UNIT
 #define BLOCK_UNIT 256
 
+#define SIZE(level) ((1 << (level)) * BLOCK_UNIT)
+
 #define IS_POW2(x) (((x) != 0) && (((x) & ((x)-1)) == 0))
 
 typedef struct BlockData {
@@ -26,6 +28,8 @@ static size_t levels_count;
 static size_t blocks_count;
 
 static void *base_address;
+
+static MemoryInfo memory_info;
 
 size_t log2n(size_t n) {
     size_t ret = 0;
@@ -74,6 +78,12 @@ int initMemoryManager(void *address, size_t size) {
     blocks_count = 1 << level;
     base_address = address;
 
+    // Initialize memory info
+    memory_info.allocated = 0;
+    memory_info.free = size;
+    memory_info.total = size;
+
+
     return 0;
 }
 
@@ -103,6 +113,8 @@ void addBlock(BlockData *block_ptr) {
         block_ptr->next->prev = block_ptr;
 
     block_ptr->allocated = false;
+    memory_info.allocated -= SIZE(block_ptr->level);
+    memory_info.free += SIZE(block_ptr->level);
 }
 
 // Remove block from its current bucket
@@ -119,6 +131,8 @@ void removeBlock(BlockData *block_ptr) {
     block_ptr->next = NULL;
     block_ptr->prev = NULL;
     block_ptr->allocated = true;
+    memory_info.allocated += SIZE(block_ptr->level);
+    memory_info.free -= SIZE(block_ptr->level);
 }
 
 // If possible, split block into two buddies
@@ -206,6 +220,10 @@ void free(void *ptr) {
 
     addBlock(block_ptr);
     mergeBuddy(block_ptr);
+}
+
+void getMemoryInfo(MemoryInfo *memory_info_ptr) {
+    *memory_info_ptr = memory_info;
 }
 
 #endif
