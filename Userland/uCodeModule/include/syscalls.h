@@ -49,6 +49,7 @@ long sys_sem_info(int idx, semInfo_t *buffer);
 long sys_sem_count();
 long sys_get_pid();
 long sys_kill(int pid);
+long sys_change_priority(int pid, int priority);
 long sys_block(int pid);
 long sys_unblock(int pid);
 void sys_yield(void);

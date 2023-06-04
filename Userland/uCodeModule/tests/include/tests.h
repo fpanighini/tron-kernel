@@ -2,7 +2,6 @@
 #define _TESTS_H_
 
 
-//#include <stdio.h>
 #include <lib.h>
 #include "test_util.h"
 

@@ -1,5 +1,3 @@
-#include "include/scheduler.h"
-#include "include/videoDriver.h"
 #include <process.h>
 #include <scheduler.h>
 #include <lib.h>

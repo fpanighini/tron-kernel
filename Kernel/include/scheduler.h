@@ -40,6 +40,8 @@ uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd
 
 uint64_t kill_process(uint64_t pid);
 
+uint64_t change_priority(uint64_t pid, uint64_t priority);
+
 void block_current_process();
 
 uint64_t block_process(uint64_t pid);

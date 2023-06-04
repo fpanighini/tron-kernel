@@ -5,11 +5,15 @@
 #include <lib.h>
 #include <tron.h>
 #include <tests.h>
+#include <loop.h>
+#include <cat.h>
 
 #define COMMAND_CHAR "$> "
 #define CURSOR "|"
 #define BACKSPACE '\b'
 #define MAX_KBD_BUF 55
+
+#define COMMAND_NOT_FOUND -1
 
 #define SHELL_NAME "Shell"
 
@@ -30,7 +34,12 @@
 #define TEST_MM_COMMAND "test-mm"
 #define TEST_SYNC_COMMAND "test-sync"
 #define PS_COMMAND "ps"
-
+#define LOOP_COMMAND "loop"
+#define KILL_COMMAND "kill"
+#define BLOCK_COMMAND "block"
+#define UNBLOCK_COMMAND "unblock"
+#define NICE_COMMAND "nice"
+#define CAT_COMMAND "cat"
 
 #define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
@@ -72,7 +81,9 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 
 void shell(int argc, char **argv);
 void bufferRead(char **buf);
-int readBuffer(char *buf);
+void readNumber(char **buf);
+int readBuffer(char *buf, int fd_read, int fd_write);
+int pipedBuffer(char *buf);
 void printLine(char *str);
 void helpCommand(void);
 void printNewline(void);
@@ -99,7 +110,9 @@ void shell(int argc, char **argv)
         bufferRead(&string);
         printf("\b");
         printNewline();
-        out = readBuffer(string);
+        out = pipedBuffer(string);
+        if (out == -1)
+            out = readBuffer(string, 0, 1);
     }
 }
 
@@ -197,7 +210,7 @@ void printmem(char *buf)
     }
 }
 
-int readBuffer(char *buf)
+int readBuffer(char *buf, int fd_read, int fd_write)
 {
     int l;
     if (!strcmp(buf, ""))
@@ -208,7 +221,7 @@ int readBuffer(char *buf)
         {
             printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
             printNewline();
-            return 1;
+            return COMMAND_NOT_FOUND;
         }
         printmem(buf + l);
     }
@@ -299,25 +312,118 @@ int readBuffer(char *buf)
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
-        char *argv[] = {"10", 0};
-        exec("test_processes", &test_processes, argv, 0, 1, 1);
+        char *argv[] = {"2", 0};
+
+        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 0);
+
+        return ret_pid;
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
         char *argv[] = {"10000", 0};
-        exec("test_mm", &test_mm, argv, 0, 1, 1);
+        int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1);
+        return ret_pid;
         // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
         char *argv[] = {"20", "5", 0};
-        exec("test_sync", &test_sync, argv, 0, 1, 1);
+        int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
+        return ret_pid;
     }
+    else if (!strcmp(buf, LOOP_COMMAND))
+    {
+        char *argv[] = {"Hola", "Como Estas", NULL};
+        int ret_pid = exec("loop", &loop, argv, fd_read, fd_write, 1);
+        return ret_pid;
+    }
+    else if (!strcmp(buf, KILL_COMMAND))
+    {
+        // TODO: Ojo que no vuelve a la shell si la matamos
+
+        int pid;
+        printf("Enter PID:  ");
+        char * pidString = (char *) malloc(10);
+        readNumber(&pidString);
+        pid = atoi(pidString);
+
+        if (kill(pid) == pid)
+            printf("\nPID %d killed successfully\n", pid);
+        else
+            printf("\nFailed to kill PID %d\n", pid);
+    }
+    else if (!strcmp(buf, BLOCK_COMMAND))
+    {
+        int pid;
+        printf("Enter PID:  ");
+        char * pidString = (char *) malloc(10);
+        readNumber(&pidString);
+        pid = atoi(pidString);
+
+        if (block(pid) == pid)
+            printf("\nPID %d blocked successfully\n", pid);
+        else
+            printf("\nFailed to block PID %d\n", pid);
+    }
+    else if (!strcmp(buf, UNBLOCK_COMMAND))
+    {
+        int pid;
+        printf("Enter PID:  ");
+        char * pidString = (char *) malloc(10);
+        readNumber(&pidString);
+        pid = atoi(pidString);
+
+        if (unblock(pid) == pid)
+            printf("\nPID %d unblocked successfully\n", pid);
+        else
+            printf("\nFailed to unblock PID %d\n", pid);
+    }
+    else if (!strcmp(buf, NICE_COMMAND))
+    {
+        int pid, priority;
+
+        printf("Enter PID:  ");
+        char * pidString = (char *) malloc(10);
+        readNumber(&pidString);
+        pid = atoi(pidString);
+        
+        char * priorityString = (char *) malloc(10);
+        do
+        {
+            printf("\nPriorities are: 0 (low), 1 (medium) or 2 (high)");
+            printf("\nEnter priority number:  ");
+            readNumber(&priorityString);
+            priority = atoi(priorityString);
+        } while (priority < 0 || priority > 2);
+
+        printf("\nSelected PID: %d\n", pid);
+        printf("Selected priority: %d\n", priority);
+
+        int new_pid = change_priority(pid, priority);
+        printf("New PID: %d\n", new_pid);
+
+        if (new_pid == pid)
+            printf("\nPID %d had its priority modified successfully\n", pid);
+        else
+            printf("\nFailed to modify priority of PID %d\n", pid);
+    }
+    /*
+    else if (!strcmp(buf, CAT_COMMAND))
+    {
+        char *argv[] = {"2", 0};
+        
+        //sem_open("cat_sem", 1);
+        //sem_wait("cat_sem");
+        exec("cat", &cat, argv, fd_read, fd_write, 1);
+        //sem_post("cat_sem");
+        //sem_close("cat_sem");
+    }*/
     else
     {
         printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
         printNewline();
+        return COMMAND_NOT_FOUND;
     }
     return 1;
 }
@@ -372,4 +478,98 @@ int increaseFontSize()
 int decreaseFontSize()
 {
     return sys_changeFontSize(DECREASE);
+}
+
+int pipedBuffer(char *buf)
+{
+    if (!strchr(buf, '|') != 0)
+        return -1;
+
+    char *left;
+    // int lengthLeft;
+    char *right;
+    // int lengthRight;
+
+    int totalLength = strlen(buf);
+
+    // Find the position of '|'
+    int delimiterPos = -1;
+    for (int i = 0; i < totalLength; i++)
+    {
+        if (buf[i] == '|')
+        {
+            delimiterPos = i;
+            break;
+        }
+    }
+
+    // If delimiter '|' not found, return NULL for both substrings
+    if (delimiterPos == -1)
+    {
+        left = NULL;
+        // lengthLeft = 0;
+        right = NULL;
+        // lengthRight = 0;
+        return -1;
+    }
+
+    // Allocate memory for left and copy characters before '|'
+    left = malloc((delimiterPos + 1) * sizeof(char));
+    strncpy(left, buf, delimiterPos);
+    (left)[delimiterPos] = '\0';
+    // lengthLeft = delimiterPos;
+
+    // Allocate memory for right and copy characters after '|'
+    right = malloc((totalLength - delimiterPos) * sizeof(char));
+    strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
+    (right)[totalLength - delimiterPos - 1] = '\0';
+    // lengthRight = totalLength - delimiterPos - 1;
+
+    // printf("Substring 1: %s\n", left);
+    // printf("Substring 1 length: %d\n", lengthLeft);
+    // printf("Substring 2: %s\n", right);
+    // printf("Substring 2 length: %d\n", lengthRight);
+
+    int fd = pipe_open("pipes");
+
+    long leftPid = readBuffer(left, 0, fd);
+    if (leftPid == -1)
+        return 2;
+
+    long rightPid = readBuffer(right, fd, 1);
+    if (rightPid == -1)
+    {
+        sys_kill(leftPid);
+        return 3;
+    }
+
+    return 1;
+}
+
+void readNumber(char **buf)
+{
+    int c = 1, i = 0;
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+    {
+        c = getChar();
+        if (c == BACKSPACE)
+        {
+            if (i > 0)
+            {
+                (*buf)[--i] = 0;
+                printf("\b");
+                printf("\b");
+                printf(CURSOR);
+            }
+        }
+        else if (c >= ' ')
+        {
+            (*buf)[i++] = (char)c;
+            (*buf)[i] = 0;
+            printf("\b");
+            printf(*buf + i - 1);
+            printf(CURSOR);
+        }
+    }
+    printf("\b");
 }

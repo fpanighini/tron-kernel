@@ -157,6 +157,15 @@ uint64_t kill_process(uint64_t pid){
     return node->proc->pid;
 }
 
+uint64_t change_priority(uint64_t pid, uint64_t priority){
+    NodeP node = find_node(pid);
+    if (node == NULL){
+        return -1;
+    }
+    node->proc->priority = priority;
+    return node->proc->pid;
+}
+
 void block_current_process(){
     currentNode->proc->state = BLOCKED;
     // scheduler();

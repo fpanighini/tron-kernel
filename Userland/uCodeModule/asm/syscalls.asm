@@ -29,6 +29,7 @@ GLOBAL sys_kill
 GLOBAL sys_block
 GLOBAL sys_unblock
 GLOBAL sys_yield
+GLOBAL sys_change_priority
 GLOBAL sys_ps
 
 ; syscall 0x00
@@ -222,8 +223,14 @@ sys_yield:
     int 0x80
     ret
 
-sys_ps:
+sys_change_priority:
     mov rax, 0x1F
+    mov r10, rcx
+    int 0x80
+    ret
+
+sys_ps:
+    mov rax, 0x20
     mov r10, rcx
     int 0x80
     ret
