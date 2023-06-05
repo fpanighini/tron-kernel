@@ -15,7 +15,8 @@
 
 #define IS_POW2(x) (((x) != 0) && (((x) & ((x)-1)) == 0))
 
-typedef struct BlockData {
+typedef struct BlockData
+{
     bool allocated;
     size_t level;
     struct BlockData *next;
@@ -31,14 +32,16 @@ static void *base_address;
 
 static MemoryInfo memory_info;
 
-size_t log2n(size_t n) {
+size_t log2n(size_t n)
+{
     size_t ret = 0;
     while (n >>= 1)
         ++ret;
     return ret;
 }
 
-int initMemoryManager(void *address, size_t size) {
+int initMemoryManager(void *address, size_t size)
+{
     // Misaligned address
     if ((size_t)address % sizeof(size_t) != 0)
         return 1;
@@ -58,7 +61,8 @@ int initMemoryManager(void *address, size_t size) {
         return 4;
 
     // Initialize blocks
-    for (size_t i = 0; i < BLOCK_LIMIT; i++) {
+    for (size_t i = 0; i < BLOCK_LIMIT; i++)
+    {
         blocks[i].allocated = false;
         blocks[i].level = 0;
         blocks[i].next = NULL;
@@ -83,27 +87,32 @@ int initMemoryManager(void *address, size_t size) {
     memory_info.free = size;
     memory_info.total = size;
 
-
     return 0;
 }
 
 // Get memory address of a block
-void *getAddress(BlockData *block_ptr) {
+void *getAddress(BlockData *block_ptr)
+{
     return base_address + (block_ptr - blocks) * BLOCK_UNIT;
 }
 
 // Get pointer to buddy
-BlockData *getBuddy(BlockData *block_ptr) {
+BlockData *getBuddy(BlockData *block_ptr)
+{
     size_t level_index = (block_ptr - blocks) >> block_ptr->level;
-    if (level_index % 2) {
+    if (level_index % 2)
+    {
         return block_ptr - (1 << block_ptr->level);
-    } else {
+    }
+    else
+    {
         return block_ptr + (1 << block_ptr->level);
     }
 }
 
 // Add block to its corresponding bucket
-void addBlock(BlockData *block_ptr) {
+void addBlock(BlockData *block_ptr)
+{
     block_ptr->next = bucket[block_ptr->level];
     block_ptr->prev = NULL;
 
@@ -118,13 +127,17 @@ void addBlock(BlockData *block_ptr) {
 }
 
 // Remove block from its current bucket
-void removeBlock(BlockData *block_ptr) {
+void removeBlock(BlockData *block_ptr)
+{
     if (block_ptr->next)
         block_ptr->next->prev = block_ptr->prev;
 
-    if (block_ptr->prev != NULL) {
+    if (block_ptr->prev != NULL)
+    {
         block_ptr->prev->next = block_ptr->next;
-    } else {
+    }
+    else
+    {
         bucket[block_ptr->level] = block_ptr->next;
     }
 
@@ -136,7 +149,8 @@ void removeBlock(BlockData *block_ptr) {
 }
 
 // If possible, split block into two buddies
-int splitBlock(size_t level) {
+int splitBlock(size_t level)
+{
     // Minimum level reached or no blocks to split
     if (level == 0 || bucket[level] == NULL)
         return -1;
@@ -155,7 +169,8 @@ int splitBlock(size_t level) {
 }
 
 // Recursively merge free buddies
-void mergeBuddy(BlockData *block_ptr) {
+void mergeBuddy(BlockData *block_ptr)
+{
     // Maximum level reached
     if (block_ptr->level == levels_count - 1)
         return;
@@ -171,7 +186,8 @@ void mergeBuddy(BlockData *block_ptr) {
     removeBlock(block_ptr);
     removeBlock(buddy_ptr);
 
-    if (block_ptr > buddy_ptr) {
+    if (block_ptr > buddy_ptr)
+    {
         BlockData *aux = block_ptr;
         block_ptr = buddy_ptr;
         buddy_ptr = aux;
@@ -182,7 +198,8 @@ void mergeBuddy(BlockData *block_ptr) {
     mergeBuddy(block_ptr);
 }
 
-void *malloc(size_t size) {
+void *malloc(size_t size)
+{
     // Get minimum level
     size_t level = log2n(size / BLOCK_UNIT);
     if ((1 << level) * BLOCK_UNIT < size)
@@ -190,7 +207,8 @@ void *malloc(size_t size) {
 
     // If there is no block of the right size, search for a bigger one and split
     // it the necessary number of times
-    if (bucket[level] == NULL) {
+    if (bucket[level] == NULL)
+    {
         size_t min_above = level + 1;
         while (min_above < levels_count && bucket[min_above] == NULL)
             min_above++;
@@ -209,7 +227,8 @@ void *malloc(size_t size) {
     return getAddress(block_ptr);
 }
 
-void free(void *ptr) {
+void free(void *ptr)
+{
     size_t offset = ptr - base_address;
     if (offset % BLOCK_UNIT)
         return;
@@ -222,7 +241,8 @@ void free(void *ptr) {
     mergeBuddy(block_ptr);
 }
 
-void getMemoryInfo(MemoryInfo *memory_info_ptr) {
+void getMemoryInfo(MemoryInfo *memory_info_ptr)
+{
     *memory_info_ptr = memory_info;
 }
 

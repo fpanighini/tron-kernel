@@ -1,4 +1,4 @@
- /*
+/*
  *   interrupts.h
  *
  *  Created on: Apr 18, 2010
@@ -31,6 +31,6 @@ void syscallINTHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, u
 /* Ends cpu execution */
 void haltcpu(void);
 
-uint64_t * getSavedRegisters(void);
+uint64_t *getSavedRegisters(void);
 
 #endif /* INTERRUPTS_H_ */

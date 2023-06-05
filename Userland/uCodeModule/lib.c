@@ -1,10 +1,6 @@
 #include "include/syscalls.h"
-#include <lib.h>
+#include "include/lib.h"
 #include <stdarg.h>
-
-#define BUFF_SIZE 100
-
-uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
 
 /**
  * @brief
@@ -13,8 +9,10 @@ uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base);
  * @param str2
  * @return int
  */
-int strcmp(const char *str1, const char *str2) {
-	for (; *str1 == *str2 && *str1 != '\0'; str1++, str2++);
+int strcmp(const char *str1, const char *str2)
+{
+	for (; *str1 == *str2 && *str1 != '\0'; str1++, str2++)
+		;
 	return *str1 - *str2;
 }
 
@@ -26,10 +24,12 @@ int strcmp(const char *str1, const char *str2) {
  * @param n
  * @return int
  */
-int strncmp(const char *str1, const char *str2, int n) {
-    int i = 0;
-    for (i = 0 ; i < n - 1 && str1[i] != 0 && str1[i] == str2[i] ; i++);
-    return str1[i] - str2[i];
+int strncmp(const char *str1, const char *str2, int n)
+{
+	int i = 0;
+	for (i = 0; i < n - 1 && str1[i] != 0 && str1[i] == str2[i]; i++)
+		;
+	return str1[i] - str2[i];
 }
 
 /**
@@ -38,9 +38,11 @@ int strncmp(const char *str1, const char *str2, int n) {
  * @param str1
  * @return int
  */
-int strlen(const char *str1) {
+int strlen(const char *str1)
+{
 	int i = 0;
-	for (; str1[i] != '\0' && *str1 != '\0'; i++);
+	for (; str1[i] != '\0' && *str1 != '\0'; i++)
+		;
 	return i;
 }
 
@@ -51,9 +53,11 @@ int strlen(const char *str1) {
  * @param src
  * @return char*
  */
-char *strcat(char *dest, const char *src) {
+char *strcat(char *dest, const char *src)
+{
 	char *aux;
-	for (aux = dest; *aux != '\0'; aux++);
+	for (aux = dest; *aux != '\0'; aux++)
+		;
 	for (; *src != '\0';)
 		*(aux++) = *(src++);
 	*aux = '\0';
@@ -68,9 +72,11 @@ char *strcat(char *dest, const char *src) {
  * @param n
  * @return char*
  */
-char *strncat(char *dest, const char *src, int n) {
+char *strncat(char *dest, const char *src, int n)
+{
 	char *aux;
-	for (aux = dest; *aux != '\0'; aux++);
+	for (aux = dest; *aux != '\0'; aux++)
+		;
 	for (; *src != '\0' && n != 0; n--)
 		*(aux++) = *(src++);
 	*aux = '\0';
@@ -84,7 +90,8 @@ char *strncat(char *dest, const char *src, int n) {
  * @param src
  * @return char*
  */
-char *strcpy(char *dest, const char *src) {
+char *strcpy(char *dest, const char *src)
+{
 	char *aux;
 	for (aux = dest; *src != '\0';)
 		*(aux++) = *(src++);
@@ -92,16 +99,19 @@ char *strcpy(char *dest, const char *src) {
 	return aux;
 }
 
-char* strchr(const char* str, int c) {
-    while (*str != '\0') {
-        if (*str == c) {
-            return (char*)str;
-        }
-        str++;
-    }
-    
-    // If the character is not found, return NULL
-    return NULL;
+char *strchr(const char *str, int c)
+{
+	while (*str != '\0')
+	{
+		if (*str == c)
+		{
+			return (char *)str;
+		}
+		str++;
+	}
+
+	// If the character is not found, return NULL
+	return NULL;
 }
 
 /**
@@ -112,7 +122,8 @@ char* strchr(const char* str, int c) {
  * @param n
  * @return char*
  */
-char *strncpy(char *dest, const char *src, int n) {
+char *strncpy(char *dest, const char *src, int n)
+{
 	char *aux;
 	for (aux = dest; *src != '\0' && n != 0; n--)
 		*(aux++) = *(src++);
@@ -120,30 +131,36 @@ char *strncpy(char *dest, const char *src, int n) {
 	return aux;
 }
 
-int atoi(const char *str) {
-    int result = 0;
-    int sign = 1;
-    int i = 0;
+int atoi(const char *str)
+{
+	int result = 0;
+	int sign = 1;
+	int i = 0;
 
-    // Check for a sign character (+/-)
-    if (str[0] == '-' || str[0] == '+') {
-        if (str[0] == '-')
-            sign = -1;
-        i++;
-    }
+	// Check for a sign character (+/-)
+	if (str[0] == '-' || str[0] == '+')
+	{
+		if (str[0] == '-')
+			sign = -1;
+		i++;
+	}
 
-    // Parse the digits and build the integer value
-    while (str[i] != '\0') {
-        if (str[i] >= '0' && str[i] <= '9') {
-            result = result * 10 + (str[i] - '0');
-            i++;
-        } else {
-            // Stop parsing if a non-digit character is encountered
-            break;
-        }
-    }
+	// Parse the digits and build the integer value
+	while (str[i] != '\0')
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+		{
+			result = result * 10 + (str[i] - '0');
+			i++;
+		}
+		else
+		{
+			// Stop parsing if a non-digit character is encountered
+			break;
+		}
+	}
 
-    return result * sign;
+	return result * sign;
 }
 
 /**
@@ -153,11 +170,14 @@ int atoi(const char *str) {
  * @param str
  * @return int
  */
-long itoa(long number, char *str) {
+long itoa(long number, char *str)
+{
 	int digits = 1;
-	for (long n = number / 10; n != 0; digits++, n /= 10);
+	for (long n = number / 10; n != 0; digits++, n /= 10)
+		;
 
-	if (digits == 1) {
+	if (digits == 1)
+	{
 		str[0] = '0';
 		str[1] = number + '0';
 		str[2] = 0;
@@ -165,7 +185,8 @@ long itoa(long number, char *str) {
 	}
 
 	str[digits] = 0;
-	for (int i = digits - 1; i >= 0; i--) {
+	for (int i = digits - 1; i >= 0; i--)
+	{
 		str[i] = (number % 10) + '0';
 		number /= 10;
 	}
@@ -173,23 +194,85 @@ long itoa(long number, char *str) {
 	return digits;
 }
 
+void bufferRead(char **buf)
+{
+	int c = 1;
+	int i = 0;
+	(*buf)[i] = 0;
+	printString(COMMAND_CHAR, GREEN);
+	printf(CURSOR);
+	while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+	{
+		c = getChar();
+		if (c == BACKSPACE)
+		{
+			if (i > 0)
+			{
+				(*buf)[--i] = 0;
+				printf("\b");
+				printf("\b");
+				printf(CURSOR);
+			}
+		}
+		else if (c >= ' ')
+		{
+			(*buf)[i++] = (char)c;
+			(*buf)[i] = 0;
+			printf("\b");
+			printf(*buf + i - 1);
+			printf(CURSOR);
+		}
+	}
+}
+
+void readNumber(char **buf)
+{
+	int c = 1, i = 0;
+	while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+	{
+		c = getChar();
+		if (c == BACKSPACE)
+		{
+			if (i > 0)
+			{
+				(*buf)[--i] = 0;
+				printf("\b");
+				printf("\b");
+				printf(CURSOR);
+			}
+		}
+		else if (c >= ' ')
+		{
+			(*buf)[i++] = (char)c;
+			(*buf)[i] = 0;
+			printf("\b");
+			printf(*buf + i - 1);
+			printf(CURSOR);
+		}
+	}
+	printf("\b");
+}
+
 /**
  * @brief
  *  Get the Char
  * @return int
  */
-int getChar() {
+int getChar()
+{
 	char c[2] = {1, 0};
 	sys_read(STDIN, (char *)&c, 2);
 	return c[0];
 }
 
-static int numToBase(long value, char *buffer, int base) {
+static int numToBase(long value, char *buffer, int base)
+{
 	char *p = buffer;
 	char *p1, *p2;
 	int digits = 0;
 
-	do {
+	do
+	{
 		int remainder = value % base;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 		digits++;
@@ -199,7 +282,8 @@ static int numToBase(long value, char *buffer, int base) {
 
 	p1 = buffer;
 	p2 = p - 1;
-	while (p1 < p2) {
+	while (p1 < p2)
+	{
 		char tmp = *p1;
 		*p1 = *p2;
 		*p2 = tmp;
@@ -210,71 +294,76 @@ static int numToBase(long value, char *buffer, int base) {
 	return digits;
 }
 
-static void print(const char *fmt, va_list args) {
+static void print(const char *fmt, va_list args)
+{
 	int state = 0;
-	while (*fmt) {
-		if (state == 0) {
+	while (*fmt)
+	{
+		if (state == 0)
+		{
 			if (*fmt == '%')
 				state = 1;
 			else
 				putChar(*fmt);
 		}
-		else if (state == 1) {
-			switch (*fmt) {
-				case 'c':
-				{
-					char ch = va_arg(args, int);
-					putChar(ch);
-					break;
-				}
-				case 's':
-				{
-					char *s = va_arg(args, char *);
-					sys_write(STDOUT, s, 0, WHITE);
-					break;
-				}
-				case 'i':
-				case 'd':
-				{
-					char buffer[27];
-					int num = va_arg(args, int);
-					numToBase(num, buffer, 10);
-					sys_write(STDOUT, buffer, 0, WHITE);
-					break;
-				}
-				case 'o':
-				{
-					char buffer[27];
-					int num = va_arg(args, int);
-					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, 0, WHITE);
-					break;
-				}
-				case 'x':
-				case 'X':
-				case 'p':
-				{
-					char buffer[27];
-					int num = va_arg(args, int);
-					putChar('0');
-					putChar('x');
-					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, 0, WHITE);
-					break;
-				}
-				case '%':
-				{
-					putChar('%');
-					break;
-				}
-				case 'l':
-				{
-					char buffer[27];
-					long num = va_arg(args, long);
-					numToBase(num, buffer, 8);
-					sys_write(STDOUT, buffer, 0, WHITE);
-					break;
-				}
+		else if (state == 1)
+		{
+			switch (*fmt)
+			{
+			case 'c':
+			{
+				char ch = va_arg(args, int);
+				putChar(ch);
+				break;
+			}
+			case 's':
+			{
+				char *s = va_arg(args, char *);
+				sys_write(STDOUT, s, 0, WHITE);
+				break;
+			}
+			case 'i':
+			case 'd':
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				numToBase(num, buffer, 10);
+				sys_write(STDOUT, buffer, 0, WHITE);
+				break;
+			}
+			case 'o':
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				numToBase(num, buffer, 8);
+				sys_write(STDOUT, buffer, 0, WHITE);
+				break;
+			}
+			case 'x':
+			case 'X':
+			case 'p':
+			{
+				char buffer[27];
+				int num = va_arg(args, int);
+				putChar('0');
+				putChar('x');
+				numToBase(num, buffer, 8);
+				sys_write(STDOUT, buffer, 0, WHITE);
+				break;
+			}
+			case '%':
+			{
+				putChar('%');
+				break;
+			}
+			case 'l':
+			{
+				char buffer[27];
+				long num = va_arg(args, long);
+				numToBase(num, buffer, 8);
+				sys_write(STDOUT, buffer, 0, WHITE);
+				break;
+			}
 			}
 			state = 0;
 		}
@@ -282,7 +371,8 @@ static void print(const char *fmt, va_list args) {
 	}
 }
 
-void printf(const char *fmt, ...) {
+void printf(const char *fmt, ...)
+{
 	va_list args;
 	va_start(args, fmt);
 	print(fmt, args);
@@ -295,11 +385,13 @@ void printf(const char *fmt, ...) {
  * @param c
  * @return int
  */
-int putChar(int c) {
+int putChar(int c)
+{
 	return putColorChar(c, WHITE);
 }
 
-int putColorChar(int car, Color c) {
+int putColorChar(int car, Color c)
+{
 	char str[2];
 	str[0] = car;
 	str[1] = '\0';
@@ -307,56 +399,67 @@ int putColorChar(int car, Color c) {
 	return str[0];
 }
 
-void putStringColor(char *str, Color c) {
-	while (*str) {
+void putStringColor(char *str, Color c)
+{
+	while (*str)
+	{
 		putColorChar(*str, c);
 		str++;
 	}
 }
 
-void puts(char *str) {
-	while (*str) {
+void puts(char *str)
+{
+	while (*str)
+	{
 		putChar(*str);
 		str++;
 	}
 	putChar('\n');
 }
 
-void printStringAt(int x, int y, char *str, Color c) {
+void printStringAt(int x, int y, char *str, Color c)
+{
 	sys_writeAt((short)x, (short)y, str, c);
 }
 
-//length problem
-static void scan(const char *fmt, va_list args, int length) {
+// length problem
+static void scan(const char *fmt, va_list args, int length)
+{
 	int state = 0;
-	while (*fmt) {
-		if (state == 0) {
+	while (*fmt)
+	{
+		if (state == 0)
+		{
 			if (*fmt == '%')
 				state = 1;
 			else
 				putChar(*fmt);
-		} else if (state == 1) {
-			switch (*fmt) {
-				case 'c':
-				{
-					*(va_arg(args, char *)) = getChar();
-					break;
-				}
-				case 's':
-				{
-					sys_read(STDIN, va_arg(args, char *), length);
-					break;
-				}
-				case 'i':
-				case 'd':
-				case 'o':
-				case 'x':
-				case 'X':
-				case 'p':
-				{
-					sys_read(STDIN, (char *) va_arg(args, int *), length); 
-					break;
-				}
+		}
+		else if (state == 1)
+		{
+			switch (*fmt)
+			{
+			case 'c':
+			{
+				*(va_arg(args, char *)) = getChar();
+				break;
+			}
+			case 's':
+			{
+				sys_read(STDIN, va_arg(args, char *), length);
+				break;
+			}
+			case 'i':
+			case 'd':
+			case 'o':
+			case 'x':
+			case 'X':
+			case 'p':
+			{
+				sys_read(STDIN, (char *)va_arg(args, int *), length);
+				break;
+			}
 			}
 			state = 0;
 		}
@@ -371,156 +474,221 @@ static void scan(const char *fmt, va_list args, int length) {
  * @param ...
  * @return int
  */
-void scanf(int length, const char *fmt, ...) {
+void scanf(int length, const char *fmt, ...)
+{
 	va_list args;
 	va_start(args, fmt);
 	scan(fmt, args, length);
 	va_end(args);
 }
 
-void clear() {
+void clear()
+{
 	sys_clearScreen();
 }
 
-int getTimedChar() {
-    char c[2] = {1, 0};
-    sys_timedRead(0, (char *)&c, 2, 1);
-    return c[0];
+int getTimedChar()
+{
+	char c[2] = {1, 0};
+	sys_timedRead(0, (char *)&c, 2, 1);
+	return c[0];
 }
 
-long getScreenWidth() {
-    return sys_getScreenWidth();
+long getScreenWidth()
+{
+	return sys_getScreenWidth();
 }
 
-long getScreenHeight() {
-    return sys_getScreenHeight();
+long getScreenHeight()
+{
+	return sys_getScreenHeight();
 }
 
-long drawRectangle(int x, int y, int width, int height, Color color) {
-    return sys_drawRectangle(x, y, width, height, color);
+long drawRectangle(int x, int y, int width, int height, Color color)
+{
+	return sys_drawRectangle(x, y, width, height, color);
 }
 
 /**
-   * @brief Function that halts for a given amount of ticks.
-*/
-void shortSleep(int ticks) {
-    sys_wait(ticks);
+ * @brief Function that halts for a given amount of ticks.
+ */
+void shortSleep(int ticks)
+{
+	sys_wait(ticks);
 }
 
-
-void printBase(uint64_t value, uint32_t base) {
-    uint8_t buf[BUFF_SIZE] = {0};
-    uint8_t * buffer = buf;
-    uintToBase(value, buffer, base);
-    sys_write(STDOUT, (char *) buffer, 0, WHITE);
+void printBase(uint64_t value, uint32_t base)
+{
+	uint8_t buf[BUFF_SIZE] = {0};
+	uint8_t *buffer = buf;
+	uintToBase(value, buffer, base);
+	sys_write(STDOUT, (char *)buffer, 0, WHITE);
 }
 
-uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base) {
-    uint8_t *p = buffer;
-    uint8_t *p1, *p2;
-    uint32_t digits = 0;
+uint32_t uintToBase(uint64_t value, uint8_t *buffer, uint32_t base)
+{
+	uint8_t *p = buffer;
+	uint8_t *p1, *p2;
+	uint32_t digits = 0;
 
-    do {
-        uint32_t remainder = value % base;
-        *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-        digits++;
-    } while (value /= base);
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	} while (value /= base);
 
-    *p = 0;
+	*p = 0;
 
-    p1 = buffer;
-    p2 = p - 1;
-    while (p1 < p2) {
-        char tmp = *p1;
-        *p1 = *p2;
-        *p2 = tmp;
-        p1++;
-        p2--;
-    }
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
 
-    return digits;
+	return digits;
 }
 
-void printError(char * str){
-    sys_write(STDERR, str,0, RED);
+void printError(char *str)
+{
+	sys_write(STDERR, str, 0, RED);
 }
 
-void printString(char * str, Color color){
-    sys_write(STDOUT, str,0, color);
+void printString(char *str, Color color)
+{
+	sys_write(STDOUT, str, 0, color);
 }
-void beep(int frequency) {
+void beep(int frequency)
+{
 	sys_beep(frequency);
 }
 
-void * malloc(unsigned int memSize) {
-    return sys_malloc(memSize);
+void *malloc(unsigned int memSize)
+{
+	return sys_malloc(memSize);
 }
 
-void free(void * ptr){
-    sys_free(ptr);
+void free(void *ptr)
+{
+	sys_free(ptr);
 }
 
-long exec(char * name, void * program, char ** argv, int read_fd, int write_fd, int priority) {
-    return sys_exec(name, program, argv, read_fd, write_fd, priority);
+long exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority)
+{
+	return sys_exec(name, program, argv, read_fd, write_fd, priority);
 }
 
-long get_pid(){
-    return sys_get_pid();
+long get_pid()
+{
+	return sys_get_pid();
 }
 
-long kill(int pid){
-    return sys_kill(pid);
+long kill(int pid)
+{
+	return sys_kill(pid);
 }
 
-long change_priority(int pid, int priority){
+long change_priority(int pid, int priority)
+{
 	return sys_change_priority(pid, priority);
 }
 
-long block(int pid){
-    return sys_block(pid);
+long block(int pid)
+{
+	return sys_block(pid);
 }
 
-long unblock(int pid){
-    return sys_unblock(pid);
+long unblock(int pid)
+{
+	return sys_unblock(pid);
 }
 
-int sem_open(char *semName, int initValue) {
-    return sys_sem_open(semName, initValue);
+int sem_open(char *semName, int initValue)
+{
+	return sys_sem_open(semName, initValue);
 }
 
-int	sem_wait(char *semName) {
-    return sys_sem_wait(semName);
+int sem_wait(char *semName)
+{
+	return sys_sem_wait(semName);
 }
 
-int sem_post(char *semName) {
-    return sys_sem_post(semName);
+int sem_post(char *semName)
+{
+	return sys_sem_post(semName);
 }
 
-int sem_close(char *semName) {
-    return sys_sem_close(semName);
+int sem_close(char *semName)
+{
+	return sys_sem_close(semName);
 }
 
-int sem_info(int idx, semInfo_t *buffer) {
-    return sys_sem_info(idx, buffer);
+int sem_info(int idx, semInfo_t *buffer)
+{
+	return sys_sem_info(idx, buffer);
 }
 
-int sems_count() {
-    return sys_sem_count();
+int sems_count()
+{
+	return sys_sem_count();
 }
 
-char * pipes_info() {
-	return (char *) sys_pipes_info();
+char *pipes_info()
+{
+	return (char *)sys_pipes_info();
 }
 
-int pipe_open(char* name) {
+int pipe_open(char *name)
+{
 	return sys_pipe_open(name);
 }
 
-//TODO: ver index-2
-void pipe_close(int index) {
+void pipe_close(int index)
+{
 	sys_pipe_close(index - 3);
 }
 
-void yield() {
+void yield()
+{
 	sys_yield();
+}
+
+long read(uint8_t fd, char *buf, int count)
+{
+	return sys_read(fd, buf, count);
+}
+
+long write(uint8_t fd, char *string, long n, Color color)
+{
+	return sys_write(fd, string, n, color);
+}
+
+long infoReg(long array[REGISTER_NUM])
+{
+	return sys_inforeg(array);
+}
+
+void ps()
+{
+	sys_ps();
+}
+
+long changeFontSize(uint32_t size)
+{
+	return sys_changeFontSize(size);
+}
+
+long time()
+{
+	return sys_time();
+}
+
+long date()
+{
+	return sys_date();
 }

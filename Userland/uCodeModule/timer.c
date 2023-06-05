@@ -1,6 +1,5 @@
-#include <timer.h>
-#include <lib.h>
-#include <syscalls.h>
+#include "include/timer.h"
+#include "include/lib.h"
 
 void getDateFormat(char *buffer);
 void getTimeFormat(char *buffer);
@@ -10,17 +9,19 @@ void getTimeFormat(char *buffer);
  *
  * @return char*
  */
-void getDateAndTime(char *buff) {
+void getDateAndTime(char *buff)
+{
     char *p = buff;
     getDateFormat(p);
     p[8] = ' ';
     getTimeFormat(&p[9]);
 }
 
-void getTimeFormat(char *buff) {
+void getTimeFormat(char *buff)
+{
     char *p = buff;
-    long time = sys_time();
-    int hours = ((time)&0xFF), minutes = ((time >> 8) & 0xFF), seconds = ((time >> 16) & 0xFF);
+    long timeVar = time();
+    int hours = ((timeVar)&0xFF), minutes = ((timeVar >> 8) & 0xFF), seconds = ((timeVar >> 16) & 0xFF);
     if (hours > 3)
         hours -= 3;
     if (hours == 0)
@@ -37,13 +38,14 @@ void getTimeFormat(char *buff) {
     p[8] = 0;
 }
 
-void getDateFormat(char *buff) {
-    char* p = buff;
-	long date = sys_date();
-	itoa((date & 0xFF), p);
-	p[2] = '/';
-	itoa((date >> 8) & 0xFF, &p[3]);
-	p[5] = '/';
-	itoa((date >> 16) & 0xFF, &p[6]);
+void getDateFormat(char *buff)
+{
+    char *p = buff;
+    long dateVar = date();
+    itoa((dateVar & 0xFF), p);
+    p[2] = '/';
+    itoa((dateVar >> 8) & 0xFF, &p[3]);
+    p[5] = '/';
+    itoa((dateVar >> 16) & 0xFF, &p[6]);
     p[8] = 0;
 }

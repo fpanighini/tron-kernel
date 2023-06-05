@@ -1,9 +1,8 @@
 #ifndef _SCHEDULER_H_
 #define _SCHEDULER_H_
 
-
 #include <timer.h>
-#include <process.h>
+#include "include/process.h"
 #include <stack.h>
 #include <memoryManager.h>
 #include <stdint.h>
@@ -13,14 +12,14 @@
 
 #define MAX_QUANTUM 5
 
-
-typedef struct Node {
+typedef struct Node
+{
     uint64_t quantums;
     ProcessP proc;
-    struct Node * next;
+    struct Node *next;
 } Node;
 
-typedef Node * NodeP;
+typedef Node *NodeP;
 
 // ASM functions
 void _force_scheduler();
@@ -29,14 +28,13 @@ uint64_t _xchg(uint64_t *dest, uint64_t value);
 
 uint64_t _cmpxchg(uint64_t *dest, uint64_t value, uint64_t test);
 
-
 uint64_t scheduler(uint64_t sp);
 
 void killCurrentProcess(void);
 
 void init_scheduler();
 
-uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
+uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
 
 uint64_t kill_process(uint64_t pid);
 
