@@ -1,3 +1,4 @@
+#include "include/scheduler.h"
 #include "include/videoDriver.h"
 #include <stdint.h>
 #include <keyboardDriver.h>
@@ -23,6 +24,7 @@ uint8_t ctrl = 0;
 
 void saveKey(uint8_t c)
 {
+    ready_foreground_proc();
     // clearScreen();
     //printBase(c, 16);
     if (c == 0x2A || c == 0x36)
@@ -60,6 +62,11 @@ void saveKey(uint8_t c)
     if (ctrl) {
         if (getKey(c) == 'c') {
             kill_foreground_proc();
+            ctrl = 0;
+            return ;
+        }
+        if (getKey(c) == 'd') {
+            buf.keys[buf.count++] = 4;
             ctrl = 0;
             return ;
         }

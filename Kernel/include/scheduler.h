@@ -70,4 +70,6 @@ void print_all_nodes();
 
 void kill_foreground_proc();
 
+void ready_foreground_proc();
+
 #endif

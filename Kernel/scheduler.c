@@ -8,6 +8,7 @@
 
 #define TAB "    "
 #define SCHED_MUTEX "SCHEDUELER_MUTEX"
+#define PROC_MUTEX "PROC_MUTEX"
 
 NodeP add_node(ProcessP process);
 NodeP find_next_ready(NodeP current);
@@ -18,9 +19,6 @@ void destroy_node(NodeP node);
 void free_node(NodeP node);
 void destroy_ground_node(uint64_t pid);
 void kill_foreground_proc();
-
-void push_foreground(NodeP node);
-void pop_foreground();
 
 
 uint64_t disable_count = 0;
@@ -120,6 +118,7 @@ void init_scheduler()
     currentNode->proc->state = RUNNING;
     sem_open(PIDC_MUTEX, 1);
     sem_open(SCHED_MUTEX, 1);
+    sem_open(PROC_MUTEX, 1);
     // add_process("IDLE", &idle);
 }
 
@@ -127,6 +126,11 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 {
     scheduler_disable();
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
+
+    sem_wait(PROC_MUTEX);
+    currentNode->proc->children++;
+    sem_post(PROC_MUTEX);
+
     NodeP newNode = add_node(proc);
 
     if (read_fd == 0){
@@ -140,6 +144,10 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
     counter++;
     scheduler_enable();
     return proc->pid;
+}
+
+void ready_foreground_proc(){
+    foreground->proc->state = foreground->proc->state == BLOCKED ? READY : foreground->proc->state;
 }
 
 void kill_foreground_proc()
@@ -200,6 +208,13 @@ uint64_t kill_process(uint64_t pid)
     {
         killCurrentProcess();
     }
+
+    NodeP parent = find_node(currentNode->proc->ppid);
+
+    sem_wait(PROC_MUTEX);
+    parent->proc->children--;
+    sem_post(PROC_MUTEX);
+
     NodeP node = find_node(pid);
     if (node == NULL)
     {

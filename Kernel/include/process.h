@@ -33,6 +33,7 @@ typedef struct Process
     uint64_t read_fd;
     uint64_t write_fd;
     uint64_t priority;
+    uint64_t children;
 } Process;
 
 typedef struct Process *ProcessP;

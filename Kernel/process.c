@@ -1,4 +1,5 @@
 #include "include/process.h"
+#include "include/pipe.h"
 #include <scheduler.h>
 #include <lib.h>
 #include <semaphore.h>
@@ -41,13 +42,24 @@ ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd,
     proc->read_fd = read_fd;
     proc->write_fd = write_fd;
     proc->priority = priority;
+    proc->children = 0;
+
     return proc;
 }
+
 
 void free_proc(ProcessP proc)
 {
     free(proc->stack);
     free_argv(proc->argv);
+    if (proc->read_fd > 2){
+        pipe_close(proc->read_fd - 3);
+    }
+    char * eof = 4;
+    sys_write(proc->write_fd, eof, 1, WHITE);
+    if (proc->write_fd > 2){
+        pipe_close(proc->write_fd - 3);
+    }
     free(proc);
 }
 
