@@ -25,17 +25,19 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
 
     uint64_t pipe_fd = get_current_write();
 
-/*    
-    printString("{", WHITE);
-    printBase(sys_get_pid(), 10);
-    printString("}", WHITE);
+    // printString("{", WHITE);
+    // printBase(sys_get_pid(), 10);
+    // printString("}", WHITE);
 
-    if(pipe_fd != 1) { 
-        printString("pipe_fd: ", WHITE);
+    if (pipe_fd != 1)
+    {
+        printString("\npipe_fd: ", GRAY);
         printBase(pipe_fd, 10);
+        printString("  PID: ", GRAY);
+        printBase(get_running_pid(), 10);
+        printString(string, GRAY);
     }
-    */
-    
+
     // Attempting to write on stdin
     if (fd == 0)
     {
@@ -51,6 +53,11 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
     // Printing to stdout
     if (pipe_fd == 1)
     {
+        //printString("\npipe_fd: ", GREEN);
+        //printBase(pipe_fd, 10);
+        //printString("  PID: ", GREEN);
+        //printBase(get_running_pid(), 10);
+        //printString(string, GREEN);
         printString((uint8_t *)string, color);
         return 0;
     }
@@ -78,6 +85,7 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
     if (fd == 0 || fd == 1 || fd == 2)
     {
         new_fd = get_current_read();
+
         // TODO: ver CAT
         // printString("new_fd: ", WHITE);
         // printBase(count, 10);
@@ -94,7 +102,14 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
 
     if (new_fd != 0)
     {
-        uint64_t ret = pipe_read(new_fd - 3, buf , count);
+        uint64_t ret = pipe_read(new_fd - 3, buf, count);
+
+        printString("\npipe_fd: ", RED);
+        printBase(new_fd, 10);
+        printString("\nPID: ", RED);
+        printBase(get_running_pid(), 10);
+        printString(buf, RED);
+
         return ret;
     }
 
@@ -106,17 +121,18 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
         read = getKbdBuffer(buf, count, &i);
         if (read && (buf[i - 1] == '\n' || buf[i - 1] == 0))
         {
-            //buf[i - 1] = 0;
+            // buf[i - 1] = 0;
             buf[i - 1] = '\n';
             return i;
         }
         _hlt();
     }
     buf[i] = 0;
+
     return i;
 }
 
-uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis)
+uint64_t sys_timedRead(uint8_t fd, char *buf, uint32_t count, uint32_t millis)
 {
     if (fd != get_current_read())
         return 0;
@@ -346,4 +362,3 @@ void sys_ps(void)
 {
     print_all_nodes();
 }
-

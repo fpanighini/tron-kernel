@@ -6,7 +6,7 @@
 #include <lib.h>
 #include <semaphore.h>
 
-#define MAX_PIPES 50
+#define MAX_PIPES 10
 #define PIPE_SIZE 3000
 #define PROCS 10
 #define NAME_MAX 100

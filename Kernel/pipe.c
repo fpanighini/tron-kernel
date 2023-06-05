@@ -19,23 +19,37 @@ void fill0(char *arr, int size)
 
 int pipe_write(int index, char *addr, int n)
 {
+
+    printString("EN PIPE WRITE1\n", MAGENTA);
+
     if (!pipes[index].created)
         return -1;
     block_process_pipe(pipes[index].wProcesses, get_running_pid());
+    
+    printString("EN PIPE WRITE2\n", MAGENTA);
+    
     sem_wait(pipes[index].name);
+    
+    printString("EN PIPE WRITE3\n", MAGENTA);
+    
     release_process_pipe(pipes[index].wProcesses, get_running_pid());
     int i;
     for (i = 0; i < n && addr[i] != 0 && (pipes[index].nread) != (pipes[index].nwrite + 1); i++)
     {
         pipes[index].data[pipes[index].nwrite++ % PIPE_SIZE] = addr[i];
+        printString(pipes[index].data[pipes[index].nwrite-1 % PIPE_SIZE], MAGENTA);
     }
+    printString("EN PIPE WRITE4\n", MAGENTA);
     pipes[index].data[pipes[index].nwrite % PIPE_SIZE] = -1;
     sem_post(pipes[index].name);
+    printString("EN PIPE WRITE5\n", MAGENTA);
     return i;
 }
 
 int pipe_read(int index, char *addr, int n)
 {
+    printString(pipes[index].data, MAGENTA);
+
     if (!pipes[index].created)
         return -1;
     block_process_pipe(pipes[index].rProcesses, get_running_pid());
@@ -48,6 +62,7 @@ int pipe_read(int index, char *addr, int n)
     {
         // print_char(pipes[index].data[pipes[index].nread % PIPE_SIZE]);
         addr[i] = pipes[index].data[pipes[index].nread++ % PIPE_SIZE];
+        printString(addr[i], MAGENTA);
     }
     if ((pipes[index].nread + 1) == (pipes[index].nwrite))
     {
@@ -63,6 +78,7 @@ int pipe_read(int index, char *addr, int n)
         pipes[index].data[pipes[index].nread % PIPE_SIZE] = 0;
     //_internal_print_string("post\n");
     sem_post(pipes[index].name);
+    printString(addr[i], BLUE);
     return i;
 }
 
@@ -209,7 +225,7 @@ void release_process_pipe(int *p, int pid)
     {
         if (p[i] == pid)
         {
-            ready_process(pid);
+            ready_process(p[i]);
             p[i] = 0;
             return;
         }
