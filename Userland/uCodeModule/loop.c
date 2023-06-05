@@ -6,6 +6,6 @@ int loop(int argc, char **argv) {
         shortSleep(1000);
         printf("My PID: %d\n", get_pid());
     }
-    sem_post("pipe");
+    // sem_post("pipe");
     return 0;
 }

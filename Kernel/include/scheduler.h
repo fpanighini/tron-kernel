@@ -22,6 +22,13 @@ typedef struct Node {
 
 typedef Node * NodeP;
 
+typedef struct GroundNode {
+    NodeP node;
+    struct GroundNode * next;
+} GroundNode;
+
+typedef GroundNode * GroundNodeP;
+
 // ASM functions
 void _force_scheduler();
 
@@ -61,5 +68,7 @@ uint64_t get_current_read();
 uint64_t get_current_write();
 
 void print_all_nodes();
+
+void kill_foreground_proc();
 
 #endif

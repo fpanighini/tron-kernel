@@ -231,10 +231,10 @@ _irq01Handler:
  	exceptionHandler 6
 
 syscallINTHandler:
-    cli
-    mov rcx, r10
+    ; cli
+    ; mov rcx, r10
     ; mov r9, rax ; <== ??
-    sti
+    ; sti
 
     cmp rax, 0x00
     je .write
@@ -338,6 +338,7 @@ syscallINTHandler:
     jmp .end
 
 .write:
+    mov rcx, r10
     call sys_write
     jmp .end
 
@@ -346,6 +347,7 @@ syscallINTHandler:
     jmp .end
 
 .writeAt:
+    mov rcx, r10
     call sys_writeAt
     jmp .end
 	
@@ -378,6 +380,7 @@ syscallINTHandler:
 	jmp .end
 
 .drawRectangle:
+        mov rcx, r10
 	call sys_drawRectangle
 	jmp .end
 
@@ -434,6 +437,7 @@ syscallINTHandler:
         jmp .end
 
 .sem_info:
+        mov rsi, r10
         call sys_sem_info
         jmp .end
 

@@ -65,6 +65,10 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
         new_fd = fd;
     }
 
+    if (new_fd == 1 || new_fd == 2){
+        return 0;
+    }
+
     if (new_fd != 0){
         uint64_t ret = pipe_read(new_fd - 3, buf , count);
         return ret;
@@ -87,7 +91,7 @@ uint64_t sys_read(uint8_t fd, char * buf, uint32_t count) {
 }
 
 uint64_t sys_timedRead(uint8_t fd, char * buf, uint32_t count, uint32_t millis) {
-    if (fd != STDIN)
+    if (fd != get_current_read())
         return 0;
     
     int i = 0;

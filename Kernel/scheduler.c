@@ -7,22 +7,31 @@
 #include <stdint.h>
 
 #define TAB "    "
+#define SCHED_MUTEX "SCHEDUELER_MUTEX"
 
 
-void add_node(ProcessP process);
+NodeP add_node(ProcessP process);
 NodeP find_next_ready(NodeP current);
 NodeP find_node(uint64_t pid);
 
 void destroy_current_node();
 void destroy_node(NodeP node);
 void free_node(NodeP node);
+void destroy_ground_node(uint64_t pid);
+void kill_foreground_proc();
+
+void push_foreground(NodeP node);
+void pop_foreground();
+
 
 uint64_t disable_count = 0;
 
 NodeP first = NULL;
 NodeP currentNode = NULL;
 
-NodeP currentForegound = NULL;
+NodeP foreground = NULL;
+NodeP background = NULL;
+
 
 uint64_t counter = 0;
 uint64_t force_yield = 0;
@@ -45,7 +54,11 @@ uint64_t scheduler(uint64_t sp){
     if (currentNode->proc->state == RUNNING){
         currentNode->quantums++;
     } else if (currentNode->proc->state == KILLED){ // If process is DEAD destroy the currentNode (replaced by the next ready process)
-        destroy_node(currentNode);
+        if (currentNode->proc == foreground->proc){
+            kill_foreground_proc();
+        } else {
+            destroy_node(currentNode);
+        }
         currentNode = find_next_ready(currentNode);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
@@ -58,6 +71,9 @@ uint64_t scheduler(uint64_t sp){
         currentNode = find_next_ready(currentNode->next);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
+        // printString("CHOSE: ", GREEN);
+        // printBase(currentNode->proc->pid, 10);
+        // printString("\n", WHITE);
     }
 
     return currentNode->proc->sp;
@@ -93,32 +109,50 @@ void init_scheduler(){
     counter++;
     currentNode->proc->state = RUNNING;
     sem_open(PIDC_MUTEX, 1);
+    sem_open(SCHED_MUTEX, 1);
     // add_process("IDLE", &idle);
 }
 
 uint64_t add_process(char * name, void * program, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority){
     scheduler_disable();
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
-    add_node(proc);
+    NodeP newNode = add_node(proc);
+
+    if (read_fd == 0){
+        foreground->proc->read_fd = 1;
+        if (background == NULL){
+            background = foreground;
+        }
+        foreground = newNode;
+    }
+
     counter++;
     scheduler_enable();
     return proc->pid;
 }
 
+void kill_foreground_proc(){
+    if (background != NULL){
+        NodeP aux = foreground;
+        foreground = background;
+        foreground->proc->read_fd = 0;
+        background = NULL;
+        kill_process(aux->proc->pid);
+    }
+}
 
-void add_node(ProcessP process){
+NodeP add_node(ProcessP process){
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL) {
         printString((uint8_t *) "MemError", RED);
-        return ;
+        return 0;
     }
     newNode->quantums = process->priority;
     newNode->proc = process;
     newNode->next = currentNode->next;
     currentNode->next = newNode;
+    return newNode;
 }
-
-
 
 void killCurrentProcess(){
     currentNode->proc->state = KILLED;
@@ -145,6 +179,9 @@ void notFound(){
 }
 
 uint64_t kill_process(uint64_t pid){
+    if (currentNode->proc->pid == pid){
+        killCurrentProcess();
+    }
     NodeP node = find_node(pid);
     if (node == NULL){
         notFound();
@@ -195,8 +232,21 @@ uint64_t get_running_pid(void){
     return currentNode == NULL ? 0 : currentNode->proc->pid;
 }
 
-void destroy_node(NodeP node){
+// void printNodes(){
+//     NodeP cur = first;
+//     printBase(cur->proc->pid, 10);
+//     printString(" -> ", WHITE);
+//     cur = cur->next;
+//     while (cur != first){
+//         printBase(cur->proc->pid, 10);
+//         printString(" -> ", WHITE);
+//         cur = cur->next;
+//     }
+//     printString("\n", WHITE);
+// }
 
+void destroy_node(NodeP node){
+    // printNodes();
     NodeP aux = node->next;
     free_proc(node->proc);
     node->proc = node->next->proc;
@@ -208,6 +258,7 @@ void destroy_node(NodeP node){
     }
 
     free(aux);
+    // printNodes();
 }
 
 void destroy_current_node(){

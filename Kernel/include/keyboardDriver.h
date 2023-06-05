@@ -2,6 +2,7 @@
 #define _KEYBOARD_DRIVER_H_
 
 #include <stdint.h>
+#include <scheduler.h>
 
 void saveKey(uint8_t c);
 void clearKeyboardBuffer();

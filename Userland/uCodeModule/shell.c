@@ -345,7 +345,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, LOOP_COMMAND))
     {
         char *argv[] = {"Hola", "Como Estas", NULL};
-        int ret_pid = exec("loop", &loop, argv, fd_read, fd_write, 1);
+        int ret_pid = exec("loop", &loop, argv, 0, fd_write, 1);
         return ret_pid;
     }
     else if (!strcmp(buf, KILL_COMMAND))

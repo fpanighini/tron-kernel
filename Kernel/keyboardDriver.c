@@ -1,3 +1,4 @@
+#include "include/videoDriver.h"
 #include <stdint.h>
 #include <keyboardDriver.h>
 #include <interrupts.h>
@@ -21,7 +22,7 @@ uint8_t ctrl = 0;
 
 void saveKey(uint8_t c){
     // clearScreen();
-    // printBase(c, 16);
+    //printBase(c, 16);
     if (c == 0x2A || c == 0x36) {
         shift = 1;
         return ;
@@ -34,7 +35,7 @@ void saveKey(uint8_t c){
         ctrl = 1;
         return;
     }
-    if (c == 0) {
+    if (c == 0xE0 || c == 0x8) {
         ctrl = 0;
         return;
     }
@@ -45,6 +46,13 @@ void saveKey(uint8_t c){
         }
         if (c == 0x8) {
             buf.keys[buf.count++] = '&';
+            return ;
+        }
+    }
+    if (ctrl) {
+        if (getKey(c) == 'c') {
+            kill_foreground_proc();
+            ctrl = 0;
             return ;
         }
     }
