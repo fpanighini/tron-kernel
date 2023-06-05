@@ -27,6 +27,12 @@ void saveKey(uint8_t c)
     ready_foreground_proc();
     // clearScreen();
     //printBase(c, 16);
+    if (c == 1)
+    {
+        buf.keys[buf.count++] = '\n';
+        return;
+    }
+    
     if (c == 0x2A || c == 0x36)
     {
         shift = 1;

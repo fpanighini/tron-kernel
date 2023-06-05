@@ -199,7 +199,7 @@ int inputRead(char **buf)
     int c = 1;
     int i = 0;
     (*buf)[i] = 0;
-    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+    while (c != '\n' && i < MAX_TERMINAL_CHARS - 1)
     {
         c = getChar();
         if (c == BACKSPACE)
@@ -232,11 +232,6 @@ int inputRead(char **buf)
  */
 int getChar()
 {
-	/*
-	int pid = get_pid();
-	if(pid!= 1)
-		printf("PID getchar: %d", pid);
-	*/
 	char c[2] = {1, 0};
 	sys_read(STDIN, (char *)&c, 2);
 	return c[0];
