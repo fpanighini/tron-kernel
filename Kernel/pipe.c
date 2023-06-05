@@ -48,7 +48,7 @@ int pipe_write(int index, char *addr, int n)
 
 int pipe_read(int index, char *addr, int n)
 {
-    printString(pipes[index].data, GREEN);
+    //printString(pipes[index].data, GREEN);
 
     if (!pipes[index].created)
         return -1;
@@ -78,7 +78,7 @@ int pipe_read(int index, char *addr, int n)
         pipes[index].data[pipes[index].nread % PIPE_SIZE] = 0;
     //_internal_print_string("post\n");
     sem_post(pipes[index].name);
-    printString(addr, BLUE);
+    //printString(addr, BLUE);
     return i;
 }
 
