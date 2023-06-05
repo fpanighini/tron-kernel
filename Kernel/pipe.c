@@ -207,7 +207,7 @@ void block_process_pipe(int *p, int pid)
     int i;
     for (i = 0; i < PROCS && p[i] != 0; i++)
     {
-        if (p[i] == pid)
+        if (p[i] != pid)
         {
             block_process(pid);
             return;
@@ -216,7 +216,7 @@ void block_process_pipe(int *p, int pid)
     if (i == PROCS)
         return;
     p[i] = pid;
-    block_process(pid);
+    // block_process(pid);
 }
 
 void release_process_pipe(int *p, int pid)

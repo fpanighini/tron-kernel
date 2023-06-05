@@ -2,6 +2,8 @@
 
 int wc(int argc, char **argv)
 {
+
+    printf("LLEGUE WC\n");
     int counter = 0;
     char c[200] = {0};
 

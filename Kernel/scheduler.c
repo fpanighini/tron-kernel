@@ -43,7 +43,7 @@ uint64_t scheduler(uint64_t sp)
         return currentNode->proc->sp = sp;
     }
 
-    if (counter == 0) // || counter == block_count)
+    if (counter == 1) // || counter == block_count)
     {
         return sp;
     }
@@ -69,7 +69,8 @@ uint64_t scheduler(uint64_t sp)
         currentNode->quantums = currentNode->proc->priority;
         return currentNode->proc->sp;
     }
-    if (currentNode->proc->state == BLOCKED){
+    if (currentNode->proc->state == BLOCKED)
+    {
         currentNode = find_next_ready(currentNode->next);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
@@ -122,6 +123,7 @@ void init_scheduler()
     newNode->next = first;
     currentNode = first;
     currentNode->proc->state = RUNNING;
+    counter++;
     sem_open(PIDC_MUTEX, 1);
     sem_open(SCHED_MUTEX, 1);
     sem_open(PROC_MUTEX, 1);
@@ -139,7 +141,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     NodeP newNode = add_node(proc);
 
-    if (read_fd == 0 || read_fd == 1){
+    if (read_fd == 0)
+    {
         if (background == NULL){
             foreground->proc->read_fd = 1;
             background = foreground;

@@ -547,6 +547,8 @@ int pipedBuffer(char *buf)
     if (leftPid == -1)
         return 2;
 
+    yield();
+
     long rightPid = readBuffer(right, fd, 1);
     if (rightPid == -1)
     {

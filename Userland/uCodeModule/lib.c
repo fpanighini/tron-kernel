@@ -552,7 +552,9 @@ void free(void *ptr)
 
 long exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority)
 {
-	return sys_exec(name, program, argv, read_fd, write_fd, priority);
+        uint64_t ret = sys_exec(name, program, argv, read_fd, write_fd, priority);
+        // yield();
+        return ret;
 }
 
 long get_pid()
@@ -647,6 +649,7 @@ long infoReg(long array[REGISTER_NUM])
 
 void ps()
 {
+    printf("LLEGUE PS\n");
 	sys_ps();
 }
 

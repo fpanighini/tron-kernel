@@ -57,7 +57,6 @@ void wait_pid(){
     }
 }
 
-
 void free_proc(ProcessP proc)
 {
     free(proc->stack);
