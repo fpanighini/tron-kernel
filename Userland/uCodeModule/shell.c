@@ -321,12 +321,14 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"20", "5", 0};
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
+        wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
         char *argv[] = {0};
         int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1);
+        wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
