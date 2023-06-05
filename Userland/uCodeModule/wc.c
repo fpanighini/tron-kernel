@@ -2,22 +2,30 @@
 
 int wc(int argc, char **argv)
 {
-    int counter = 1;
-    char c[2] = {1, 0};
+    int counter = 0;
+    char c[200] = {0};
 
+    int i = 0;
     do
     {
-        sys_read(STDIN, (char *)&c, 2);
-        putChar(c[0]);
+        sys_read(STDIN, (char *)&c, 199);
 
-        //if(c[0] != 0)
-        //    printf("\nLETTER: %c ASCII: %d \n", c[0], c[0]);
+        int aux = 0;
+        while (c[aux] != 4 && c[aux] != 0)
+            putChar(c[aux++]);
 
-        if (c[0] == '\n')
-            counter++;
+        printf("\nSTRING: %s \n", c);
 
-    } while (c[0] != 4 && c[0] != 0);
+        while (c[i] != 4 && c[i] != 0)
+        {
+            if (c[i++] == '\n')
+            {
+                counter++;
+            }
+        }
 
-    //printf("\nCantidad de lineas del input: %d\n", counter);
+    } while (c[i] != 4 && c[i] != 0);
+
+    printf("\nCantidad de lineas del input: %d\n", counter == 0 ? 1 : counter);
     return 0;
 }

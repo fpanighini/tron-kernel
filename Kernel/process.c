@@ -62,16 +62,16 @@ void free_proc(ProcessP proc)
 {
     free(proc->stack);
     free_argv(proc->argv);
-    if (proc->read_fd > 2)
-    {
-        pipe_close(proc->read_fd - 3);
-    }
+    //if (proc->read_fd > 2)
+    //{
+    //    pipe_close(proc->read_fd - 3);
+    //}
     char *eof = (char*)4;
     sys_write(proc->write_fd, eof, 1, WHITE);
-    if (proc->write_fd > 2)
-    {
-        pipe_close(proc->write_fd - 3);
-    }
+    //if (proc->write_fd > 2)
+    //{
+    //    pipe_close(proc->write_fd - 3);
+    //}
     free(proc);
 }
 

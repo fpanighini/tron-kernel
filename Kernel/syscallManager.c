@@ -26,17 +26,17 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
 
     uint64_t pipe_fd = get_current_write();
 
-    // printString("{", WHITE);
-    // printBase(sys_get_pid(), 10);
-    // printString("}", WHITE);
+    //printString("{", WHITE);
+    //printBase(sys_get_pid(), 10);
+    //printString("}", WHITE);
 
     if (pipe_fd != 1)
     {
-        printString("\npipe_fd: ", GRAY);
-        printBase(pipe_fd, 10);
-        printString("  PID: ", GRAY);
-        printBase(get_running_pid(), 10);
-        printString(string, GRAY);
+        //printString("\npipe_fd: ", GRAY);
+        //printBase(pipe_fd, 10);
+        //printString("  PID: ", GRAY);
+        //printBase(get_running_pid(), 10);
+        //printString(string, GRAY);
     }
 
     // Attempting to write on stdin
@@ -88,7 +88,7 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
         new_fd = get_current_read();
 
         // TODO: ver CAT
-        // printString("new_fd: ", WHITE);
+        // printString("new_fd: ", RED);
         // printBase(count, 10);
     }
     else

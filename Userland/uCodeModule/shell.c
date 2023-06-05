@@ -297,7 +297,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"10", 0};
         uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1);
-        wait_pid();
+        //wait_pid();
         return ret;
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
@@ -551,5 +551,6 @@ int pipedBuffer(char *buf)
         return 3;
     }
 
+    wait_pid();
     return 1;
 }
