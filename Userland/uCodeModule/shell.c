@@ -123,7 +123,7 @@ void shell(int argc, char **argv)
         out = pipedBuffer(string);
         if (out == -1)
             out = readBuffer(string, 0, 1);
-            
+
         printString(COMMAND_CHAR, GREEN);
         printf(CURSOR);
     }
@@ -296,13 +296,14 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, PS_COMMAND))
     {
         char *argv[] = {"10", 0};
-        return exec("ps", &ps, argv, 0, 1, 5);
+        return exec("ps", &ps, argv, fd_read, fd_write, 1);
+        
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
 
-        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 0);
+        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1);
 
         return ret_pid;
         // test_processes(1,argv);
@@ -329,8 +330,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, LOOP_COMMAND))
     {
         char *argv[] = {"Hola", "Como Estas", NULL};
-        int ret_pid = exec("loop", &loop, argv, 0, fd_write, 1);
-        return ret_pid;
+        return exec("loop", &loop, argv, fd_read, fd_write, 1);
     }
     else if (!strcmp(buf, KILL_COMMAND))
     {
@@ -418,14 +418,13 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, WC_COMMAND))
     {
         char *argv[] = {"2", 0};
-
-        return exec("wc", &wc, argv, fd_read, fd_write, 0);
+        return exec("wc", &wc, argv, fd_read, fd_write, 1);
     }
     else if (!strcmp(buf, SH_COMMAND))
     {
         char *argv[] = {"2", 0};
 
-        return exec("shell", &shell, argv, fd_read, fd_write, 0);
+        return exec("shell", &shell, argv, fd_read, fd_write, 1);
     }
     else
     {
@@ -533,10 +532,8 @@ int pipedBuffer(char *buf)
     (right)[totalLength - delimiterPos - 1] = '\0';
     // lengthRight = totalLength - delimiterPos - 1;
 
-    // printf("Substring 1: %s\n", left);
-    // printf("Substring 1 length: %d\n", lengthLeft);
-    // printf("Substring 2: %s\n", right);
-    // printf("Substring 2 length: %d\n", lengthRight);
+    //printf("Substring 1: %s\n", left);
+    //printf("Substring 2: %s\n", right);
 
     int fd = pipe_open("pipes");
 

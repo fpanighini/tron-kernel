@@ -232,6 +232,11 @@ int inputRead(char **buf)
  */
 int getChar()
 {
+	/*
+	int pid = get_pid();
+	if(pid!= 1)
+		printf("PID getchar: %d", pid);
+	*/
 	char c[2] = {1, 0};
 	sys_read(STDIN, (char *)&c, 2);
 	return c[0];
