@@ -34,7 +34,7 @@ uint64_t test_processes(uint64_t argc, char *argv[])
     // Create max_processes processes
     for (rq = 0; rq < max_processes; rq++)
     {
-      p_rqs[rq].pid = exec("endless_loop", &endless_loop, argvAux, 0, 1, 5);
+      p_rqs[rq].pid = exec("endless_loop", &endless_loop, argvAux, 1, 1, 5);
 
       if (p_rqs[rq].pid == -1)
       {
