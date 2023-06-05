@@ -133,9 +133,9 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     NodeP newNode = add_node(proc);
 
-    if (read_fd == 0){
-        foreground->proc->read_fd = 1;
+    if (read_fd == 0 || write_fd == 1){
         if (background == NULL){
+            foreground->proc->read_fd = 1;
             background = foreground;
         }
         foreground = newNode;
