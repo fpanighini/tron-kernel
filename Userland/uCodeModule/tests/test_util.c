@@ -78,8 +78,8 @@ void endless_loop_print(uint64_t wait)
 
   while (1)
   {
-    printf("%d\n", pid);
-    busy_wait(100000000);
+    printf("%d ", pid);
+    busy_wait(10000000);
     // busy_wait(wait);
   }
 }

@@ -30,6 +30,8 @@ NodeP foreground = NULL;
 NodeP background = NULL;
 
 uint64_t counter = 0;
+uint64_t block_count = 0;
+
 uint64_t force_yield = 0;
 
 typedef int (*EntryPoint)();
@@ -41,7 +43,7 @@ uint64_t scheduler(uint64_t sp)
         return currentNode->proc->sp = sp;
     }
 
-    if (counter == 1)
+    if (counter == 0) // || counter == block_count)
     {
         return sp;
     }
@@ -58,6 +60,7 @@ uint64_t scheduler(uint64_t sp)
         if (currentNode->proc == foreground->proc)
         {
             kill_foreground_proc();
+
         } else {
             destroy_node(currentNode);
         }
@@ -118,7 +121,6 @@ void init_scheduler()
     first = newNode;
     newNode->next = first;
     currentNode = first;
-    counter++;
     currentNode->proc->state = RUNNING;
     sem_open(PIDC_MUTEX, 1);
     sem_open(SCHED_MUTEX, 1);
@@ -137,7 +139,7 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     NodeP newNode = add_node(proc);
 
-    if (read_fd == 0 || write_fd == 1){
+    if (read_fd == 0 || read_fd == 1){
         if (background == NULL){
             foreground->proc->read_fd = 1;
             background = foreground;
@@ -158,8 +160,12 @@ void kill_foreground_proc()
 {
     if (background != NULL)
     {
+        // print_all_nodes();
         NodeP aux = foreground;
         foreground = background;
+
+        ready_foreground_proc();
+
         foreground->proc->read_fd = 0;
         background = NULL;
         kill_process(aux->proc->pid);
@@ -230,6 +236,8 @@ uint64_t kill_process(uint64_t pid)
 
 uint64_t change_priority(uint64_t pid, uint64_t priority)
 {
+    print_all_nodes();
+
     NodeP node = find_node(pid);
     if (node == NULL)
     {
@@ -241,6 +249,7 @@ uint64_t change_priority(uint64_t pid, uint64_t priority)
 
 void block_current_process()
 {
+    block_count++;
     currentNode->proc->state = BLOCKED;
     _force_scheduler();
     // scheduler();
@@ -266,6 +275,7 @@ uint64_t ready_process(uint64_t pid)
         return -1;
     }
     node->proc->state = READY;
+    block_count--;
     return node->proc->pid;
 }
 
@@ -299,6 +309,13 @@ void destroy_node(NodeP node)
         ready_process(parent->proc->pid);
     }
     sem_post(PROC_MUTEX);
+
+
+    counter--;
+    if (node->proc->state == BLOCKED){
+        block_count--;
+    }
+
 
     NodeP aux = node->next;
     free_proc(node->proc);
