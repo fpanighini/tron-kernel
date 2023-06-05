@@ -1,17 +1,11 @@
-#include "include/syscalls.h"
-#include <syscalls.h>
-#include <color.h>
 #include <timer.h>
-#include <lib.h>
+#include "include/lib.h"
 #include <tron.h>
 #include <tests.h>
 #include <loop.h>
 #include <cat.h>
-
-#define COMMAND_CHAR "$> "
-#define CURSOR "|"
-#define BACKSPACE '\b'
-#define MAX_KBD_BUF 55
+#include "include/filter.h"
+#include <wc.h>
 
 #define COMMAND_NOT_FOUND -1
 
@@ -41,8 +35,10 @@
 #define UNBLOCK_COMMAND "unblock"
 #define NICE_COMMAND "nice"
 #define CAT_COMMAND "cat"
+#define FILTER_COMMAND "filter"
+#define WC_COMMAND "wc"
+#define SH_COMMAND "sh"
 
-#define MAX_TERMINAL_CHARS 124 // 124 = (1024/8) - 4 (number of characters that fit in one line minus the command prompt and cursor characters)
 #define HELP_MESSAGE "HELP:\n\
 The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
 \
@@ -61,7 +57,21 @@ inforeg           - Displays the contents of all the registers at a given time.\
                     To save registers press and release the CTRL key.\n\
                     If the command is called before pressing CTRL at least once,\n\
                     the registers will appear as if they have the value 0\n\
-printmem           - Receives a parameter in hexadecimal. Displays the next 32 bytes after the given memory direction given\n"
+printmem          - Receives a parameter in hexadecimal format. Displays the next 32 bytes after the given memory direction given\n\
+ps                - Displays the current processes information\n\
+loop              - Creates a process that loops infinitely\n\
+kill              - Kills the process with the given pid\n\
+block             - Blocks the process with the given pid\n\
+unblock           - Unblocks the process with the given pid\n\
+nice              - Changes the priority of the process with the given pid\n\
+cat               - Prints the contents of the given input\n\
+filter            - Prints the contents of the file without consonants\n\
+wc                - Prints the number of lines, words and characters of the given input\n\
+sh                - Creates a new shell\n\
+test-processes    - Runs a test \n\
+test-mm           - Runs a test \n\
+test-sync         - Runs a test \n\
+test-prio         - Runs a test \n"
 
 #define INCREASE 1
 #define DECREASE -1
@@ -81,8 +91,6 @@ printmem           - Receives a parameter in hexadecimal. Displays the next 32 b
 #define NEWLINE "\n"
 
 void shell(int argc, char **argv);
-void bufferRead(char **buf);
-void readNumber(char **buf);
 int readBuffer(char *buf, int fd_read, int fd_write);
 int pipedBuffer(char *buf);
 void printLine(char *str);
@@ -114,37 +122,6 @@ void shell(int argc, char **argv)
         out = pipedBuffer(string);
         if (out == -1)
             out = readBuffer(string, 0, 1);
-    }
-}
-
-void bufferRead(char **buf)
-{
-    int c = 1;
-    int i = 0;
-    (*buf)[i] = 0;
-    printString(COMMAND_CHAR, GREEN);
-    printf(CURSOR);
-    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
-    {
-        c = getChar();
-        if (c == BACKSPACE)
-        {
-            if (i > 0)
-            {
-                (*buf)[--i] = 0;
-                printf("\b");
-                printf("\b");
-                printf(CURSOR);
-            }
-        }
-        else if (c >= ' ')
-        {
-            (*buf)[i++] = (char)c;
-            (*buf)[i] = 0;
-            printf("\b");
-            printf(*buf + i - 1);
-            printf(CURSOR);
-        }
     }
 }
 
@@ -226,10 +203,12 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         }
         printMem(buf + l);
     }
-    else if (!strcmp(buf, HELP_COMMAND)) {
+    else if (!strcmp(buf, HELP_COMMAND))
+    {
         helpCommand();
     }
-    else if (!strcmp(buf, CLEAR_COMMAND)) {
+    else if (!strcmp(buf, CLEAR_COMMAND))
+    {
         clear();
     }
     else if (!strcmp(buf, TRON_COMMAND))
@@ -291,7 +270,8 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         else
             clear();
     }
-    else if (!strcmp(buf, INFOREG_COMMAND)) {
+    else if (!strcmp(buf, INFOREG_COMMAND))
+    {
         printInfoReg();
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO))
@@ -312,7 +292,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, PS_COMMAND))
     {
         char *argv[] = {"10", 0};
-        return exec("ps", &sys_ps, argv, 0, 1, 5);
+        return exec("ps", &ps, argv, 0, 1, 5);
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
@@ -354,7 +334,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
 
         int pid;
         printf("Enter PID:  ");
-        char * pidString = (char *) malloc(10);
+        char *pidString = (char *)malloc(10);
         readNumber(&pidString);
         pid = atoi(pidString);
 
@@ -367,7 +347,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         int pid;
         printf("Enter PID:  ");
-        char * pidString = (char *) malloc(10);
+        char *pidString = (char *)malloc(10);
         readNumber(&pidString);
         pid = atoi(pidString);
 
@@ -380,7 +360,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         int pid;
         printf("Enter PID:  ");
-        char * pidString = (char *) malloc(10);
+        char *pidString = (char *)malloc(10);
         readNumber(&pidString);
         pid = atoi(pidString);
 
@@ -394,11 +374,11 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         int pid, priority;
 
         printf("Enter PID:  ");
-        char * pidString = (char *) malloc(10);
+        char *pidString = (char *)malloc(10);
         readNumber(&pidString);
         pid = atoi(pidString);
-        
-        char * priorityString = (char *) malloc(10);
+
+        char *priorityString = (char *)malloc(10);
         do
         {
             printf("\nPriorities are: 0 (high) to 5 (low)");
@@ -421,12 +401,30 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, CAT_COMMAND))
     {
         char *argv[] = {"2", 0};
-        
-        //sem_open("cat_sem", 1);
-        //sem_wait("cat_sem");
+
+        // sem_open("cat_sem", 1);
+        // sem_wait("cat_sem");
         return exec("cat", &cat, argv, fd_read, fd_write, 1);
-        //sem_post("cat_sem");
-        //sem_close("cat_sem");
+        // sem_post("cat_sem");
+        // sem_close("cat_sem");
+    }
+    else if (!strcmp(buf, FILTER_COMMAND))
+    {
+        char *argv[] = {"2", 0};
+
+        return exec("filter", &filter, argv, fd_read, fd_write, 1);
+    }
+    else if (!strcmp(buf, WC_COMMAND))
+    {
+        char *argv[] = {"2", 0};
+
+        return exec("wc", &wc, argv, fd_read, fd_write, 0);
+    }
+    else if (!strcmp(buf, SH_COMMAND))
+    {
+        char *argv[] = {"2", 0};
+
+        return exec("shell", &shell, argv, fd_read, fd_write, 0);
     }
     else
     {
@@ -469,7 +467,7 @@ void printInfoReg()
 {
     long array[REGISTER_NUM] = {0};
     long *arr = (long *)&array;
-    sys_inforeg(arr);
+    infoReg(arr);
     char *registerNames[] = REGISTER_NAMES;
     for (int i = 0; i < REGISTER_NUM; i++)
     {
@@ -481,12 +479,12 @@ void printInfoReg()
 
 int increaseFontSize()
 {
-    return sys_changeFontSize(INCREASE);
+    return changeFontSize(INCREASE);
 }
 
 int decreaseFontSize()
 {
-    return sys_changeFontSize(DECREASE);
+    return changeFontSize(DECREASE);
 }
 
 int pipedBuffer(char *buf)
@@ -548,37 +546,9 @@ int pipedBuffer(char *buf)
     long rightPid = readBuffer(right, fd, 1);
     if (rightPid == -1)
     {
-        sys_kill(leftPid);
+        kill(leftPid);
         return 3;
     }
 
     return 1;
-}
-
-void readNumber(char **buf)
-{
-    int c = 1, i = 0;
-    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
-    {
-        c = getChar();
-        if (c == BACKSPACE)
-        {
-            if (i > 0)
-            {
-                (*buf)[--i] = 0;
-                printf("\b");
-                printf("\b");
-                printf(CURSOR);
-            }
-        }
-        else if (c >= ' ')
-        {
-            (*buf)[i++] = (char)c;
-            (*buf)[i] = 0;
-            printf("\b");
-            printf(*buf + i - 1);
-            printf(CURSOR);
-        }
-    }
-    printf("\b");
 }

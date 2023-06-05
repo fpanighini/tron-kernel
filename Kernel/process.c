@@ -1,29 +1,30 @@
-#include <process.h>
+#include "include/process.h"
 #include <scheduler.h>
 #include <lib.h>
 #include <semaphore.h>
 
-
 uint64_t pidc = 0;
 
-char ** save_argv(int argc, char ** argv);
-uint64_t count_argv(char ** argv);
-void free_argv(char ** argv);
+char **save_argv(int argc, char **argv);
+uint64_t count_argv(char **argv);
+void free_argv(char **argv);
 
-ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority) {
+ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority)
+{
     ProcessP proc = malloc(sizeof(Process));
 
-    int argc =  count_argv(argv);
+    int argc = count_argv(argv);
 
-    char ** saved_argv = save_argv(argc, argv);
+    char **saved_argv = save_argv(argc, argv);
 
-    void * stack = malloc(STACK_FRAME_SIZE);
+    void *stack = malloc(STACK_FRAME_SIZE);
 
-    char * stackBase = stack + STACK_FRAME_SIZE - sizeof(uint64_t);
+    //TODO: check for errors in (char*) (lo puse yo para que no de error)
+    char *stackBase = (char*)stack + STACK_FRAME_SIZE - sizeof(uint64_t);
 
     StackFrame stackFrame = createStack(entryPoint, stackBase, argc, saved_argv);
 
-    memcpy(stack + STACK_FRAME_SIZE - sizeof(StackFrame), &stackFrame, sizeof(StackFrame));
+    memcpy((char*)stack + STACK_FRAME_SIZE - sizeof(StackFrame), &stackFrame, sizeof(StackFrame));
 
     proc->name = name;
     proc->argv = saved_argv;
@@ -33,8 +34,8 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_
     sem_post(PIDC_MUTEX);
 
     proc->ppid = get_running_pid();
-    proc->sp = (uint64_t) stack + STACK_FRAME_SIZE - sizeof(StackFrame);
-    proc->bp = (uint64_t) stackBase;
+    proc->sp = (uint64_t)stack + STACK_FRAME_SIZE - sizeof(StackFrame);
+    proc->bp = (uint64_t)stackBase;
     proc->state = NEW;
     proc->stack = stack;
     proc->read_fd = read_fd;
@@ -43,28 +44,35 @@ ProcessP newProcess(char * name, void * entryPoint, char ** argv, uint64_t read_
     return proc;
 }
 
-void free_proc(ProcessP proc){
+void free_proc(ProcessP proc)
+{
     free(proc->stack);
     free_argv(proc->argv);
     free(proc);
 }
 
-void free_argv(char ** argv){
+void free_argv(char **argv)
+{
     uint64_t i = 0;
-    while (argv[i] != NULL){
+    while (argv[i] != NULL)
+    {
         free(argv[i++]);
     }
     free(argv);
 }
 
-char ** save_argv(int argc, char ** argv){
-    char ** ret = malloc((argc + 1) * sizeof(char *));
-    if (ret == NULL){
+char **save_argv(int argc, char **argv)
+{
+    char **ret = malloc((argc + 1) * sizeof(char *));
+    if (ret == NULL)
+    {
         return NULL;
     }
-    for(int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++)
+    {
         ret[i] = malloc(strlen(argv[i]) + 1); // +1 for the null terminator
-        if(ret[i] == NULL) {
+        if (ret[i] == NULL)
+        {
             // handle error, probably you should free the previously allocated memory here
             return NULL;
         }
@@ -75,12 +83,12 @@ char ** save_argv(int argc, char ** argv){
     return ret;
 }
 
-uint64_t count_argv(char ** argv){
+uint64_t count_argv(char **argv)
+{
     uint64_t count = 0;
-    while(argv[count] != NULL){
+    while (argv[count] != NULL)
+    {
         count++;
     }
     return count;
 }
-
-

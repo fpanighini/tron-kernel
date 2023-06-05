@@ -11,27 +11,32 @@ extern uint8_t keyPressed(void);
 
 uint8_t getKey(uint8_t id);
 
-typedef struct buf {
+typedef struct buf
+{
     uint8_t keys[BUF_SIZE];
     uint8_t count;
 } bufT;
 
-bufT buf = {{0},0};
+bufT buf = {{0}, 0};
 uint8_t shift = 0;
 uint8_t ctrl = 0;
 
-void saveKey(uint8_t c){
+void saveKey(uint8_t c)
+{
     // clearScreen();
     //printBase(c, 16);
-    if (c == 0x2A || c == 0x36) {
+    if (c == 0x2A || c == 0x36)
+    {
         shift = 1;
-        return ;
+        return;
     }
-    if (c == 0xAA || c == 0xB6) {
+    if (c == 0xAA || c == 0xB6)
+    {
         shift = 0;
-        return ;
+        return;
     }
-    if (c == 0x1D) {
+    if (c == 0x1D)
+    {
         ctrl = 1;
         return;
     }
@@ -39,14 +44,17 @@ void saveKey(uint8_t c){
         ctrl = 0;
         return;
     }
-    if (shift){
-        if (c == 0x2B) {
+    if (shift)
+    {
+        if (c == 0x2B)
+        {
             buf.keys[buf.count++] = '|';
-            return ;
+            return;
         }
-        if (c == 0x8) {
+        if (c == 0x8)
+        {
             buf.keys[buf.count++] = '&';
-            return ;
+            return;
         }
     }
     if (ctrl) {
@@ -61,10 +69,12 @@ void saveKey(uint8_t c){
     buf.keys[buf.count++] = getKey(c) + ('A' - 'a') * shift;
 }
 
-uint32_t readBuf(char * str, uint32_t count){
+uint32_t readBuf(char *str, uint32_t count)
+{
     _cli();
     int i = 0;
-    while (i < buf.count && i < count){
+    while (i < buf.count && i < count)
+    {
         str[i] = buf.keys[i];
         i++;
     }
@@ -73,15 +83,18 @@ uint32_t readBuf(char * str, uint32_t count){
     return i;
 }
 
-void clearKeyboardBuffer(){
+void clearKeyboardBuffer()
+{
     buf.count = 0;
 }
 
-uint8_t getCount(){
+uint8_t getCount()
+{
     return buf.count;
 }
 
-uint8_t getKey(uint8_t id) {
+uint8_t getKey(uint8_t id)
+{
     if (id >= 128)
         return -1;
 
@@ -93,16 +106,16 @@ uint8_t getKey(uint8_t id) {
             5, /* <-- control key */
             'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', '^', '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '^',
             '*',
-            '^',   /* Alt */
+            '^', /* Alt */
             ' ', /* Space bar */
-            '^',   /* Caps lock */
-            '^',   /* 59 - F1 key ... > */
+            '^', /* Caps lock */
+            '^', /* 59 - F1 key ... > */
             '^', '^', '^', '^', '^', '^', '^', '^',
             '^', /* < ... F10 */
             '^', /* 69 - Num lock*/
             '^', /* Scroll Lock */
             '^', /* Home key */
-            3, /* Up Arrow */
+            3,   /* Up Arrow */
             '^', /* Page Up */
             '-',
             1, /* Left Arrow */
@@ -110,7 +123,7 @@ uint8_t getKey(uint8_t id) {
             2, /* Right Arrow */
             '+',
             '^', /* 79 - End key*/
-            4, /* Down Arrow */
+            4,   /* Down Arrow */
             '^', /* Page Down */
             '^', /* Insert Key */
             '^', /* Delete Key */
@@ -122,5 +135,3 @@ uint8_t getKey(uint8_t id) {
 
     return kbd_US[id];
 }
-
-

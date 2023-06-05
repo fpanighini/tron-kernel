@@ -9,8 +9,3 @@ void invalidOpcodeException();
 void loadMain(void);
 
 #endif /* INTERRUPTS_H_ */
-
-
-
-
-

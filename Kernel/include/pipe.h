@@ -10,7 +10,8 @@
 #define PIPE_SIZE 3000
 #define PROCS 10
 #define NAME_MAX 100
-typedef struct {
+typedef struct
+{
     char name[NAME_MAX];
     int created;
     char data[PIPE_SIZE];
@@ -21,12 +22,12 @@ typedef struct {
     int usingPipe;
     int waitingPid;
     int fd;
-}pipe_t;
+} pipe_t;
 typedef int (*function_t)(size_t argc, char **argv);
 
 int pipe_read(int index, char *address, int n);
 int pipe_write(int index, char *address, int n);
 void pipe_close(int index);
-int pipe_open(char* name);
-char* pipes_info();
+int pipe_open(char *name);
+char *pipes_info();
 #endif
