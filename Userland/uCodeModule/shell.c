@@ -324,8 +324,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
         char *argv[] = {0};
-        int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1);
-        return ret_pid;
+        return exec("test_prio", &test_prio, argv, fd_read, fd_write, 1);
     }
     else if (!strcmp(buf, LOOP_COMMAND))
     {
