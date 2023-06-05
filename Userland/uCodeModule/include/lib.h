@@ -82,5 +82,6 @@ void ps();
 long changeFontSize(uint32_t size);
 long time();
 long date();
+void wait_pid();
 
 #endif

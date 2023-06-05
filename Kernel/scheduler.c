@@ -66,8 +66,12 @@ uint64_t scheduler(uint64_t sp)
         currentNode->quantums = currentNode->proc->priority;
         return currentNode->proc->sp;
     }
-
-    if (currentNode->quantums > MAX_QUANTUM || currentNode->proc->state == BLOCKED || force_yield)
+    if (currentNode->proc->state == BLOCKED){
+        currentNode = find_next_ready(currentNode->next);
+        currentNode->proc->state = RUNNING;
+        currentNode->quantums = currentNode->proc->priority;
+    }
+    else if (currentNode->quantums > MAX_QUANTUM || force_yield)
     {
         force_yield = 0;
         currentNode->proc->state = READY;
@@ -209,11 +213,6 @@ uint64_t kill_process(uint64_t pid)
         killCurrentProcess();
     }
 
-    NodeP parent = find_node(currentNode->proc->ppid);
-
-    sem_wait(PROC_MUTEX);
-    parent->proc->children--;
-    sem_post(PROC_MUTEX);
 
     NodeP node = find_node(pid);
     if (node == NULL)
@@ -243,6 +242,7 @@ uint64_t change_priority(uint64_t pid, uint64_t priority)
 void block_current_process()
 {
     currentNode->proc->state = BLOCKED;
+    _force_scheduler();
     // scheduler();
 }
 
@@ -290,6 +290,16 @@ uint64_t get_running_pid(void)
 void destroy_node(NodeP node)
 {
     // printNodes();
+    NodeP parent = find_node(currentNode->proc->ppid);
+
+    sem_wait(PROC_MUTEX);
+    parent->proc->children--;
+    if (parent->proc->children == 0){
+        parent->proc->blocked_by_children = 0;
+        ready_process(parent->proc->pid);
+    }
+    sem_post(PROC_MUTEX);
+
     NodeP aux = node->next;
     free_proc(node->proc);
     node->proc = node->next->proc;
@@ -348,6 +358,10 @@ void force_current_yield()
     _force_scheduler();
 }
 
+ProcessP get_current_proc(){
+    return currentNode->proc;
+}
+
 uint64_t get_current_read()
 {
     return currentNode->proc->read_fd;
@@ -386,7 +400,7 @@ void printNode(NodeP node)
 
 void print_all_nodes(void)
 {
-    printString((uint8_t *)"\nNAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
+    printString((uint8_t *)"NAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
     NodeP cur = first;
     printNode(cur);
     cur = cur->next;

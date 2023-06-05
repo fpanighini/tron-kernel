@@ -31,6 +31,7 @@ GLOBAL sys_unblock
 GLOBAL sys_yield
 GLOBAL sys_change_priority
 GLOBAL sys_ps
+GLOBAL sys_wait_pid
 
 ; syscall 0x00
 sys_write:
@@ -233,4 +234,11 @@ sys_ps:
     mov r10, rcx
     int 0x80
     ret
+
+sys_wait_pid:
+    mov rax, 0x21
+    mov r10, rcx
+    int 0x80
+    ret
+
 

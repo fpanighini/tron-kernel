@@ -72,4 +72,6 @@ void kill_foreground_proc();
 
 void ready_foreground_proc();
 
+ProcessP get_current_proc();
+
 #endif

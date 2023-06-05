@@ -1,4 +1,5 @@
 #include "include/pipe.h"
+#include "include/process.h"
 #include "include/scheduler.h"
 #include "include/videoDriver.h"
 #include <syscallManager.h>
@@ -346,3 +347,7 @@ void sys_ps(void)
     print_all_nodes();
 }
 
+
+void sys_wait_pid(){
+    wait_pid();
+}

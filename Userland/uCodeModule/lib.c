@@ -669,3 +669,8 @@ long date()
 {
 	return sys_date();
 }
+
+void wait_pid()
+{
+    sys_wait_pid();
+}

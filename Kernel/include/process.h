@@ -34,6 +34,7 @@ typedef struct Process
     uint64_t write_fd;
     uint64_t priority;
     uint64_t children;
+    uint64_t blocked_by_children;
 } Process;
 
 typedef struct Process *ProcessP;
@@ -41,5 +42,7 @@ typedef struct Process *ProcessP;
 ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
 
 void free_proc(ProcessP proc);
+
+void wait_pid();
 
 #endif

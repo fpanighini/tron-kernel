@@ -59,6 +59,7 @@ EXTERN sys_block
 EXTERN sys_unblock
 EXTERN sys_yield
 EXTERN sys_ps
+EXTERN sys_wait_pid
 
 
 SECTION .text
@@ -335,6 +336,9 @@ syscallINTHandler:
     cmp rax, 0x20
     je .ps
 
+    cmp rax, 0x21
+    je .wait_pid
+
     jmp .end
 
 .write:
@@ -471,6 +475,10 @@ syscallINTHandler:
 
 .ps:
         call sys_ps
+        jmp .end
+
+.wait_pid:
+        call sys_wait_pid
         jmp .end
 
 .end:

@@ -54,5 +54,6 @@ uint64_t sys_block(uint64_t pid);
 uint64_t sys_unblock(uint64_t pid);
 void sys_yield(void);
 void sys_ps(void);
+void sys_wait_pid();
 
 #endif

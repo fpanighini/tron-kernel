@@ -55,5 +55,6 @@ long sys_block(int pid);
 long sys_unblock(int pid);
 void sys_yield(void);
 void sys_ps(void);
+void sys_wait_pid(void);
 
 #endif

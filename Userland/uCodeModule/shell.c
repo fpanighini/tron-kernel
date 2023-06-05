@@ -296,15 +296,16 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, PS_COMMAND))
     {
         char *argv[] = {"10", 0};
-        return exec("ps", &ps, argv, fd_read, fd_write, 1);
-        
+        uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1);
+        wait_pid();
+        return ret;
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
 
         int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1);
-
+        wait_pid();
         return ret_pid;
         // test_processes(1,argv);
     }
@@ -312,6 +313,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"10000", 0};
         int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1);
+        wait_pid();
         return ret_pid;
         // test_processes(1,argv);
     }
@@ -330,7 +332,9 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, LOOP_COMMAND))
     {
         char *argv[] = {"Hola", "Como Estas", NULL};
-        return exec("loop", &loop, argv, fd_read, fd_write, 1);
+        uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1);
+        wait_pid();
+        return ret;
     }
     else if (!strcmp(buf, KILL_COMMAND))
     {
