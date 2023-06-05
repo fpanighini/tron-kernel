@@ -21,12 +21,12 @@ ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd,
 
     void *stack = malloc(STACK_FRAME_SIZE);
 
-    //TODO: check for errors in (char*) (lo puse yo para que no de error)
-    char *stackBase = (char*)stack + STACK_FRAME_SIZE - sizeof(uint64_t);
+    // TODO: check for errors in (char*) (lo puse yo para que no de error)
+    char *stackBase = (char *)stack + STACK_FRAME_SIZE - sizeof(uint64_t);
 
     StackFrame stackFrame = createStack(entryPoint, stackBase, argc, saved_argv);
 
-    memcpy((char*)stack + STACK_FRAME_SIZE - sizeof(StackFrame), &stackFrame, sizeof(StackFrame));
+    memcpy((char *)stack + STACK_FRAME_SIZE - sizeof(StackFrame), &stackFrame, sizeof(StackFrame));
 
     proc->name = name;
     proc->argv = saved_argv;
@@ -62,12 +62,14 @@ void free_proc(ProcessP proc)
 {
     free(proc->stack);
     free_argv(proc->argv);
-    if (proc->read_fd > 2){
+    if (proc->read_fd > 2)
+    {
         pipe_close(proc->read_fd - 3);
     }
-    char * eof = (char *) 4;
+    char *eof = (char*)4;
     sys_write(proc->write_fd, eof, 1, WHITE);
-    if (proc->write_fd > 2){
+    if (proc->write_fd > 2)
+    {
         pipe_close(proc->write_fd - 3);
     }
     free(proc);

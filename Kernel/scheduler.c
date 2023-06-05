@@ -417,7 +417,8 @@ void printNode(NodeP node)
 
 void print_all_nodes(void)
 {
-    printString((uint8_t *)"NAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
+    sys_write(1, (uint8_t *)"\nNAME\n", 6, WHITE);
+    printString((uint8_t *)"\nNAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
     NodeP cur = first;
     printNode(cur);
     cur = cur->next;
