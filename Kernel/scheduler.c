@@ -236,8 +236,6 @@ uint64_t kill_process(uint64_t pid)
 
 uint64_t change_priority(uint64_t pid, uint64_t priority)
 {
-    print_all_nodes();
-
     NodeP node = find_node(pid);
     if (node == NULL)
     {
