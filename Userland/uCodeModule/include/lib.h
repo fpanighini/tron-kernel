@@ -36,7 +36,7 @@ char *strchr(const char *str, int c);
 long itoa(long number, char *str);
 int atoi(const char *str);
 
-void readNumber(char **buf);
+int inputRead(char **buf);
 void bufferRead(char **buf);
 int getChar(void);
 void printf(const char *fmt, ...);

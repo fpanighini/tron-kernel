@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #define TAB "    "
-#define SCHED_MUTEX "SCHEDUELER_MUTEX"
+#define SCHED_MUTEX "SCHEDULER_MUTEX"
 #define PROC_MUTEX "PROC_MUTEX"
 
 NodeP add_node(ProcessP process);
@@ -360,6 +360,8 @@ uint64_t get_current_write()
 
 void printNode(NodeP node)
 {
+    sys_write(node->proc->write_fd, (uint8_t *)"\nHOLA SANTI\n\n\n", 11, MAGENTA);
+
     ProcessP proc = node->proc;
     printString((uint8_t *)proc->name, WHITE);
     printString((uint8_t *)TAB, WHITE);

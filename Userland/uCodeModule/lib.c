@@ -194,63 +194,35 @@ long itoa(long number, char *str)
 	return digits;
 }
 
-void bufferRead(char **buf)
+int inputRead(char **buf)
 {
-	int c = 1;
-	int i = 0;
-	(*buf)[i] = 0;
-	printString(COMMAND_CHAR, GREEN);
-	printf(CURSOR);
-	while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
-	{
-		c = getChar();
-		if (c == BACKSPACE)
-		{
-			if (i > 0)
-			{
-				(*buf)[--i] = 0;
-				printf("\b");
-				printf("\b");
-				printf(CURSOR);
-			}
-		}
-		else if (c >= ' ')
-		{
-			(*buf)[i++] = (char)c;
-			(*buf)[i] = 0;
-			printf("\b");
-			printf(*buf + i - 1);
-			printf(CURSOR);
-		}
-	}
-}
-
-void readNumber(char **buf)
-{
-	int c = 1, i = 0;
-	while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
-	{
-		c = getChar();
-		if (c == BACKSPACE)
-		{
-			if (i > 0)
-			{
-				(*buf)[--i] = 0;
-				printf("\b");
-				printf("\b");
-				printf(CURSOR);
-			}
-		}
-		else if (c >= ' ')
-		{
-			(*buf)[i++] = (char)c;
-			(*buf)[i] = 0;
-			printf("\b");
-			printf(*buf + i - 1);
-			printf(CURSOR);
-		}
-	}
+    int c = 1;
+    int i = 0;
+    (*buf)[i] = 0;
+    while (c != 0 && i < MAX_TERMINAL_CHARS - 1)
+    {
+        c = getChar();
+        if (c == BACKSPACE)
+        {
+            if (i > 0)
+            {
+                (*buf)[--i] = 0;
+                printf("\b");
+                printf("\b");
+                printf(CURSOR);
+            }
+        }
+        else if (c >= ' ')
+        {
+            (*buf)[i++] = (char)c;
+            (*buf)[i] = 0;
+            printf("\b");
+            printf(*buf + i - 1);
+            printf(CURSOR);
+        }
+    }
 	printf("\b");
+	return i;
 }
 
 /**
@@ -260,6 +232,11 @@ void readNumber(char **buf)
  */
 int getChar()
 {
+	/*
+	int pid = get_pid();
+	if(pid!= 1)
+		printf("PID getchar: %d", pid);
+	*/
 	char c[2] = {1, 0};
 	sys_read(STDIN, (char *)&c, 2);
 	return c[0];

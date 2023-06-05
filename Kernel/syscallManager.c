@@ -25,6 +25,17 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
 
     uint64_t pipe_fd = get_current_write();
 
+    /*
+    printString("{", WHITE);
+    printBase(sys_get_pid(), 10);
+    printString("}", WHITE);
+
+    if(pipe_fd != 1) { 
+        printString("pipe_fd: ", WHITE);
+        printBase(pipe_fd, 10);
+    }
+    */
+
     // Attempting to write on stdin
     if (fd == 0)
     {
