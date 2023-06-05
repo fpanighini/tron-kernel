@@ -112,16 +112,20 @@ void shell(int argc, char **argv)
 {
     int out = 1;
 
+    printString(COMMAND_CHAR, GREEN);
+    printf(CURSOR);
     while (out)
     {
         char str[MAX_TERMINAL_CHARS] = {0};
         char *string = str;
-        bufferRead(&string);
-        printf("\b");
+        inputRead(&string);
         printNewline();
         out = pipedBuffer(string);
         if (out == -1)
             out = readBuffer(string, 0, 1);
+            
+        printString(COMMAND_CHAR, GREEN);
+        printf(CURSOR);
     }
 }
 
@@ -335,7 +339,8 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         int pid;
         printf("Enter PID:  ");
         char *pidString = (char *)malloc(10);
-        readNumber(&pidString);
+        inputRead(&pidString);
+
         pid = atoi(pidString);
 
         if (kill(pid) == pid)
@@ -348,7 +353,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         int pid;
         printf("Enter PID:  ");
         char *pidString = (char *)malloc(10);
-        readNumber(&pidString);
+        inputRead(&pidString);
         pid = atoi(pidString);
 
         if (block(pid) == pid)
@@ -361,7 +366,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         int pid;
         printf("Enter PID:  ");
         char *pidString = (char *)malloc(10);
-        readNumber(&pidString);
+        inputRead(&pidString);
         pid = atoi(pidString);
 
         if (unblock(pid) == pid)
@@ -375,7 +380,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
 
         printf("Enter PID:  ");
         char *pidString = (char *)malloc(10);
-        readNumber(&pidString);
+        inputRead(&pidString);
         pid = atoi(pidString);
 
         char *priorityString = (char *)malloc(10);
@@ -383,7 +388,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
         {
             printf("\nPriorities are: 0 (high) to 5 (low)");
             printf("\nEnter priority number:  ");
-            readNumber(&priorityString);
+            inputRead(&priorityString);
             priority = atoi(priorityString);
         } while (priority < 0 || priority > 5);
 
@@ -402,11 +407,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"2", 0};
 
-        // sem_open("cat_sem", 1);
-        // sem_wait("cat_sem");
         return exec("cat", &cat, argv, fd_read, fd_write, 1);
-        // sem_post("cat_sem");
-        // sem_close("cat_sem");
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
