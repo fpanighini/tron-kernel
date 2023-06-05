@@ -194,11 +194,6 @@ NodeP find_node(uint64_t pid)
     return NULL;
 }
 
-void notFound()
-{
-    printString((uint8_t *)"PID NOT FOUND", RED);
-}
-
 uint64_t kill_process(uint64_t pid)
 {
     if (currentNode->proc->pid == pid)
@@ -208,7 +203,7 @@ uint64_t kill_process(uint64_t pid)
     NodeP node = find_node(pid);
     if (node == NULL)
     {
-        notFound();
+        printString((uint8_t *)"PID NOT FOUND\n", RED);
         return -1;
     }
     node->proc->state = KILLED;
