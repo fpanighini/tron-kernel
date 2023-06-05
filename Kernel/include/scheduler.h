@@ -2,7 +2,8 @@
 #define _SCHEDULER_H_
 
 #include <timer.h>
-#include "include/process.h"
+//#include "include/process.h"
+#include <process.h>
 #include <stack.h>
 #include <memoryManager.h>
 #include <stdint.h>
