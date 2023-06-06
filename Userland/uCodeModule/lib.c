@@ -649,7 +649,6 @@ long infoReg(long array[REGISTER_NUM])
 
 void ps()
 {
-    printf("LLEGUE PS\n");
 	sys_ps();
 }
 
