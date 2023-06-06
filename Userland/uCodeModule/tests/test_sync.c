@@ -7,19 +7,14 @@ int64_t global; // shared memory
 
 void slowInc(int64_t *p, int64_t inc)
 {
-    // printf("INSIDE slowInc (test_sync.c 11)\n");
     uint64_t aux = *p;
     yield(); // This makes the race condition highly probable
     aux += inc;
     *p = aux;
-    // printf("p value in slowInc: %d\n", *p);
 }
 
 uint64_t my_process_inc(uint64_t argc, char *argv[])
 {
-
-    // printf("INSIDE my_process_inc (test_sync.c 20)\n");
-
     uint64_t n;
     int8_t inc;
     int8_t use_sem;
@@ -34,8 +29,6 @@ uint64_t my_process_inc(uint64_t argc, char *argv[])
     if ((use_sem = satoi(argv[2])) < 0)
         return -1;
 
-    // printf("inc value in my_process_inc: %d\n", inc);
-
     if (use_sem)
         if (sem_open(SEM_ID, 1) < 0)
         {
@@ -46,7 +39,6 @@ uint64_t my_process_inc(uint64_t argc, char *argv[])
     uint64_t i;
     for (i = 0; i < n; i++)
     {
-        // printf("INSIDE FOR (test_sync.c 46)\n");
         if (use_sem)
             sem_wait(SEM_ID);
         slowInc(&global, inc);
@@ -61,7 +53,7 @@ uint64_t my_process_inc(uint64_t argc, char *argv[])
 }
 
 uint64_t test_sync(uint64_t argc, char *argv[])
-{ //{n, use_sem, 0}
+{
     uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
 
     if (argc != 2)

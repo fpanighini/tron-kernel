@@ -6,9 +6,6 @@
 
 StackFrame createStack(void *entryPoint, void *stackBase, uint64_t argc, char **argv)
 {
-    // for (int i = 0 ; i < count_argv(argv); i++){
-    //     printString(argv[i], WHITE);
-    // }
     StackFrame stackFrame;
 
     stackFrame.r15 = 0x0;

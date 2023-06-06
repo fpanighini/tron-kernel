@@ -10,13 +10,13 @@ void cat(int argc, char *args[])
     {
         read(STDIN, (char *)&c, 2);
 
-        if(c[0] != 0 && c[0] != 4)
+        if (c[0] != 0 && c[0] != 4)
         {
             putChar(c[0]);
             buff[i++] = c[0];
         }
 
-        if(c[1] != 0 && c[1] != 4)
+        if (c[1] != 0 && c[1] != 4)
         {
             putChar(c[1]);
             buff[i++] = c[1];
@@ -30,4 +30,5 @@ void cat(int argc, char *args[])
         }
 
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
+    free(buff);
 }

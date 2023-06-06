@@ -1,4 +1,5 @@
 #include "include/scheduler.h"
+#include <syscallManager.h>
 #include "include/process.h"
 #include "include/timer.h"
 #include "include/videoDriver.h"
@@ -19,7 +20,6 @@ void destroy_node(NodeP node);
 void free_node(NodeP node);
 void destroy_ground_node(uint64_t pid);
 void kill_foreground_proc();
-
 
 uint64_t disable_count = 0;
 
@@ -43,7 +43,7 @@ uint64_t scheduler(uint64_t sp)
         return currentNode->proc->sp = sp;
     }
 
-    if (counter == 1) // || counter == block_count)
+    if (counter == 1)
     {
         return sp;
     }
@@ -55,13 +55,15 @@ uint64_t scheduler(uint64_t sp)
     if (currentNode->proc->state == RUNNING)
     {
         currentNode->quantums++;
-    } else if (currentNode->proc->state == KILLED)  // If process is DEAD destroy the currentNode (replaced by the next ready process)
+    }
+    else if (currentNode->proc->state == KILLED) // If process is DEAD destroy the currentNode (replaced by the next ready process)
     {
         if (currentNode->proc == foreground->proc)
         {
             kill_foreground_proc();
-
-        } else {
+        }
+        else
+        {
             destroy_node(currentNode);
         }
         currentNode = find_next_ready(currentNode);
@@ -82,9 +84,6 @@ uint64_t scheduler(uint64_t sp)
         currentNode = find_next_ready(currentNode->next);
         currentNode->proc->state = RUNNING;
         currentNode->quantums = currentNode->proc->priority;
-        // printString("CHOSE: ", GREEN);
-        // printBase(currentNode->proc->pid, 10);
-        // printString("\n", WHITE);
     }
 
     return currentNode->proc->sp;
@@ -103,8 +102,7 @@ void idle()
 {
     while (1)
     {
-        // _hlt();
-        printString((uint8_t *)"IDLE", WHITE);
+        sys_wait(100);
     }
 }
 
@@ -127,14 +125,14 @@ void init_scheduler()
     sem_open(PIDC_MUTEX, 1);
     sem_open(SCHED_MUTEX, 1);
     sem_open(PROC_MUTEX, 1);
-    // add_process("IDLE", &idle);
 }
 
 uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority, uint64_t is_foreground)
 {
     scheduler_disable();
 
-    if (priority > 5){
+    if (priority > 5)
+    {
         priority = 5;
     }
 
@@ -148,10 +146,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     if (is_foreground == 1)
     {
-        // if (background == NULL && foreground != NULL){
-        //     foreground->proc->read_fd = 0;
-        // }
-        if (background == NULL){
+        if (background == NULL)
+        {
             background = foreground;
         }
         foreground = newNode;
@@ -162,7 +158,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
     return proc->pid;
 }
 
-void ready_foreground_proc(){
+void ready_foreground_proc()
+{
     foreground->proc->state = foreground->proc->state == BLOCKED ? READY : foreground->proc->state;
 }
 
@@ -170,7 +167,6 @@ void kill_foreground_proc()
 {
     if (background != NULL)
     {
-        // print_all_nodes();
         NodeP aux = foreground;
         foreground = background;
 
@@ -187,7 +183,7 @@ NodeP add_node(ProcessP process)
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL)
     {
-        printString((uint8_t *) "MemError", RED);
+        printString((uint8_t *)"MemError", RED);
         return 0;
     }
     newNode->quantums = process->priority;
@@ -229,7 +225,6 @@ uint64_t kill_process(uint64_t pid)
         killCurrentProcess();
     }
 
-
     NodeP node = find_node(pid);
     if (node == NULL)
     {
@@ -239,8 +234,6 @@ uint64_t kill_process(uint64_t pid)
     node->proc->state = KILLED;
     uint64_t removedPid = node->proc->pid;
     destroy_node(node);
-    // currentNode = node;
-    // _force_scheduler();
     return removedPid;
 }
 
@@ -260,7 +253,6 @@ void block_current_process()
     block_count++;
     currentNode->proc->state = BLOCKED;
     _force_scheduler();
-    // scheduler();
 }
 
 uint64_t block_process(uint64_t pid)
@@ -292,38 +284,24 @@ uint64_t get_running_pid(void)
     return currentNode == NULL ? 0 : currentNode->proc->pid;
 }
 
-// void printNodes(){
-//     NodeP cur = first;
-//     printBase(cur->proc->pid, 10);
-//     printString(" -> ", WHITE);
-//     cur = cur->next;
-//     while (cur != first){
-//         printBase(cur->proc->pid, 10);
-//         printString(" -> ", WHITE);
-//         cur = cur->next;
-//     }
-//     printString("\n", WHITE);
-// }
-
 void destroy_node(NodeP node)
 {
-    // printNodes();
     NodeP parent = find_node(currentNode->proc->ppid);
 
     sem_wait(PROC_MUTEX);
     parent->proc->children--;
-    if (parent->proc->children == 0){
+    if (parent->proc->children == 0)
+    {
         parent->proc->blocked_by_children = 0;
         ready_process(parent->proc->pid);
     }
     sem_post(PROC_MUTEX);
 
-
     counter--;
-    if (node->proc->state == BLOCKED){
+    if (node->proc->state == BLOCKED)
+    {
         block_count--;
     }
-
 
     NodeP aux = node->next;
     free_proc(node->proc);
@@ -337,7 +315,6 @@ void destroy_node(NodeP node)
     }
 
     free(aux);
-    // printNodes();
 }
 
 void destroy_current_node()
@@ -383,7 +360,8 @@ void force_current_yield()
     _force_scheduler();
 }
 
-ProcessP get_current_proc(){
+ProcessP get_current_proc()
+{
     return currentNode->proc;
 }
 
@@ -402,29 +380,6 @@ void printNode(NodeP node)
     ProcessP proc = node->proc;
 
     printf("%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%s\n", proc->name, proc->pid, proc->priority, proc->bp, proc->sp, proc->state, proc->pid == foreground->proc->pid ? "FOREGROUND" : "BACKGROUND");
-
-
-    // printString((uint8_t *)proc->name, WHITE);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // printBase(proc->pid, 10);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // printBase(proc->priority, 10);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // printBase(proc->bp, 10);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // printBase(proc->sp, 10);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // printBase(proc->state, 10);
-    // printString((uint8_t *)TAB, WHITE);
-
-    // // FOREGROUND
-    // // printString(, WHITE);
-    // printString((uint8_t *)"\n", WHITE);
 }
 
 void print_all_nodes(void)
@@ -440,5 +395,3 @@ void print_all_nodes(void)
         cur = cur->next;
     }
 }
-
-// TODO: ojo con la declaracion de xchg (libasm.h)

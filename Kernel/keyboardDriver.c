@@ -1,118 +1,135 @@
 #include "include/scheduler.h"
 #include "include/videoDriver.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include <keyboardDriver.h>
 #include <interrupts.h>
 #include <videoDriver.h>
 
-#define BUF_SIZE 55
+#define BUF_SIZE 64
 #define CTRL 31
 
 extern uint8_t keyPressed(void);
 
 uint8_t getKey(uint8_t id);
 
-typedef struct buf
+typedef struct CircBuffer
 {
-    uint8_t keys[BUF_SIZE];
-    uint8_t count;
-} bufT;
+    char keys[BUF_SIZE];
+    size_t read;
+    size_t write;
+    size_t size;
+} CircBuffer;
 
-bufT buf = {{0}, 0};
-uint8_t shift = 0;
-uint8_t ctrl = 0;
+static CircBuffer buffer = {{0}, 0, 0, 0};
+static bool shift = false;
+static bool ctrl = false;
 
-void saveKey(uint8_t c)
-{
-    // clearScreen();
-    // printBase(c, 16);
-    if (c == 0b111000){
-        return;
+void push(char c) {
+    if (buffer.size < BUF_SIZE) {
+        buffer.keys[buffer.write] = c;
+        buffer.write++;
+        buffer.size++;
+        if (buffer.write == BUF_SIZE)
+            buffer.write = 0;
     }
-    if (c == 1)
+}
+
+int pop() {
+    int c = -1;
+    if (buffer.size > 0) {
+        c = buffer.keys[buffer.read];
+        buffer.read++;
+        buffer.size--;
+        if (buffer.read == BUF_SIZE)
+            buffer.read = 0;
+    }
+    return c;
+}
+
+void saveKey(uint8_t scan_code)
+{
+    if (scan_code == 0b111000)
     {
-        buf.keys[buf.count++] = '\n';
         return;
     }
-    if (c == 0x2A || c == 0x36)
+    if (scan_code == 1)
+    {
+        push('\n');
+        return;
+    }
+    if (scan_code == 0x2A || scan_code == 0x36)
     {
         shift = 1;
         return;
     }
-    if (c == 0xAA || c == 0xB6)
+    if (scan_code == 0xAA || scan_code == 0xB6)
     {
         shift = 0;
         return;
     }
 
-    if (c == 0xE0 || c == 0x0)
+    if (scan_code == 0xE0 || scan_code == 0x0)
     {
-        //printString("CTRL OFF\n",WHITE);
         ctrl = 0;
         return;
     }
 
-    if (c == 0x1D)
+    if (scan_code == 0x1D)
     {
-        // printString("CTRL ON\n", WHITE);
         ctrl = 1;
         return;
     }
     if (shift)
     {
-        if (c == 0x8)
+        if (scan_code == 0x8)
         {
-            buf.keys[buf.count++] = '&';
+            push('&');
             return;
         }
-        if (c == 0x2B)
+        if (scan_code == 0x2B)
         {
-            buf.keys[buf.count++] = '|';
+            push('|');
             return;
         }
-
     }
-    if (ctrl) {
-        if (getKey(c) == 'c') {
+    if (ctrl)
+    {
+        if (getKey(scan_code) == 'c')
+        {
             kill_foreground_proc();
             ready_foreground_proc();
             ctrl = 0;
-            return ;
+            return;
         }
-        if (getKey(c) == 'd') {
-            buf.keys[buf.count++] = 4;
+        if (getKey(scan_code) == 'd')
+        {
+            push(4);
             ctrl = 0;
-            return ;
+            return;
         }
-        //return ;
     }
-    if (c > 128)
+    if (scan_code > 128)
         return;
-    buf.keys[buf.count++] = getKey(c) + ('A' - 'a') * shift;
+    push(getKey(scan_code) + ('A' - 'a') * shift);
 }
 
 uint32_t readBuf(char *str, uint32_t count)
 {
     _cli();
-    int i = 0;
-    while (i < buf.count && i < count)
-    {
-        str[i] = buf.keys[i];
-        i++;
+    int i;
+    for (i = 0; i < count; i++) {
+        int c = pop();
+        if (c == -1) break;
+        str[i] = c;
     }
-    clearKeyboardBuffer();
     _sti();
     return i;
 }
 
-void clearKeyboardBuffer()
-{
-    buf.count = 0;
-}
-
 uint8_t getCount()
 {
-    return buf.count;
+    return buffer.size;
 }
 
 uint8_t getKey(uint8_t id)

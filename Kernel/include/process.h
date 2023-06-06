@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 #include "memoryManager.h"
-// #include "scheduler.h"
-//  #include <scheduler.h>
 #include <stack.h>
 
 #define PIDC_MUTEX "PROCESSES_MUTEX"

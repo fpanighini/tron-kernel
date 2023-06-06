@@ -2,6 +2,7 @@
 #define _SYSCALLS_USERLAND_H_
 #include <color.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #define STDIN 0
 #define STDOUT 1
@@ -14,13 +15,20 @@ typedef struct semInfo
 {
     int semId;
     char name[NAME_LIMIT];
-    uint64_t lock; // lock
+    uint64_t lock;
     int value;
-    uint64_t openCount; // Counter of pending 'close' signals
+    uint64_t openCount;
     uint64_t blockedProcesses[PROC_MAX];
     uint64_t blockedFirst;
     uint64_t blockedLast;
 } semInfo_t;
+
+typedef struct MemoryInfo
+{
+    size_t allocated;
+    size_t free;
+    size_t total;
+} MemoryInfo;
 
 long sys_write(unsigned char fd, char *s, uint64_t n, Color c);
 long sys_read(unsigned char fd, char *s, int count);
@@ -56,5 +64,6 @@ long sys_unblock(int pid);
 void sys_yield(void);
 void sys_ps(void);
 void sys_wait_pid(void);
+void sys_mem_info(MemoryInfo * memory_info_ptr);
 
 #endif

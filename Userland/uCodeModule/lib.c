@@ -220,7 +220,8 @@ long itoa(long number, char *str)
 long ultoa(unsigned long number, char *str)
 {
 	int digits = 1;
-	for (long n = number / 10; n != 0; digits++, n /= 10);
+	for (long n = number / 10; n != 0; digits++, n /= 10)
+		;
 
 	if (digits == 1)
 	{
@@ -241,31 +242,31 @@ long ultoa(unsigned long number, char *str)
 
 int inputRead(char **buf)
 {
-    int c = 1;
-    int i = 0;
-    (*buf)[i] = 0;
-    while (c != '\n' && i < MAX_TERMINAL_CHARS - 1)
-    {
-        c = getChar();
-        if (c == BACKSPACE)
-        {
-            if (i > 0)
-            {
-                (*buf)[--i] = 0;
-                printf("\b");
-                printf("\b");
-                printf(CURSOR);
-            }
-        }
-        else if (c >= ' ')
-        {
-            (*buf)[i++] = (char)c;
-            (*buf)[i] = 0;
-            printf("\b");
-            printf(*buf + i - 1);
-            printf(CURSOR);
-        }
-    }
+	int c = 1;
+	int i = 0;
+	(*buf)[i] = 0;
+	while (c != '\n' && i < MAX_TERMINAL_CHARS - 1)
+	{
+		c = getChar();
+		if (c == BACKSPACE)
+		{
+			if (i > 0)
+			{
+				(*buf)[--i] = 0;
+				printf("\b");
+				printf("\b");
+				printf(CURSOR);
+			}
+		}
+		else if (c >= ' ')
+		{
+			(*buf)[i++] = (char)c;
+			(*buf)[i] = 0;
+			printf("\b");
+			printf(*buf + i - 1);
+			printf(CURSOR);
+		}
+	}
 	printf("\b");
 	return i;
 }
@@ -311,6 +312,55 @@ static int numToBase(long value, char *buffer, int base)
 	return digits;
 }
 
+void reverse(char* str, int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+char* sitoa(int num, char* str, int base) {
+    int i = 0;
+    int isNegative = 0;
+
+    // Handle 0 case
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Handle negative numbers
+    if (num < 0 && base == 10) {
+        isNegative = 1;
+        num = -num;
+    }
+
+    // Convert number to string
+    while (num != 0) {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num /= base;
+    }
+
+    // Add negative sign if needed
+    if (isNegative)
+        str[i++] = '-';
+
+    // Null terminate the string
+    str[i] = '\0';
+
+    // Reverse the string
+    reverse(str, i);
+
+    return str;
+}
+
 static void print(const char *fmt, va_list args)
 {
 	int state = 0;
@@ -344,7 +394,7 @@ static void print(const char *fmt, va_list args)
 			{
 				char buffer[27];
 				int num = va_arg(args, int);
-				numToBase(num, buffer, 10);
+				sitoa(num, buffer, 10);
 				sys_write(STDOUT, buffer, 0, WHITE);
 				break;
 			}
@@ -597,9 +647,9 @@ void free(void *ptr)
 
 long exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority, int is_foreground)
 {
-        uint64_t ret = sys_exec(name, program, argv, read_fd, write_fd, priority, is_foreground);
-        // yield();
-        return ret;
+	uint64_t ret = sys_exec(name, program, argv, read_fd, write_fd, priority, is_foreground);
+	// yield();
+	return ret;
 }
 
 long get_pid()
@@ -714,5 +764,13 @@ long date()
 
 void wait_pid()
 {
-    sys_wait_pid();
+	sys_wait_pid();
+}
+
+void memory_info() {
+	MemoryInfo mem_info;
+	sys_mem_info(&mem_info);
+	printf("Free memory: %d bytes\n", mem_info.free);
+	printf("Allocated memory: %d bytes\n", mem_info.allocated);
+	printf("Total memory: %d bytes\n", mem_info.total);
 }

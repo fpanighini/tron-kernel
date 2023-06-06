@@ -43,6 +43,7 @@
 #define WC_COMMAND "wc"
 #define SH_COMMAND "sh"
 #define PHYLO_COMMAND "phylo"
+#define MEM_INFO_COMMAND "mem-info"
 
 #define AMPERSAND "&"
 
@@ -64,21 +65,23 @@ inforeg           - Displays the contents of all the registers at a given time.\
                     To save registers press and release the CTRL key.\n\
                     If the command is called before pressing CTRL at least once,\n\
                     the registers will appear as if they have the value 0\n\
-printmem          - Receives a parameter in hexadecimal format. Displays the next 32 bytes after the given memory direction given\n\
+printmem          - Receives a parameter in hexadecimal format. Displays the next 32 bytes after the given memory direction\n\
 ps                - Displays the current processes information\n\
 loop              - Creates a process that loops infinitely\n\
-kill              - Kills the process with the given pid\n\
-block             - Blocks the process with the given pid\n\
-unblock           - Unblocks the process with the given pid\n\
-nice              - Changes the priority of the process with the given pid\n\
+kill              - Kills the process with the given pid, receives pid as argument\n\
+block             - Blocks the process with the given pid, receives pid as argument\n\
+unblock           - Unblocks the process with the given pid, receives pid as argument\n\
+nice              - Changes the priority of the process with the given pid, receives pid and priority respectively as arguments\n\
 cat               - Prints the contents of the given input\n\
 filter            - Prints the contents of the file without consonants\n\
 wc                - Prints the number of lines, words and characters of the given input\n\
 sh                - Creates a new shell\n\
-test-processes    - Runs a test \n\
-test-mm           - Runs a test \n\
-test-sync         - Runs a test \n\
-test-prio         - Runs a test \n"
+test-processes    - Runs a test, receives the number of processes to run as an argument\n\
+test-mm           - Runs a test, receives a number with the maximum memory as an argument\n\
+test-sync         - Runs a test, receives two numbers as arguments, the first one with the amount of iterations and the second one as a flag for semaphore use\n\
+test-prio         - Runs a test changing priorities of processes\n\
+phylo             - Runs the dining philosophers problem, to add a philosopher during runtime press 'a', to remove one press 'r'\n\
+mem-info          - Shows free, allocated and total heap memory\n"
 
 #define INCREASE 1
 #define DECREASE -1
@@ -97,8 +100,7 @@ test-prio         - Runs a test \n"
 
 #define NEWLINE "\n"
 
-
-void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords);
+void parseString(const char *str, char words[][MAX_WORD_LENGTH + 1], int *numWords);
 
 void shell(int argc, char **argv);
 int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground);
@@ -205,29 +207,25 @@ void printMem(char *buf)
 
 int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
 {
-
-        //char inputString[] = "Hello world! This is a sample string.";
     char words[MAX_WORDS][MAX_WORD_LENGTH + 1]; // Array to store the words
     int numWords;
 
     parseString(input, words, &numWords);
 
-
     char buf[MAX_WORD_LENGTH + 1];
     strncpy(buf, words[0], MAX_WORD_LENGTH);
     buf[MAX_WORD_LENGTH] = '\0';
 
-
-    char* argv[MAX_WORDS];
+    char *argv[MAX_WORDS];
     int numArgs = 0;
 
-    for (int i = 1; i < numWords; i++) {
+    for (int i = 1; i < numWords; i++)
+    {
         argv[numArgs] = words[i];
         numArgs++;
     }
 
     argv[numArgs] = NULL;
-
 
     if (!strcmp(argv[numArgs - 1], AMPERSAND))
     {
@@ -235,7 +233,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         argv[numArgs - 1] = NULL;
         fd_read = pipe_open(AMPERSAND);
     }
-
 
     int l;
     if (!strcmp(buf, ""))
@@ -262,7 +259,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         clear();
 
-        // Lower font size
         int count = 0;
         for (; decreaseFontSize(); count++)
             ;
@@ -338,7 +334,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, PS_COMMAND))
     {
-        // char *argv[] = {"10", 0};
         uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
@@ -350,46 +345,34 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret_pid;
-        // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
-        // char *argv[] = {"10000", 0};
         int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret_pid;
-        // test_processes(1,argv);
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
-        // char *argv[] = {"20", "5", 0};
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret_pid;
     }
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
-        // char *argv[] = {0};
         int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
     {
-        // char *argv[] = {"Hola", "Como Estas", NULL};
         uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
     }
     else if (!strcmp(buf, KILL_COMMAND))
     {
-        // TODO: Ojo que no vuelve a la shell si la matamos
-
         int pid;
-        // printf("Enter PID:  ");
-        // char *pidString = (char *)malloc(10);
-        // inputRead(&pidString);
-
         pid = atoi(argv[0]);
 
         if (kill(pid) == pid)
@@ -422,13 +405,9 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         int pid, priority;
 
         pid = atoi(argv[0]);
-
         priority = atoi(argv[1]);
-        // printf("\nSelected PID: %d\n", pid);
-        // printf("Selected priority: %d\n", priority);
 
         int new_pid = change_priority(pid, priority);
-        // printf("New PID: %d\n", new_pid);
 
         if (new_pid == pid)
             printf("\nPID %d had its priority modified successfully\n", pid);
@@ -437,41 +416,37 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, CAT_COMMAND))
     {
-        // char *argv[] = {"2", 0};
-
         int ret = exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
-
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
-        // char *argv[] = {"2", 0};
-
         int ret = exec("filter", &filter, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
     }
     else if (!strcmp(buf, WC_COMMAND))
     {
-        // char *argv[] = {"2", 0};
         int ret = exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
-        //printf("fd_read: %d\n", fd_read);
     }
     else if (!strcmp(buf, SH_COMMAND))
     {
-        // char *argv[] = {"2", 0};
-
         int ret = exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
-
     }
     else if (!strcmp(buf, PHYLO_COMMAND))
     {
         int ret = exec("phylo", &phylo, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
+    }
+    else if (!strcmp(buf, MEM_INFO_COMMAND))
+    {
+        int ret = exec("mem_info", &memory_info, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
     }
@@ -542,9 +517,7 @@ int pipedBuffer(char *buf)
         return -1;
 
     char *left;
-    // int lengthLeft;
     char *right;
-    // int lengthRight;
 
     int totalLength = strlen(buf);
 
@@ -563,9 +536,7 @@ int pipedBuffer(char *buf)
     if (delimiterPos == -1)
     {
         left = NULL;
-        // lengthLeft = 0;
         right = NULL;
-        // lengthRight = 0;
         return -1;
     }
 
@@ -573,76 +544,86 @@ int pipedBuffer(char *buf)
     left = malloc((delimiterPos + 1) * sizeof(char));
     strncpy(left, buf, delimiterPos);
     (left)[delimiterPos] = '\0';
-    // lengthLeft = delimiterPos;
 
     // Allocate memory for right and copy characters after '|'
     right = malloc((totalLength - delimiterPos) * sizeof(char));
     strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
     (right)[totalLength - delimiterPos - 1] = '\0';
-    // lengthRight = totalLength - delimiterPos - 1;
-
-    //printf("Substring 1: %s\n", left);
-    //printf("Substring 2: %s\n", right);
 
     int fd = pipe_open("pipes");
 
     long leftPid = readBuffer(left, 0, fd, 0);
     if (leftPid == -1)
+    {
+        free(left);
+        free(right);
         return 2;
+    }
 
     yield();
 
     long rightPid = readBuffer(right, fd, 1, 1);
     if (rightPid == -1)
     {
+        free(left);
+        free(right);
         kill(leftPid);
         return 3;
     }
 
-    // wait_pid();
-
+    free(left);
+    free(right);
     pipe_close(fd);
 
     return 1;
 }
 
-void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords) {
+void parseString(const char *str, char words[][MAX_WORD_LENGTH + 1], int *numWords)
+{
     *numWords = 0; // Initialize the number of words to 0
 
-    while (*str != '\0' && *numWords < MAX_WORDS) {
-        while (*str == ' ') {
+    while (*str != '\0' && *numWords < MAX_WORDS)
+    {
+        while (*str == ' ')
+        {
             str++; // Skip leading spaces
         }
 
-        if (*str == '\0') {
+        if (*str == '\0')
+        {
             break; // Reached the end of the string
         }
 
-        const char* wordStart = str; // Start of the current word
+        const char *wordStart = str; // Start of the current word
 
-        while (*str != ' ' && *str != '\0') {
+        while (*str != ' ' && *str != '\0')
+        {
             str++; // Move to the next character
         }
 
-        const char* wordEnd = str - 1; // End of the current word
+        const char *wordEnd = str - 1; // End of the current word
 
         int wordLength = wordEnd - wordStart + 1;
-        if (wordLength > MAX_WORD_LENGTH) {
+        if (wordLength > MAX_WORD_LENGTH)
+        {
             wordLength = MAX_WORD_LENGTH; // Truncate the word if it exceeds the maximum length
         }
 
-        for (int i = 0; i < wordLength; i++) {
+        for (int i = 0; i < wordLength; i++)
+        {
             words[*numWords][i] = wordStart[i]; // Copy the word into the array
         }
 
         words[*numWords][wordLength] = '\0'; // Null-terminate the word
-        (*numWords)++; // Increment the number of words
+        (*numWords)++;                       // Increment the number of words
     }
     words[*numWords][0] = '\0';
 }
 
-void ask_wait_pid(int is_foreground){
-    if (is_foreground == 1){
+void ask_wait_pid(int is_foreground)
+{
+    if (is_foreground == 1)
+    {
         wait_pid();
     }
 }

@@ -32,6 +32,7 @@ GLOBAL sys_yield
 GLOBAL sys_change_priority
 GLOBAL sys_ps
 GLOBAL sys_wait_pid
+GLOBAL sys_mem_info
 
 ; syscall 0x00
 sys_write:
@@ -242,4 +243,8 @@ sys_wait_pid:
     int 0x80
     ret
 
-
+sys_mem_info:
+    mov rax, 0x22
+    mov r10, rcx
+    int 0x80
+    ret

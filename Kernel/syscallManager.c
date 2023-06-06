@@ -15,7 +15,6 @@ void beep2();
 
 extern uint64_t registers[REGISTER_NUM];
 
-// TODO: checkear el uso de write con pipes
 uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
 {
     if (fd == STDERR)
@@ -25,19 +24,6 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
     }
 
     uint64_t pipe_fd = get_current_write();
-
-    //printString("{", WHITE);
-    //printBase(sys_get_pid(), 10);
-    //printString("}", WHITE);
-
-    if (pipe_fd != 1)
-    {
-        //printString("\npipe_fd: ", GRAY);
-        //printBase(pipe_fd, 10);
-        //printString("  PID: ", GRAY);
-        //printBase(get_running_pid(), 10);
-        //printString(string, GRAY);
-    }
 
     // Attempting to write on stdin
     if (fd == 0)
@@ -54,11 +40,6 @@ uint64_t sys_write(uint8_t fd, char *string, uint64_t n, Color color)
     // Printing to stdout
     if (pipe_fd == 1)
     {
-        //printString("\npipe_fd: ", GREEN);
-        //printBase(pipe_fd, 10);
-        //printString("  PID: ", GREEN);
-        //printBase(get_running_pid(), 10);
-        //printString(string, GREEN);
         printString((uint8_t *)string, color);
         return 0;
     }
@@ -73,23 +54,17 @@ int getKbdBuffer(char *buf, uint32_t count, int *pos)
     if (getCount())
     {
         *pos += readBuf(buf + *pos, count - *pos - 1);
-        clearKeyboardBuffer();
         return 1;
     }
     return 0;
 }
 
-// TODO: checkear el uso de read con pipes
 uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
 {
     uint64_t new_fd = 0;
     if (fd == 0 || fd == 1 || fd == 2)
     {
         new_fd = get_current_read();
-
-        // TODO: ver CAT
-        // printString("new_fd: ", RED);
-        // printBase(count, 10);
     }
     else
     {
@@ -104,25 +79,16 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
     if (new_fd != 0)
     {
         uint64_t ret = pipe_read(new_fd - 3, buf, count);
-
-        //printString("\npipe_fd: ", RED);
-        //printBase(new_fd, 10);
-        //printString("\nPID: ", RED);
-        //printBase(get_running_pid(), 10);
-        //printString(buf, RED);
-
         return ret;
     }
 
     int i = 0;
     int read = 0;
-    clearKeyboardBuffer();
     while (i < count - 1)
     {
         read = getKbdBuffer(buf, count, &i);
         if (read && (buf[i - 1] == '\n' || buf[i - 1] == 0))
         {
-            // buf[i - 1] = 0;
             buf[i - 1] = '\n';
             return i;
         }
@@ -140,7 +106,6 @@ uint64_t sys_timedRead(uint8_t fd, char *buf, uint32_t count, uint32_t millis)
 
     int i = 0;
     int read = 0;
-    clearKeyboardBuffer();
     buf[0] = 0;
     int initial = milliseconds_elapsed();
     while ((i < count - 1) && ((milliseconds_elapsed() - initial) < millis))
@@ -364,7 +329,11 @@ void sys_ps(void)
     print_all_nodes();
 }
 
-
-void sys_wait_pid(){
+void sys_wait_pid()
+{
     wait_pid();
+}
+
+void sys_mem_info(MemoryInfo *memory_info_ptr) {
+    getMemoryInfo(memory_info_ptr);
 }
