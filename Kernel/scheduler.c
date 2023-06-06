@@ -1,4 +1,5 @@
 #include "include/scheduler.h"
+#include <syscallManager.h>
 #include "include/process.h"
 #include "include/timer.h"
 #include "include/videoDriver.h"

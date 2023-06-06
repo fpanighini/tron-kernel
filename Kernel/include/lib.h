@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <videoDriver.h>
-#include <syscall.h>
 
 #define STDOUT 1
 
@@ -18,7 +17,7 @@ char *strcpy(char *dest, const char *src);
 char *strcat(char *dest, const char *src);
 int strcmp(char *str1, char *str2);
 int strlen(char *str);
-
+int numToBase(long value, char *buffer, int base);
 void print(const char *fmt, va_list args);
 void printf(const char *fmt, ...);
 int putChar(int c);

@@ -1,5 +1,6 @@
 #include "include/process.h"
 #include "include/pipe.h"
+#include <syscallManager.h>
 #include "include/scheduler.h"
 #include <scheduler.h>
 #include <lib.h>
