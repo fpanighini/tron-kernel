@@ -14,9 +14,9 @@ typedef struct semInfo
 {
     int semId;
     char name[NAME_LIMIT];
-    uint64_t lock; // lock
+    uint64_t lock;
     int value;
-    uint64_t openCount; // Counter of pending 'close' signals
+    uint64_t openCount;
     uint64_t blockedProcesses[PROC_MAX];
     uint64_t blockedFirst;
     uint64_t blockedLast;

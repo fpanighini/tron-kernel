@@ -23,8 +23,7 @@ int wc(int argc, char **argv)
             putChar(c[1]);
             buff[i++] = c[1];
         }
-
-    // } while (c[0] != 4  && c[1] != 4 );
+        
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 
     long charCount = 0;

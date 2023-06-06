@@ -9,7 +9,6 @@
 #define PLAYER2_WON "PLAYER 2 WON"
 #define DRAW "IT'S A DRAW!"
 
-// VER score counter
 int player1Score = 0, player2Score = 0;
 
 int mainTron()

@@ -33,6 +33,7 @@ void filter(int argc, char **argv)
     buff[j] = '\0';
 
     printf("\nFiltered vowels: %s\n", buff);
+    free(buff);
 }
 
 int isVowel(char c)

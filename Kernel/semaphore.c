@@ -10,7 +10,6 @@
 #define SUCCESS_SIGNAL 0
 
 // TODO: Ver este codigo
-// TODO: Ojo con xchg prototipado en libasm.asm
 
 sem_ts semaphores[MAX_SEMS];
 
@@ -72,7 +71,6 @@ int sem_wait(char *name)
             break;
         }
         scheduler_enable();
-        // TODO: Ver _force_scheduler
         _force_scheduler();
     }
     sem->value--; // Only one process gets here

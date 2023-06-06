@@ -2,12 +2,10 @@
 #define _SCHEDULER_H_
 
 #include <timer.h>
-//#include "include/process.h"
 #include <process.h>
 #include <stack.h>
 #include <memoryManager.h>
 #include <stdint.h>
-// #include <codeModules.h>
 #include <videoDriver.h>
 #include <semaphore.h>
 

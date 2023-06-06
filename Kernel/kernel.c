@@ -1,12 +1,10 @@
 #include <stdint.h>
-// #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <videoDriver.h>
 #include <idtLoader.h>
 #include <memoryManager.h>
 #include <syscallManager.h>
-// #include <codeModules.h>
 #include <scheduler.h>
 
 #define HEAP_SIZE 0x100000
@@ -59,14 +57,6 @@ int main()
 {
     load_idt();
     clearScreen();
-    // add_process("IDLE2", &idle2);
-
-    // scheduler();
-
-    //while(1);
-
-
-
 
     ((EntryPoint)uCodeModuleAddress)();
 

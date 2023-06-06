@@ -30,4 +30,5 @@ void cat(int argc, char *args[])
         }
 
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
+    free(buff);
 }
