@@ -458,6 +458,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         int ret = exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
+        //printf("fd_read: %d\n", fd_read);
     }
     else if (!strcmp(buf, SH_COMMAND))
     {

@@ -19,8 +19,11 @@ void fill0(char *arr, int size)
 
 int pipe_write(int index, char *addr, int n)
 {
+    if(n == 0)
+        n = strlen(addr);
 
     //printString("EN PIPE WRITE1\n", MAGENTA);
+    //printString(addr, RED);
 
     if (!pipes[index].created)
         return -1;
@@ -34,21 +37,24 @@ int pipe_write(int index, char *addr, int n)
     
     release_process_pipe(pipes[index].wProcesses, get_running_pid());
     int i;
+
     for (i = 0; i < n && addr[i] != 0 && (pipes[index].nread) != (pipes[index].nwrite + 1); i++)
     {
+        //printString("EN PIPE WRITE FOR\n", MAGENTA);
         pipes[index].data[pipes[index].nwrite++ % PIPE_SIZE] = addr[i];
-        printString(pipes[index].data[pipes[index].nwrite-1 % PIPE_SIZE], MAGENTA);
+        //printString(pipes[index].data[pipes[index].nwrite-1 % PIPE_SIZE], MAGENTA);
     }
     //printString("EN PIPE WRITE4\n", MAGENTA);
     pipes[index].data[pipes[index].nwrite % PIPE_SIZE] = -1;
     sem_post(pipes[index].name);
+    //printString(pipes[index].data, RED);
     //printString("EN PIPE WRITE5\n", MAGENTA);
     return i;
 }
 
 int pipe_read(int index, char *addr, int n)
 {
-    //printString(pipes[index].data, GREEN);
+    //printString(pipes[index].data, RED);
 
     if (!pipes[index].created)
         return -1;
@@ -60,9 +66,9 @@ int pipe_read(int index, char *addr, int n)
     int i;
     for (i = 0; i < n && pipes[index].data[pipes[index].nread % PIPE_SIZE] != -1 && (pipes[index].nread + 1) != (pipes[index].nwrite); i++)
     {
-        // print_char(pipes[index].data[pipes[index].nread % PIPE_SIZE]);
+        //print_char(pipes[index].data[pipes[index].nread % PIPE_SIZE]);
         addr[i] = pipes[index].data[pipes[index].nread++ % PIPE_SIZE];
-        //printString(addr[i], MAGENTA);
+        printString(addr[i], MAGENTA);
     }
     if ((pipes[index].nread + 1) == (pipes[index].nwrite))
     {
