@@ -2,23 +2,37 @@
 
 void filter(int argc, char **argv)
 {
-
+    char c[3] = {0};
     char *buff = malloc(MAX_BUFFER_SIZE);
+    int i = 0;
 
-    for (int i = 0; i < MAX_BUFFER_SIZE; i++)
+    do
     {
-        buff[i] = 0;
-    }
+        read(STDIN, (char *)&c, 2);
 
-    int cant = inputRead(&buff);
+        if (c[0] != 0 && c[0] != 4)
+        {
+            putChar(c[0]);
+            buff[i++] = c[0];
+        }
+
+        if (c[1] != 0 && c[1] != 4)
+        {
+            putChar(c[1]);
+            buff[i++] = c[1];
+        }
+
+    } while (c[0] != 4 && c[1] != 4);
+
+    buff[i] = 0;
 
     int j = 0;
-    for (int i = 0; i < cant || buff[i] == 0; i++)
+    for (i = 0; buff[i] != 0; i++)
         if (isVowel(buff[i]))
             buff[j++] = buff[i];
     buff[j] = '\0';
 
-    printf("\nFiltered string: %s\n", buff);
+    printf("\nFiltered vowels: %s\n", buff);
 }
 
 int isVowel(char c)
