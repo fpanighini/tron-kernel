@@ -384,7 +384,7 @@ void printNode(NodeP node)
 
 void print_all_nodes(void)
 {
-    printf("\nNAME\t\tPID\t\tPRIORITY\t\tBP\t\tSP\t\tSTATE\t\tGROUND\n");
+    printf("NAME\t\tPID\t\tPRIORITY\t\tBP\t\tSP\t\tSTATE\t\tGROUND\n");
     NodeP cur = first;
     printNode(cur);
     cur = cur->next;

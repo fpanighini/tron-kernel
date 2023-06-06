@@ -111,6 +111,8 @@ void printNewline(void);
 void testInvalidOpException();
 void testDivideByZeroException();
 
+void printMem(int argc, char * argv[]);
+
 void printInfoReg();
 void printErrorMessage(char *program, char *errorMessage);
 void ask_wait_pid(int is_foreground);
@@ -142,8 +144,9 @@ void shell(int argc, char **argv)
     }
 }
 
-void printMem(char *buf)
+void printMem(int argc, char * argv[])
 {
+    char * buf = argv[0];
     int i = 0;
     while (buf[i] != 0 && buf[i] == ' ')
         i++;
@@ -199,9 +202,9 @@ void printMem(char *buf)
     for (long long j = 0; j < PRINT_BYTES && accum + j + 2 < 0xFFFFFFFFFFFFFFFF; j++)
     {
         printBase((int)j, 10);
-        printf("d\n");
-        printBase(pointer[j], 2);
-        printf("b\n");
+        printf(": ");
+        printBase(pointer[j], 16);
+        printf("h\n");
     }
 }
 
@@ -234,18 +237,13 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         fd_read = pipe_open(AMPERSAND);
     }
 
-    int l;
     if (!strcmp(buf, ""))
         ;
-    else if (!strncmp(buf, PRINTMEM_COMMAND, l = strlen(PRINTMEM_COMMAND)))
+    else if (!strcmp(buf, PRINTMEM_COMMAND))
     {
-        if (buf[l] != ' ' && buf[l] != 0)
-        {
-            printErrorMessage(buf, COMMAND_NOT_FOUND_MESSAGE);
-            printNewline();
-            return COMMAND_NOT_FOUND;
-        }
-        printMem(buf + l);
+        int ret = exec("printmem", &printMem, argv, fd_read, fd_write, 5, is_foreground);
+        wait_pid();
+        return ret;
     }
     else if (!strcmp(buf, HELP_COMMAND))
     {
@@ -315,7 +313,10 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, INFOREG_COMMAND))
     {
-        exec("inforeg", &printInfoReg, argv, fd_read, fd_write, 5, is_foreground);
+        int ret = exec("inforeg", &printInfoReg, argv, fd_read, fd_write, 5, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
+
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO))
     {

@@ -9,11 +9,9 @@ LOADERSRC=loader.asm
 
 LOADEROBJECT=$(LOADERSRC:%.asm=object/%.asm.o)
 
-
 ifeq ($(MAKECMDGOALS),buddy)
 	CFLAGS += -DBUDDY
 endif
-
 
 all: $(KERNEL)
 
