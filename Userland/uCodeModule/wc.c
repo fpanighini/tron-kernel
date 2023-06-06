@@ -12,16 +12,24 @@ int wc(int argc, char **argv)
 
         if (c[0] != 0 && c[0] != 4)
         {
-            putChar(c[0]);
+            //putChar(c[0]);
             buff[i++] = c[0];
         }
 
         if (c[1] != 0 && c[1] != 4)
         {
-            putChar(c[1]);
+            //putChar(c[1]);
             buff[i++] = c[1];
         }
 
+        if(i > 170) {
+        printf("C[0]: %c - %d", c[0], c[0]);
+        printf("     C[1]:  %c - %d\n", c[1], c[1]);
+        printf("BUFFER: %s\n", buff);
+        printf(" I = %d\n", i);
+        }
+
+    //} while (c[0] != 4  || c[1] != 4 );
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 
     int charCount = 0;
@@ -29,7 +37,7 @@ int wc(int argc, char **argv)
     int lineCount = 0;
     bool inWord = false;
 
-    for (int i = 0; buff[i] != '\0'; i++)
+    for (i = 0; buff[i] != '\0'; i++)
     {
         charCount++;
 

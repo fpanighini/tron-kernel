@@ -3,7 +3,7 @@
 
 #include <lib.h>
 
-#define MAX_BUFFER_SIZE 1024
+#define MAX_BUFFER_SIZE 2048
 
 void cat(int argc, char **argv);
 

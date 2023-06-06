@@ -397,7 +397,7 @@ void printNode(NodeP node)
 {
     ProcessP proc = node->proc;
 
-    printf("%s\t\t%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%s\n", proc->name, proc->pid, proc->priority, proc->bp, proc->sp, proc->state, proc->pid == foreground->proc->pid ? "FOREGROUND" : "BACKGROUND");
+    printf("%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%s\n", proc->name, proc->pid, proc->priority, proc->bp, proc->sp, proc->state, proc->pid == foreground->proc->pid ? "FOREGROUND" : "BACKGROUND");
 
 
     // printString((uint8_t *)proc->name, WHITE);

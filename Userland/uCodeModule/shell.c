@@ -450,6 +450,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     else if (!strcmp(buf, WC_COMMAND))
     {
         // char *argv[] = {"2", 0};
+        //printf("fd_read: %d\n", fd_read);
         return exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, SH_COMMAND))
