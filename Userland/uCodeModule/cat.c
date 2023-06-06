@@ -2,14 +2,33 @@
 
 void cat(int argc, char *args[])
 {
+    char c[3] = {0};
     char *buff = malloc(MAX_BUFFER_SIZE);
+    int i = 0;
 
-    for (int i = 0; i < MAX_BUFFER_SIZE; i++)
+    do
     {
-        buff[i] = 0;
-    }
+        read(STDIN, (char *)&c, 2);
 
-    inputRead(&buff);
+        if(c[0] != 0 && c[0] != 4)
+        {
+            putChar(c[0]);
+            buff[i++] = c[0];
+        }
 
-    printf("\n%s\n", buff);
+        if(c[1] != 0 && c[1] != 4)
+        {
+            putChar(c[1]);
+            buff[i++] = c[1];
+        }
+
+        if (c[0] == '\n' || c[1] == '\n')
+        {
+            putChar('\n');
+            buff[i] = 0;
+            printf("%s\n", buff);
+            i = 0;
+        }
+
+    } while (c[0] != 4 && c[1] != 4);
 }
