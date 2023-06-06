@@ -35,6 +35,8 @@ char *strncpy(char *dest, const char *src, int n);
 char *strchr(const char *str, int c);
 long itoa(long number, char *str);
 int atoi(const char *str);
+unsigned long atoul(const char *str);
+long ultoa(unsigned long number, char *str);
 
 int inputRead(char **buf);
 void bufferRead(char **buf);
