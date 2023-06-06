@@ -1,9 +1,14 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <wc.h>
 
 int wc(int argc, char **argv)
 {
     char c[4] = {0, 0, 1, 1};
     char *buff = malloc(MAX_BUFFER_SIZE);
+    if (buff == NULL)
+        return -1;
+
     for (int i = 0; i < MAX_BUFFER_SIZE; i++)
         buff[i] = 0;
 

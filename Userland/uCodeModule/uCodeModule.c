@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /* uCodeModule.c */
 #include "include/lib.h"
 #include "include/syscalls.h"
@@ -7,7 +9,7 @@
 
 void shell(int argc, char **argv);
 
-char *v = (char *)0xB8000 + 79 * 2;
+char *vvvvv = (char *)0xB8000 + 79 * 2;
 
 int main()
 {

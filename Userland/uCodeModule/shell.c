@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <timer.h>
 #include "include/lib.h"
 #include <tron.h>
@@ -149,7 +151,7 @@ void printMem(int argc, char * argv[])
 {
     char * buf = argv[0];
     int i = 0;
-    while (buf[i] != 0 && buf[i] == ' ')
+    while (buf[i] == ' ')
         i++;
     if (buf[i] == 0)
     {
@@ -544,11 +546,19 @@ int pipedBuffer(char *buf)
 
     // Allocate memory for left and copy characters before '|'
     left = malloc((delimiterPos + 1) * sizeof(char));
+    if (left == NULL)
+        return -1;
+
     strncpy(left, buf, delimiterPos);
     (left)[delimiterPos] = '\0';
 
     // Allocate memory for right and copy characters after '|'
     right = malloc((totalLength - delimiterPos) * sizeof(char));
+    if (right == NULL) {
+        free(left);
+        return -1;
+    }
+
     strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
     (right)[totalLength - delimiterPos - 1] = '\0';
 

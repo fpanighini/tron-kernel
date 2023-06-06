@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/pipe.h"
 #include "include/process.h"
 #include "include/scheduler.h"
@@ -216,15 +218,11 @@ uint64_t sys_wait(uint32_t millis)
 
 uint64_t sys_inforeg(uint64_t array[REGISTER_NUM])
 {
-    if (registers != 0)
+    for (int i = 0; i < REGISTER_NUM; i++)
     {
-        for (int i = 0; i < REGISTER_NUM; i++)
-        {
-            array[i] = registers[i];
-        }
-        return 1;
+        array[i] = registers[i];
     }
-    return 0;
+    return 1;
 }
 
 uint64_t sys_changeFontSize(uint32_t size)

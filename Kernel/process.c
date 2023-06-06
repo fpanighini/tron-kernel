@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/process.h"
 #include "include/pipe.h"
 #include <syscallManager.h>
@@ -15,12 +17,18 @@ void free_argv(char **argv);
 ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority)
 {
     ProcessP proc = malloc(sizeof(Process));
+    if (proc == NULL)
+        return NULL;
 
     int argc = count_argv(argv);
 
     char **saved_argv = save_argv(argc, argv);
 
     void *stack = malloc(STACK_FRAME_SIZE);
+    if (stack == NULL) {
+        free(proc);
+        return NULL;
+    }
 
     char *stackBase = (char *)stack + STACK_FRAME_SIZE - sizeof(uint64_t);
 
@@ -90,7 +98,9 @@ char **save_argv(int argc, char **argv)
         ret[i] = malloc(strlen(argv[i]) + 1); // +1 for the null terminator
         if (ret[i] == NULL)
         {
-            // handle error, probably you should free the previously allocated memory here
+            for (int j = 0; j < i; j++)
+                free(ret[j]);
+            free(ret);
             return NULL;
         }
         strcpy(ret[i], argv[i]);

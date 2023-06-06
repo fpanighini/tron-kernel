@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <phylo.h>
 
 #define MAX 10
@@ -146,19 +148,14 @@ int phylo(int argc, char *argv[])
 
     while (1)
     {
-        int c;
-        while (c = getTimedChar(), c != '\0')
+        int c = getTimedChar();
+        if (c == 'a' && shared_data.count < MAX)
         {
-            if (c == 'a' && shared_data.count < MAX)
-            {
-                addPhylo(&shared_data);
-                break;
-            }
-            else if (c == 'r' && shared_data.count > MIN)
-            {
-                removePhylo(&shared_data);
-                break;
-            }
+            addPhylo(&shared_data);
+        }
+        else if (c == 'r' && shared_data.count > MIN)
+        {
+            removePhylo(&shared_data);
         }
 
         sem_wait(MUTEX);

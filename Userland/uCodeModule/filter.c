@@ -1,9 +1,14 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/filter.h"
 
 void filter(int argc, char **argv)
 {
     char c[4] = {0, 0, 1, 1};
     char *buff = malloc(MAX_BUFFER_SIZE);
+    if (buff == NULL)
+        return;
+
     int i = 0;
 
     do
