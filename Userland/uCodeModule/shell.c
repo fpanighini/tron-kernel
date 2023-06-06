@@ -42,6 +42,8 @@
 #define WC_COMMAND "wc"
 #define SH_COMMAND "sh"
 
+#define AMPERSAND "&"
+
 #define HELP_MESSAGE "HELP:\n\
 The following is a list of the different commands the shell can interpret and a short description of what they do:\n\
 \
@@ -107,6 +109,7 @@ void testDivideByZeroException();
 
 void printInfoReg();
 void printErrorMessage(char *program, char *errorMessage);
+void ask_wait_pid(int is_foreground);
 
 int increaseFontSize();
 int decreaseFontSize();
@@ -212,6 +215,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     strncpy(buf, words[0], MAX_WORD_LENGTH);
     buf[MAX_WORD_LENGTH] = '\0';
 
+
     char* argv[MAX_WORDS];
     int numArgs = 0;
 
@@ -221,6 +225,14 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
 
     argv[numArgs] = NULL;
+
+
+    if (!strcmp(argv[numArgs - 1], AMPERSAND))
+    {
+        is_foreground = 0;
+        argv[numArgs - 1] = NULL;
+    }
+
 
     int l;
     if (!strcmp(buf, ""))
@@ -325,7 +337,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         // char *argv[] = {"10", 0};
         uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret;
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
@@ -333,7 +345,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         char *argv[] = {"2", 0};
 
         int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret_pid;
         // test_processes(1,argv);
     }
@@ -341,7 +353,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         // char *argv[] = {"10000", 0};
         int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret_pid;
         // test_processes(1,argv);
     }
@@ -349,21 +361,21 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         // char *argv[] = {"20", "5", 0};
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret_pid;
     }
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
         // char *argv[] = {0};
         int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
     {
         // char *argv[] = {"Hola", "Como Estas", NULL};
         uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1, is_foreground);
-        wait_pid();
+        ask_wait_pid(is_foreground);
         return ret;
     }
     else if (!strcmp(buf, KILL_COMMAND))
@@ -606,3 +618,8 @@ void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWor
     words[*numWords][0] = '\0';
 }
 
+void ask_wait_pid(int is_foreground){
+    if (is_foreground == 1){
+        wait_pid();
+    }
+}
