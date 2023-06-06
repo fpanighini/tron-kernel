@@ -312,6 +312,55 @@ static int numToBase(long value, char *buffer, int base)
 	return digits;
 }
 
+void reverse(char* str, int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+char* sitoa(int num, char* str, int base) {
+    int i = 0;
+    int isNegative = 0;
+
+    // Handle 0 case
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Handle negative numbers
+    if (num < 0 && base == 10) {
+        isNegative = 1;
+        num = -num;
+    }
+
+    // Convert number to string
+    while (num != 0) {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num /= base;
+    }
+
+    // Add negative sign if needed
+    if (isNegative)
+        str[i++] = '-';
+
+    // Null terminate the string
+    str[i] = '\0';
+
+    // Reverse the string
+    reverse(str, i);
+
+    return str;
+}
+
 static void print(const char *fmt, va_list args)
 {
 	int state = 0;
@@ -345,7 +394,7 @@ static void print(const char *fmt, va_list args)
 			{
 				char buffer[27];
 				int num = va_arg(args, int);
-				numToBase(num, buffer, 10);
+				sitoa(num, buffer, 10);
 				sys_write(STDOUT, buffer, 0, WHITE);
 				break;
 			}
