@@ -6,6 +6,7 @@
 #include <cat.h>
 #include "include/filter.h"
 #include <wc.h>
+#include <phylo.h>
 
 #define COMMAND_NOT_FOUND -1
 
@@ -41,6 +42,7 @@
 #define FILTER_COMMAND "filter"
 #define WC_COMMAND "wc"
 #define SH_COMMAND "sh"
+#define PHYLO_COMMAND "phylo"
 
 #define AMPERSAND "&"
 
@@ -454,6 +456,10 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         // char *argv[] = {"2", 0};
 
         return exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
+    }
+    else if (!strcmp(buf, PHYLO_COMMAND))
+    {
+        return exec("phylo", &phylo, argv, fd_read, fd_write, 1, is_foreground);
     }
     else
     {
