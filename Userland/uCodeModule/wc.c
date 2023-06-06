@@ -2,39 +2,34 @@
 
 int wc(int argc, char **argv)
 {
-    char c[3] = {0};
+    char c[4] = {0, 0, 1, 1};
     char *buff = malloc(MAX_BUFFER_SIZE);
-    int i = 0;
+    for(int i = 0; i < MAX_BUFFER_SIZE; i++)
+        buff[i] = 0;
 
+    int i = 0;
     do
     {
         read(STDIN, (char *)&c, 2);
 
         if (c[0] != 0 && c[0] != 4)
         {
-            //putChar(c[0]);
+            putChar(c[0]);
             buff[i++] = c[0];
         }
 
         if (c[1] != 0 && c[1] != 4)
         {
-            //putChar(c[1]);
+            putChar(c[1]);
             buff[i++] = c[1];
         }
 
-        if(i > 170) {
-        printf("C[0]: %c - %d", c[0], c[0]);
-        printf("     C[1]:  %c - %d\n", c[1], c[1]);
-        printf("BUFFER: %s\n", buff);
-        printf(" I = %d\n", i);
-        }
-
-    //} while (c[0] != 4  || c[1] != 4 );
+    // } while (c[0] != 4  && c[1] != 4 );
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 
-    int charCount = 0;
-    int wordCount = 0;
-    int lineCount = 0;
+    long charCount = 0;
+    long wordCount = 0;
+    long lineCount = 0;
     bool inWord = false;
 
     for (i = 0; buff[i] != '\0'; i++)
@@ -59,5 +54,7 @@ int wc(int argc, char **argv)
         lineCount++;
 
     printf("\n %d    %d    %d\n", charCount, wordCount, lineCount);
+
+    free(buff);
     return 0;
 }

@@ -68,7 +68,7 @@ int pipe_read(int index, char *addr, int n)
     {
         //print_char(pipes[index].data[pipes[index].nread % PIPE_SIZE]);
         addr[i] = pipes[index].data[pipes[index].nread++ % PIPE_SIZE];
-        printString(addr[i], MAGENTA);
+        //printString(addr[i], MAGENTA);
     }
     if ((pipes[index].nread + 1) == (pipes[index].nwrite))
     {
