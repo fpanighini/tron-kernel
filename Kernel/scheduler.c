@@ -133,6 +133,11 @@ void init_scheduler()
 uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority, uint64_t is_foreground)
 {
     scheduler_disable();
+
+    if (priority > 5){
+        priority = 5;
+    }
+
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
 
     sem_wait(PROC_MUTEX);
