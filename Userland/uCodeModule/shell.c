@@ -64,21 +64,22 @@ inforeg           - Displays the contents of all the registers at a given time.\
                     To save registers press and release the CTRL key.\n\
                     If the command is called before pressing CTRL at least once,\n\
                     the registers will appear as if they have the value 0\n\
-printmem          - Receives a parameter in hexadecimal format. Displays the next 32 bytes after the given memory direction given\n\
+printmem          - Receives a parameter in hexadecimal format. Displays the next 32 bytes after the given memory direction\n\
 ps                - Displays the current processes information\n\
 loop              - Creates a process that loops infinitely\n\
-kill              - Kills the process with the given pid\n\
-block             - Blocks the process with the given pid\n\
-unblock           - Unblocks the process with the given pid\n\
-nice              - Changes the priority of the process with the given pid\n\
+kill              - Kills the process with the given pid, receives pid as argument\n\
+block             - Blocks the process with the given pid, receives pid as argument\n\
+unblock           - Unblocks the process with the given pid, receives pid as argument\n\
+nice              - Changes the priority of the process with the given pid, receives pid and priority respectively as arguments\n\
 cat               - Prints the contents of the given input\n\
 filter            - Prints the contents of the file without consonants\n\
 wc                - Prints the number of lines, words and characters of the given input\n\
 sh                - Creates a new shell\n\
-test-processes    - Runs a test \n\
-test-mm           - Runs a test \n\
-test-sync         - Runs a test \n\
-test-prio         - Runs a test \n"
+test-processes    - Runs a test, receives the number of processes to run as an argument\n\
+test-mm           - Runs a test, receives a number with the maximum memory as an argument\n\
+test-sync         - Runs a test, receives two numbers as arguments, the first one with the amount of iterations and the second one as a flag for semaphore use\n\
+test-prio         - Runs a test changing priorities of processes\n\
+phylo             - Runs the dining philosophers problem, to add a philosopher during runtime press 'a', to remove one press 'r' \n"
 
 #define INCREASE 1
 #define DECREASE -1

@@ -2,7 +2,7 @@
 
 void filter(int argc, char **argv)
 {
-    char c[3] = {0};
+    char c[4] = {0, 0, 1, 1};
     char *buff = malloc(MAX_BUFFER_SIZE);
     int i = 0;
 
@@ -22,7 +22,7 @@ void filter(int argc, char **argv)
             buff[i++] = c[1];
         }
 
-    } while (c[0] != 4 && c[1] != 4);
+    } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 
     buff[i] = 0;
 
