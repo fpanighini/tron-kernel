@@ -18,7 +18,15 @@ Execute the following commands on the x64BareBones project directory:
 
 From the x64BareBones project directory run:
 
+  user@linux:$ make clean
   user@linux:$ make all
+
+It is possible to compile the kernel with an alternative memory manager called buddy system
+
+From the x64BareBones project directory run:
+
+  user@linux:$ make clean
+  user@linux:$ make buddy
 
 4- Run the kernel
 
@@ -26,6 +34,3 @@ From the x64BareBones project directory run:
 
   user@linux:$ ./run.sh
 
-
-Author: Rodrigo Rearden (RowDaBoat)
-Collaborator: Augusto Nizzo McIntosh
