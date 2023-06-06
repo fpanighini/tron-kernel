@@ -85,8 +85,8 @@ uint64_t test_sync(uint64_t argc, char *argv[])
         shortSleep(pids[i + TOTAL_PAIR_PROCESSES]);
     }
 
-    printf("Final value: %d\n", global);
     wait_pid();
+    printf("Final value: %d\n", global);
 
     return 0;
 }
