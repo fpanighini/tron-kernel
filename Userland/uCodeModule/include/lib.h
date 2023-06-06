@@ -85,5 +85,6 @@ long changeFontSize(uint32_t size);
 long time();
 long date();
 void wait_pid();
+void memory_info();
 
 #endif

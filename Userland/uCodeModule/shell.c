@@ -43,6 +43,7 @@
 #define WC_COMMAND "wc"
 #define SH_COMMAND "sh"
 #define PHYLO_COMMAND "phylo"
+#define MEM_INFO_COMMAND "mem-info"
 
 #define AMPERSAND "&"
 
@@ -79,7 +80,8 @@ test-processes    - Runs a test, receives the number of processes to run as an a
 test-mm           - Runs a test, receives a number with the maximum memory as an argument\n\
 test-sync         - Runs a test, receives two numbers as arguments, the first one with the amount of iterations and the second one as a flag for semaphore use\n\
 test-prio         - Runs a test changing priorities of processes\n\
-phylo             - Runs the dining philosophers problem, to add a philosopher during runtime press 'a', to remove one press 'r' \n"
+phylo             - Runs the dining philosophers problem, to add a philosopher during runtime press 'a', to remove one press 'r'\n\
+mem-info          - Shows free, allocated and total heap memory\n"
 
 #define INCREASE 1
 #define DECREASE -1
@@ -439,6 +441,12 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     else if (!strcmp(buf, PHYLO_COMMAND))
     {
         int ret = exec("phylo", &phylo, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
+    }
+    else if (!strcmp(buf, MEM_INFO_COMMAND))
+    {
+        int ret = exec("mem_info", &memory_info, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
     }

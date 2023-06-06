@@ -336,3 +336,7 @@ void sys_wait_pid()
 {
     wait_pid();
 }
+
+void sys_mem_info(MemoryInfo *memory_info_ptr) {
+    getMemoryInfo(memory_info_ptr);
+}

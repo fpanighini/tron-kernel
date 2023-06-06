@@ -60,6 +60,7 @@ EXTERN sys_unblock
 EXTERN sys_yield
 EXTERN sys_ps
 EXTERN sys_wait_pid
+EXTERN sys_mem_info
 
 
 SECTION .text
@@ -340,6 +341,9 @@ syscallINTHandler:
     cmp rax, 0x21
     je .wait_pid
 
+    cmp rax, 0x22
+    je .mem_info
+
     jmp .end
 
 .write:
@@ -482,6 +486,10 @@ syscallINTHandler:
 
 .wait_pid:
         call sys_wait_pid
+        jmp .end
+
+.mem_info:
+        call sys_mem_info
         jmp .end
 
 .end:

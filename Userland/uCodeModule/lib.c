@@ -766,3 +766,11 @@ void wait_pid()
 {
 	sys_wait_pid();
 }
+
+void memory_info() {
+	MemoryInfo mem_info;
+	sys_mem_info(&mem_info);
+	printf("Free memory: %d bytes\n", mem_info.free);
+	printf("Allocated memory: %d bytes\n", mem_info.allocated);
+	printf("Total memory: %d bytes\n", mem_info.total);
+}
