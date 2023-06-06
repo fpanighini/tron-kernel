@@ -24,7 +24,8 @@ uint8_t ctrl = 0;
 
 void saveKey(uint8_t c)
 {
-    if (c == 0b111000){
+    if (c == 0b111000)
+    {
         return;
     }
     if (c == 1)
@@ -66,19 +67,21 @@ void saveKey(uint8_t c)
             buf.keys[buf.count++] = '|';
             return;
         }
-
     }
-    if (ctrl) {
-        if (getKey(c) == 'c') {
+    if (ctrl)
+    {
+        if (getKey(c) == 'c')
+        {
             kill_foreground_proc();
             ready_foreground_proc();
             ctrl = 0;
-            return ;
+            return;
         }
-        if (getKey(c) == 'd') {
+        if (getKey(c) == 'd')
+        {
             buf.keys[buf.count++] = 4;
             ctrl = 0;
-            return ;
+            return;
         }
     }
     if (c > 128)

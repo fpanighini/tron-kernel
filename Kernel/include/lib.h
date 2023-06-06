@@ -19,8 +19,6 @@ char *strcat(char *dest, const char *src);
 int strcmp(char *str1, char *str2);
 int strlen(char *str);
 
-
-
 void print(const char *fmt, va_list args);
 void printf(const char *fmt, ...);
 int putChar(int c);

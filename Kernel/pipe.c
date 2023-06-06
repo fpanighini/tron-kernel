@@ -17,15 +17,15 @@ void fill0(char *arr, int size)
 
 int pipe_write(int index, char *addr, int n)
 {
-    if(n == 0)
+    if (n == 0)
         n = strlen(addr);
 
     if (!pipes[index].created)
         return -1;
     block_process_pipe(pipes[index].wProcesses, get_running_pid());
-    
+
     sem_wait(pipes[index].name);
-    
+
     release_process_pipe(pipes[index].wProcesses, get_running_pid());
     int i;
 

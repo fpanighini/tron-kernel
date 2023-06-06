@@ -125,7 +125,6 @@ int strlen(char *str)
 	return i;
 }
 
-
 void print(const char *fmt, va_list args)
 {
 	int state = 0;
@@ -211,7 +210,6 @@ void printf(const char *fmt, ...)
 	va_end(args);
 }
 
-
 int putChar(int c)
 {
 	return putColorChar(c, WHITE);
@@ -225,7 +223,6 @@ int putColorChar(int car, Color c)
 	sys_write(STDOUT, (char *)str, 0, c);
 	return str[0];
 }
-
 
 int numToBase(long value, char *buffer, int base)
 {

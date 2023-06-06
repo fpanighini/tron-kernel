@@ -48,9 +48,11 @@ ProcessP newProcess(char *name, void *entryPoint, char **argv, uint64_t read_fd,
     return proc;
 }
 
-void wait_pid(){
+void wait_pid()
+{
     ProcessP proc = get_current_proc();
-    if (proc->children != 0){
+    if (proc->children != 0)
+    {
         proc->blocked_by_children = 1;
         block_current_process();
     }
@@ -60,7 +62,7 @@ void free_proc(ProcessP proc)
 {
     free(proc->stack);
     free_argv(proc->argv);
-    char *eof = (char*) 4;
+    char *eof = (char *)4;
     sys_write(proc->write_fd, eof, 1, WHITE);
     free(proc);
 }
@@ -93,7 +95,7 @@ char **save_argv(int argc, char **argv)
         strcpy(ret[i], argv[i]);
     }
 
-    ret[argc] = NULL; //
+    ret[argc] = NULL;
     return ret;
 }
 

@@ -4,7 +4,7 @@ int wc(int argc, char **argv)
 {
     char c[4] = {0, 0, 1, 1};
     char *buff = malloc(MAX_BUFFER_SIZE);
-    for(int i = 0; i < MAX_BUFFER_SIZE; i++)
+    for (int i = 0; i < MAX_BUFFER_SIZE; i++)
         buff[i] = 0;
 
     int i = 0;
@@ -23,7 +23,7 @@ int wc(int argc, char **argv)
             putChar(c[1]);
             buff[i++] = c[1];
         }
-        
+
     } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 
     long charCount = 0;

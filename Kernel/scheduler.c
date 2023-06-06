@@ -20,7 +20,6 @@ void free_node(NodeP node);
 void destroy_ground_node(uint64_t pid);
 void kill_foreground_proc();
 
-
 uint64_t disable_count = 0;
 
 NodeP first = NULL;
@@ -55,13 +54,15 @@ uint64_t scheduler(uint64_t sp)
     if (currentNode->proc->state == RUNNING)
     {
         currentNode->quantums++;
-    } else if (currentNode->proc->state == KILLED)  // If process is DEAD destroy the currentNode (replaced by the next ready process)
+    }
+    else if (currentNode->proc->state == KILLED) // If process is DEAD destroy the currentNode (replaced by the next ready process)
     {
         if (currentNode->proc == foreground->proc)
         {
             kill_foreground_proc();
-
-        } else {
+        }
+        else
+        {
             destroy_node(currentNode);
         }
         currentNode = find_next_ready(currentNode);
@@ -129,7 +130,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 {
     scheduler_disable();
 
-    if (priority > 5){
+    if (priority > 5)
+    {
         priority = 5;
     }
 
@@ -143,7 +145,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     if (is_foreground == 1)
     {
-        if (background == NULL){
+        if (background == NULL)
+        {
             background = foreground;
         }
         foreground = newNode;
@@ -154,7 +157,8 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
     return proc->pid;
 }
 
-void ready_foreground_proc(){
+void ready_foreground_proc()
+{
     foreground->proc->state = foreground->proc->state == BLOCKED ? READY : foreground->proc->state;
 }
 
@@ -178,7 +182,7 @@ NodeP add_node(ProcessP process)
     NodeP newNode = malloc(sizeof(Node));
     if (newNode == NULL)
     {
-        printString((uint8_t *) "MemError", RED);
+        printString((uint8_t *)"MemError", RED);
         return 0;
     }
     newNode->quantums = process->priority;
@@ -219,7 +223,6 @@ uint64_t kill_process(uint64_t pid)
     {
         killCurrentProcess();
     }
-
 
     NodeP node = find_node(pid);
     if (node == NULL)
@@ -286,18 +289,18 @@ void destroy_node(NodeP node)
 
     sem_wait(PROC_MUTEX);
     parent->proc->children--;
-    if (parent->proc->children == 0){
+    if (parent->proc->children == 0)
+    {
         parent->proc->blocked_by_children = 0;
         ready_process(parent->proc->pid);
     }
     sem_post(PROC_MUTEX);
 
-
     counter--;
-    if (node->proc->state == BLOCKED){
+    if (node->proc->state == BLOCKED)
+    {
         block_count--;
     }
-
 
     NodeP aux = node->next;
     free_proc(node->proc);
@@ -356,7 +359,8 @@ void force_current_yield()
     _force_scheduler();
 }
 
-ProcessP get_current_proc(){
+ProcessP get_current_proc()
+{
     return currentNode->proc;
 }
 

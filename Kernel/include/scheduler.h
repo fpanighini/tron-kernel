@@ -20,12 +20,13 @@ typedef struct Node
 
 typedef Node *NodeP;
 
-typedef struct GroundNode {
+typedef struct GroundNode
+{
     NodeP node;
-    struct GroundNode * next;
+    struct GroundNode *next;
 } GroundNode;
 
-typedef GroundNode * GroundNodeP;
+typedef GroundNode *GroundNodeP;
 
 // ASM functions
 void _force_scheduler();

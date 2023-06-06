@@ -97,8 +97,7 @@ test-prio         - Runs a test \n"
 
 #define NEWLINE "\n"
 
-
-void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords);
+void parseString(const char *str, char words[][MAX_WORD_LENGTH + 1], int *numWords);
 
 void shell(int argc, char **argv);
 int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground);
@@ -210,22 +209,20 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
 
     parseString(input, words, &numWords);
 
-
     char buf[MAX_WORD_LENGTH + 1];
     strncpy(buf, words[0], MAX_WORD_LENGTH);
     buf[MAX_WORD_LENGTH] = '\0';
 
-
-    char* argv[MAX_WORDS];
+    char *argv[MAX_WORDS];
     int numArgs = 0;
 
-    for (int i = 1; i < numWords; i++) {
+    for (int i = 1; i < numWords; i++)
+    {
         argv[numArgs] = words[i];
         numArgs++;
     }
 
     argv[numArgs] = NULL;
-
 
     if (!strcmp(argv[numArgs - 1], AMPERSAND))
     {
@@ -233,7 +230,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         argv[numArgs - 1] = NULL;
         fd_read = pipe_open(AMPERSAND);
     }
-
 
     int l;
     if (!strcmp(buf, ""))
@@ -420,7 +416,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         int ret = exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
-
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
@@ -439,7 +434,6 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
         int ret = exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
         ask_wait_pid(is_foreground);
         return ret;
-
     }
     else if (!strcmp(buf, PHYLO_COMMAND))
     {
@@ -547,7 +541,6 @@ int pipedBuffer(char *buf)
     strncpy(right, buf + delimiterPos + 1, totalLength - delimiterPos);
     (right)[totalLength - delimiterPos - 1] = '\0';
 
-
     int fd = pipe_open("pipes");
 
     long leftPid = readBuffer(left, 0, fd, 0);
@@ -576,43 +569,52 @@ int pipedBuffer(char *buf)
     return 1;
 }
 
-void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords) {
+void parseString(const char *str, char words[][MAX_WORD_LENGTH + 1], int *numWords)
+{
     *numWords = 0; // Initialize the number of words to 0
 
-    while (*str != '\0' && *numWords < MAX_WORDS) {
-        while (*str == ' ') {
+    while (*str != '\0' && *numWords < MAX_WORDS)
+    {
+        while (*str == ' ')
+        {
             str++; // Skip leading spaces
         }
 
-        if (*str == '\0') {
+        if (*str == '\0')
+        {
             break; // Reached the end of the string
         }
 
-        const char* wordStart = str; // Start of the current word
+        const char *wordStart = str; // Start of the current word
 
-        while (*str != ' ' && *str != '\0') {
+        while (*str != ' ' && *str != '\0')
+        {
             str++; // Move to the next character
         }
 
-        const char* wordEnd = str - 1; // End of the current word
+        const char *wordEnd = str - 1; // End of the current word
 
         int wordLength = wordEnd - wordStart + 1;
-        if (wordLength > MAX_WORD_LENGTH) {
+        if (wordLength > MAX_WORD_LENGTH)
+        {
             wordLength = MAX_WORD_LENGTH; // Truncate the word if it exceeds the maximum length
         }
 
-        for (int i = 0; i < wordLength; i++) {
+        for (int i = 0; i < wordLength; i++)
+        {
             words[*numWords][i] = wordStart[i]; // Copy the word into the array
         }
 
         words[*numWords][wordLength] = '\0'; // Null-terminate the word
-        (*numWords)++; // Increment the number of words
+        (*numWords)++;                       // Increment the number of words
     }
     words[*numWords][0] = '\0';
 }
 
-void ask_wait_pid(int is_foreground){
-    if (is_foreground == 1){
+void ask_wait_pid(int is_foreground)
+{
+    if (is_foreground == 1)
+    {
         wait_pid();
     }
 }
