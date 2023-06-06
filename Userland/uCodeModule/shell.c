@@ -304,7 +304,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, INFOREG_COMMAND))
     {
-        printInfoReg();
+        exec("inforeg", &printInfoReg, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO))
     {
@@ -489,8 +489,8 @@ void printInfoReg()
     for (int i = 0; i < REGISTER_NUM; i++)
     {
         printf("%s : ", registerNames[i]);
-        printBase(arr[i], 2);
-        printf("b\n");
+        printBase(arr[i], 16);
+        printf("h\n");
     }
 }
 

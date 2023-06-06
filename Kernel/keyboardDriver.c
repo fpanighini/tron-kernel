@@ -24,9 +24,11 @@ uint8_t ctrl = 0;
 
 void saveKey(uint8_t c)
 {
-    ready_foreground_proc();
     // clearScreen();
     // printBase(c, 16);
+    if (c == 0b111000){
+        return;
+    }
     if (c == 1)
     {
         buf.keys[buf.count++] = '\n';
@@ -42,16 +44,18 @@ void saveKey(uint8_t c)
         shift = 0;
         return;
     }
+
+    if (c == 0xE0 || c == 0x0)
+    {
+        //printString("CTRL OFF\n",WHITE);
+        ctrl = 0;
+        return;
+    }
+
     if (c == 0x1D)
     {
         // printString("CTRL ON\n", WHITE);
         ctrl = 1;
-        return;
-    }
-    if (c == 0xE0 || c == 0x0)
-    {
-        // printString("CTRL OFF\n",WHITE);
-        ctrl = 0;
         return;
     }
     if (shift)
@@ -71,6 +75,7 @@ void saveKey(uint8_t c)
     if (ctrl) {
         if (getKey(c) == 'c') {
             kill_foreground_proc();
+            ready_foreground_proc();
             ctrl = 0;
             return ;
         }
@@ -79,6 +84,7 @@ void saveKey(uint8_t c)
             ctrl = 0;
             return ;
         }
+        //return ;
     }
     if (c > 128)
         return;
