@@ -73,7 +73,6 @@ int getKbdBuffer(char *buf, uint32_t count, int *pos)
     if (getCount())
     {
         *pos += readBuf(buf + *pos, count - *pos - 1);
-        clearKeyboardBuffer();
         return 1;
     }
     return 0;
@@ -116,7 +115,6 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
 
     int i = 0;
     int read = 0;
-    clearKeyboardBuffer();
     while (i < count - 1)
     {
         read = getKbdBuffer(buf, count, &i);
@@ -140,7 +138,6 @@ uint64_t sys_timedRead(uint8_t fd, char *buf, uint32_t count, uint32_t millis)
 
     int i = 0;
     int read = 0;
-    clearKeyboardBuffer();
     buf[0] = 0;
     int initial = milliseconds_elapsed();
     while ((i < count - 1) && ((milliseconds_elapsed() - initial) < millis))
