@@ -202,7 +202,7 @@ void printMem(int argc, char * argv[])
     for (long long j = 0; j < PRINT_BYTES && accum + j + 2 < 0xFFFFFFFFFFFFFFFF; j++)
     {
         printBase((int)j, 10);
-        printf(": ");
+        printf(":\t");
         printBase(pointer[j], 16);
         printf("h\n");
     }
