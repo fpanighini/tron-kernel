@@ -207,16 +207,17 @@ _irq01Handler:
     pushState
     call keyPressed
 
-    cmp al, 0b10011101
+    cmp al, 0b111000
     jne .end
     popState
     snapshot
     pushState
+    jmp .skip_save
 
 .end:
     mov rdi, rax
     call saveKey
-
+.skip_save:
     mov al, 20h
     out 20h, al
     popState
