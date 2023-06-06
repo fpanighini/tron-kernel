@@ -42,7 +42,7 @@ void killCurrentProcess(void);
 
 void init_scheduler();
 
-uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority);
+uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority, uint64_t is_foreground);
 
 uint64_t kill_process(uint64_t pid);
 

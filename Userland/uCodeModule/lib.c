@@ -550,9 +550,9 @@ void free(void *ptr)
 	sys_free(ptr);
 }
 
-long exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority)
+long exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority, int is_foreground)
 {
-        uint64_t ret = sys_exec(name, program, argv, read_fd, write_fd, priority);
+        uint64_t ret = sys_exec(name, program, argv, read_fd, write_fd, priority, is_foreground);
         // yield();
         return ret;
 }

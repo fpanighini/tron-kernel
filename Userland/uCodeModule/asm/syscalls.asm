@@ -135,6 +135,7 @@ sys_free:
 
 ; syscall 0x10
 sys_exec:
+    mov r11, [rsp + 8]
     mov rax, 0x10
     int 0x80
     ret

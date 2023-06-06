@@ -130,7 +130,7 @@ void init_scheduler()
     // add_process("IDLE", &idle);
 }
 
-uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority)
+uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority, uint64_t is_foreground)
 {
     scheduler_disable();
     ProcessP proc = newProcess(name, program, argv, read_fd, write_fd, priority);
@@ -141,10 +141,13 @@ uint64_t add_process(char *name, void *program, char **argv, uint64_t read_fd, u
 
     NodeP newNode = add_node(proc);
 
-    if (read_fd == 0)
+    if (is_foreground == 1)
     {
-        if (background == NULL){
+
+        if (background == NULL && foreground != NULL){
             foreground->proc->read_fd = 1;
+        }
+        if (background == NULL){
             background = foreground;
         }
         foreground = newNode;

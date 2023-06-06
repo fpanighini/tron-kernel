@@ -91,7 +91,7 @@ test-prio         - Runs a test \n"
 #define NEWLINE "\n"
 
 void shell(int argc, char **argv);
-int readBuffer(char *buf, int fd_read, int fd_write);
+int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground);
 int pipedBuffer(char *buf);
 void printLine(char *str);
 void helpCommand(void);
@@ -122,7 +122,7 @@ void shell(int argc, char **argv)
         printNewline();
         out = pipedBuffer(string);
         if (out == -1)
-            out = readBuffer(string, 0, 1);
+            out = readBuffer(string, 0, 1, 1);
 
         printString(COMMAND_CHAR, GREEN);
         printf(CURSOR);
@@ -192,7 +192,7 @@ void printMem(char *buf)
     }
 }
 
-int readBuffer(char *buf, int fd_read, int fd_write)
+int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
 {
     int l;
     if (!strcmp(buf, ""))
@@ -296,15 +296,15 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, PS_COMMAND))
     {
         char *argv[] = {"10", 0};
-        uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1);
-        //wait_pid();
+        uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1, is_foreground);
+        wait_pid();
         return ret;
     }
     else if (!strcmp(buf, TEST_PROCESSES_COMMAND))
     {
         char *argv[] = {"2", 0};
 
-        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1);
+        int ret_pid = exec("test_processes", &test_processes, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
         // test_processes(1,argv);
@@ -312,7 +312,7 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
         char *argv[] = {"10000", 0};
-        int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1);
+        int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
         // test_processes(1,argv);
@@ -320,21 +320,21 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
         char *argv[] = {"20", "5", 0};
-        int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1);
+        int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
         char *argv[] = {0};
-        int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1);
+        int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
     {
         char *argv[] = {"Hola", "Como Estas", NULL};
-        uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1);
+        uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret;
     }
@@ -413,24 +413,24 @@ int readBuffer(char *buf, int fd_read, int fd_write)
     {
         char *argv[] = {"2", 0};
 
-        return exec("cat", &cat, argv, fd_read, fd_write, 1);
+        return exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
         char *argv[] = {"2", 0};
 
-        return exec("filter", &filter, argv, fd_read, fd_write, 1);
+        return exec("filter", &filter, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, WC_COMMAND))
     {
         char *argv[] = {"2", 0};
-        return exec("wc", &wc, argv, fd_read, fd_write, 1);
+        return exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, SH_COMMAND))
     {
         char *argv[] = {"2", 0};
 
-        return exec("shell", &shell, argv, fd_read, fd_write, 1);
+        return exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
     }
     else
     {
@@ -543,13 +543,13 @@ int pipedBuffer(char *buf)
 
     int fd = pipe_open("pipes");
 
-    long leftPid = readBuffer(left, 0, fd);
+    long leftPid = readBuffer(left, 0, fd, 0);
     if (leftPid == -1)
         return 2;
 
     yield();
 
-    long rightPid = readBuffer(right, fd, 1);
+    long rightPid = readBuffer(right, fd, 1, 1);
     if (rightPid == -1)
     {
         kill(leftPid);

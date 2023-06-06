@@ -409,7 +409,9 @@ syscallINTHandler:
         jmp .end
 
 .exec:
+        push r11
         call sys_exec
+        pop r11
         jmp .end
 
 .pipe_open:

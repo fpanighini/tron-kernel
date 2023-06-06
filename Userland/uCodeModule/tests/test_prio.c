@@ -22,7 +22,7 @@ void test_prio()
     uint64_t i;
 
     for (i = 0; i < TOTAL_PROCESSES; i++)
-        pids[i] = exec("endless_loop_print", &endless_loop_print, argv, 0, 1, HIGHEST);
+        pids[i] = exec("endless_loop_print", &endless_loop_print, argv, 0, 1, HIGHEST, 0);
     busy_wait(WAIT);
     printf("\nCHANGING PRIORITIES...\n");
 

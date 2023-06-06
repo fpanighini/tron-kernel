@@ -67,7 +67,7 @@ int main()
     // exec("procA", &procA, argv, 0, fd, 0);
     // exec("procB", &procB, argv, fd, 1, 0);
 
-    exec("shell", &shell, argv, 0, 1, 0);
+    exec("shell", &shell, argv, 0, 1, 0, 1);
     // exec("shell2", &start_shell, argv, 8);
     while (1)
     {

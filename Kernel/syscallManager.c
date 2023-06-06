@@ -277,9 +277,9 @@ void sys_free(void *ptr)
     free(ptr);
 }
 
-uint64_t sys_exec(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority)
+uint64_t sys_exec(char *name, void *program, char **argv, uint64_t read_fd, uint64_t write_fd, uint64_t priority, uint64_t is_foreground)
 {
-    return add_process(name, program, argv, read_fd, write_fd, priority);
+    return add_process(name, program, argv, read_fd, write_fd, priority, is_foreground);
 }
 
 uint64_t sys_sem_open(char *name, int value)

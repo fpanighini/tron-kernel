@@ -38,7 +38,7 @@ long sys_inforeg(long *registers);
 long sys_changeFontSize(int diff);
 void *sys_malloc(int size);
 void sys_free(void *ptr);
-long sys_exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority);
+long sys_exec(char *name, void *program, char **argv, int read_fd, int write_fd, int priority, int is_foreground);
 long sys_pipe_open(char *name);
 long sys_pipes_info();
 long sys_pipe_close(int id);

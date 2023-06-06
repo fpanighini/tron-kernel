@@ -26,7 +26,7 @@ void saveKey(uint8_t c)
 {
     ready_foreground_proc();
     // clearScreen();
-    //printBase(c, 16);
+    // printBase(c, 16);
     if (c == 1)
     {
         buf.keys[buf.count++] = '\n';
@@ -48,22 +48,23 @@ void saveKey(uint8_t c)
         ctrl = 1;
         return;
     }
-    if (c == 0xE0 || c == 0x8) {
+    if (c == 0xE0 || c == 0x0) {
         ctrl = 0;
         return;
     }
     if (shift)
     {
-        if (c == 0x2B)
-        {
-            buf.keys[buf.count++] = '|';
-            return;
-        }
         if (c == 0x8)
         {
             buf.keys[buf.count++] = '&';
             return;
         }
+        if (c == 0x2B)
+        {
+            buf.keys[buf.count++] = '|';
+            return;
+        }
+
     }
     if (ctrl) {
         if (getKey(c) == 'c') {
