@@ -105,11 +105,11 @@ uint64_t sys_read(uint8_t fd, char *buf, uint32_t count)
     {
         uint64_t ret = pipe_read(new_fd - 3, buf, count);
 
-        printString("\npipe_fd: ", RED);
-        printBase(new_fd, 10);
-        printString("\nPID: ", RED);
-        printBase(get_running_pid(), 10);
-        printString(buf, RED);
+        //printString("\npipe_fd: ", RED);
+        //printBase(new_fd, 10);
+        //printString("\nPID: ", RED);
+        //printBase(get_running_pid(), 10);
+        //printString(buf, RED);
 
         return ret;
     }
