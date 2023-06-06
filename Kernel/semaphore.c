@@ -3,13 +3,10 @@
 #include <semaphore.h>
 #include <stdbool.h>
 #include <stdint.h>
-// #include <libasm.h>
 #include <scheduler.h>
 
 #define NO_PID -1
 #define SUCCESS_SIGNAL 0
-
-// TODO: Ver este codigo
 
 sem_ts semaphores[MAX_SEMS];
 

@@ -1,8 +1,6 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
-// TODO: Cambiar esto
-
 #include <lib.h>
 #include <process.h>
 #include <scheduler.h>
