@@ -396,32 +396,36 @@ uint64_t get_current_write()
 void printNode(NodeP node)
 {
     ProcessP proc = node->proc;
-    printString((uint8_t *)proc->name, WHITE);
-    printString((uint8_t *)TAB, WHITE);
 
-    printBase(proc->pid, 10);
-    printString((uint8_t *)TAB, WHITE);
+    printf("%s\t\t%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%s\n", proc->name, proc->pid, proc->priority, proc->bp, proc->sp, proc->state, proc->pid == foreground->proc->pid ? "FOREGROUND" : "BACKGROUND");
 
-    printBase(proc->priority, 10);
-    printString((uint8_t *)TAB, WHITE);
 
-    printBase(proc->bp, 10);
-    printString((uint8_t *)TAB, WHITE);
+    // printString((uint8_t *)proc->name, WHITE);
+    // printString((uint8_t *)TAB, WHITE);
 
-    printBase(proc->sp, 10);
-    printString((uint8_t *)TAB, WHITE);
+    // printBase(proc->pid, 10);
+    // printString((uint8_t *)TAB, WHITE);
 
-    printBase(proc->state, 10);
-    printString((uint8_t *)TAB, WHITE);
+    // printBase(proc->priority, 10);
+    // printString((uint8_t *)TAB, WHITE);
 
-    // FOREGROUND
-    // printString(, WHITE);
-    printString((uint8_t *)"\n", WHITE);
+    // printBase(proc->bp, 10);
+    // printString((uint8_t *)TAB, WHITE);
+
+    // printBase(proc->sp, 10);
+    // printString((uint8_t *)TAB, WHITE);
+
+    // printBase(proc->state, 10);
+    // printString((uint8_t *)TAB, WHITE);
+
+    // // FOREGROUND
+    // // printString(, WHITE);
+    // printString((uint8_t *)"\n", WHITE);
 }
 
 void print_all_nodes(void)
 {
-    printString((uint8_t *)"\nNAME    PID    PRIORITY    BP    SP    STATE\n", WHITE);
+    printf("\nNAME\t\tPID\t\tPRIORITY\t\tBP\t\tSP\t\tSTATE\t\tGROUND\n");
     NodeP cur = first;
     printNode(cur);
     cur = cur->next;

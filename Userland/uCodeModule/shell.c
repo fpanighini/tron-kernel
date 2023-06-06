@@ -233,6 +233,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         is_foreground = 0;
         argv[numArgs - 1] = NULL;
+        fd_read = pipe_open(AMPERSAND);
     }
 
 

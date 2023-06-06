@@ -144,7 +144,7 @@ int phylo(int argc, char *argv[]) {
             state[i] = shared_data.state[i] == EATING ? 'E' : '.';
         state[i] = '\n';
         state[i+1] = '\0';
-        sys_write(STDOUT, state, i+1, WHITE);
+        printf("%s", state);
         sys_sem_post(MUTEX);
         sys_yield();
     }
