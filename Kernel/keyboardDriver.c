@@ -32,7 +32,6 @@ void saveKey(uint8_t c)
         buf.keys[buf.count++] = '\n';
         return;
     }
-    
     if (c == 0x2A || c == 0x36)
     {
         shift = 1;
@@ -45,10 +44,13 @@ void saveKey(uint8_t c)
     }
     if (c == 0x1D)
     {
+        // printString("CTRL ON\n", WHITE);
         ctrl = 1;
         return;
     }
-    if (c == 0xE0 || c == 0x0) {
+    if (c == 0xE0 || c == 0x0)
+    {
+        // printString("CTRL OFF\n",WHITE);
         ctrl = 0;
         return;
     }

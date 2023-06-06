@@ -9,6 +9,9 @@
 
 #define COMMAND_NOT_FOUND -1
 
+#define MAX_WORDS 100
+#define MAX_WORD_LENGTH 50
+
 #define SHELL_NAME "Shell"
 
 #define HELP_COMMAND "help"
@@ -89,6 +92,9 @@ test-prio         - Runs a test \n"
 #define DECREASE_FONT_FAIL "Minimum font size reached"
 
 #define NEWLINE "\n"
+
+
+void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords);
 
 void shell(int argc, char **argv);
 int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground);
@@ -192,8 +198,30 @@ void printMem(char *buf)
     }
 }
 
-int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
+int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
 {
+
+        //char inputString[] = "Hello world! This is a sample string.";
+    char words[MAX_WORDS][MAX_WORD_LENGTH + 1]; // Array to store the words
+    int numWords;
+
+    parseString(input, words, &numWords);
+
+
+    char buf[MAX_WORD_LENGTH + 1];
+    strncpy(buf, words[0], MAX_WORD_LENGTH);
+    buf[MAX_WORD_LENGTH] = '\0';
+
+    char* argv[MAX_WORDS];
+    int numArgs = 0;
+
+    for (int i = 1; i < numWords; i++) {
+        argv[numArgs] = words[i];
+        numArgs++;
+    }
+
+    argv[numArgs] = NULL;
+
     int l;
     if (!strcmp(buf, ""))
         ;
@@ -295,7 +323,7 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, PS_COMMAND))
     {
-        char *argv[] = {"10", 0};
+        // char *argv[] = {"10", 0};
         uint64_t ret = exec("ps", &ps, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret;
@@ -311,7 +339,7 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, TEST_MM_COMMAND))
     {
-        char *argv[] = {"10000", 0};
+        // char *argv[] = {"10000", 0};
         int ret_pid = exec("test_mm", &test_mm, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
@@ -319,21 +347,21 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, TEST_SYNC_COMMAND))
     {
-        char *argv[] = {"20", "5", 0};
+        // char *argv[] = {"20", "5", 0};
         int ret_pid = exec("test_sync", &test_sync, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, TEST_PRIO_COMMAND))
     {
-        char *argv[] = {0};
+        // char *argv[] = {0};
         int ret_pid = exec("test_prio", &test_prio, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret_pid;
     }
     else if (!strcmp(buf, LOOP_COMMAND))
     {
-        char *argv[] = {"Hola", "Como Estas", NULL};
+        // char *argv[] = {"Hola", "Como Estas", NULL};
         uint64_t ret = exec("loop", &loop, argv, fd_read, fd_write, 1, is_foreground);
         wait_pid();
         return ret;
@@ -343,11 +371,11 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
         // TODO: Ojo que no vuelve a la shell si la matamos
 
         int pid;
-        printf("Enter PID:  ");
-        char *pidString = (char *)malloc(10);
-        inputRead(&pidString);
+        // printf("Enter PID:  ");
+        // char *pidString = (char *)malloc(10);
+        // inputRead(&pidString);
 
-        pid = atoi(pidString);
+        pid = atoi(argv[0]);
 
         if (kill(pid) == pid)
             printf("\nPID %d killed successfully\n", pid);
@@ -357,10 +385,7 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     else if (!strcmp(buf, BLOCK_COMMAND))
     {
         int pid;
-        printf("Enter PID:  ");
-        char *pidString = (char *)malloc(10);
-        inputRead(&pidString);
-        pid = atoi(pidString);
+        pid = atoi(argv[0]);
 
         if (block(pid) == pid)
             printf("\nPID %d blocked successfully\n", pid);
@@ -370,10 +395,7 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     else if (!strcmp(buf, UNBLOCK_COMMAND))
     {
         int pid;
-        printf("Enter PID:  ");
-        char *pidString = (char *)malloc(10);
-        inputRead(&pidString);
-        pid = atoi(pidString);
+        pid = atoi(argv[0]);
 
         if (unblock(pid) == pid)
             printf("\nPID %d unblocked successfully\n", pid);
@@ -384,25 +406,14 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     {
         int pid, priority;
 
-        printf("Enter PID:  ");
-        char *pidString = (char *)malloc(10);
-        inputRead(&pidString);
-        pid = atoi(pidString);
+        pid = atoi(argv[0]);
 
-        char *priorityString = (char *)malloc(10);
-        do
-        {
-            printf("\nPriorities are: 0 (high) to 5 (low)");
-            printf("\nEnter priority number:  ");
-            inputRead(&priorityString);
-            priority = atoi(priorityString);
-        } while (priority < 0 || priority > 5);
-
-        printf("\nSelected PID: %d\n", pid);
-        printf("Selected priority: %d\n", priority);
+        priority = atoi(argv[1]);
+        // printf("\nSelected PID: %d\n", pid);
+        // printf("Selected priority: %d\n", priority);
 
         int new_pid = change_priority(pid, priority);
-        printf("New PID: %d\n", new_pid);
+        // printf("New PID: %d\n", new_pid);
 
         if (new_pid == pid)
             printf("\nPID %d had its priority modified successfully\n", pid);
@@ -411,24 +422,24 @@ int readBuffer(char *buf, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, CAT_COMMAND))
     {
-        char *argv[] = {"2", 0};
+        // char *argv[] = {"2", 0};
 
         return exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
-        char *argv[] = {"2", 0};
+        // char *argv[] = {"2", 0};
 
         return exec("filter", &filter, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, WC_COMMAND))
     {
-        char *argv[] = {"2", 0};
+        // char *argv[] = {"2", 0};
         return exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
     }
     else if (!strcmp(buf, SH_COMMAND))
     {
-        char *argv[] = {"2", 0};
+        // char *argv[] = {"2", 0};
 
         return exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
     }
@@ -559,3 +570,39 @@ int pipedBuffer(char *buf)
     wait_pid();
     return 1;
 }
+
+void parseString(const char* str, char words[][MAX_WORD_LENGTH + 1], int* numWords) {
+    *numWords = 0; // Initialize the number of words to 0
+
+    while (*str != '\0' && *numWords < MAX_WORDS) {
+        while (*str == ' ') {
+            str++; // Skip leading spaces
+        }
+
+        if (*str == '\0') {
+            break; // Reached the end of the string
+        }
+
+        const char* wordStart = str; // Start of the current word
+
+        while (*str != ' ' && *str != '\0') {
+            str++; // Move to the next character
+        }
+
+        const char* wordEnd = str - 1; // End of the current word
+
+        int wordLength = wordEnd - wordStart + 1;
+        if (wordLength > MAX_WORD_LENGTH) {
+            wordLength = MAX_WORD_LENGTH; // Truncate the word if it exceeds the maximum length
+        }
+
+        for (int i = 0; i < wordLength; i++) {
+            words[*numWords][i] = wordStart[i]; // Copy the word into the array
+        }
+
+        words[*numWords][wordLength] = '\0'; // Null-terminate the word
+        (*numWords)++; // Increment the number of words
+    }
+    words[*numWords][0] = '\0';
+}
+
