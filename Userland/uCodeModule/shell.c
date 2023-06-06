@@ -319,7 +319,7 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     }
     else if (!strcmp(buf, INFOREG_COMMAND))
     {
-        exec("inforeg", &printInfoReg, argv, fd_read, fd_write, 1, is_foreground);
+        exec("inforeg", &printInfoReg, argv, fd_read, fd_write, 5, is_foreground);
     }
     else if (!strcmp(buf, DIVIDE_BY_ZERO))
     {
@@ -439,28 +439,40 @@ int readBuffer(char *input, int fd_read, int fd_write, int is_foreground)
     {
         // char *argv[] = {"2", 0};
 
-        return exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
+        int ret = exec("cat", &cat, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
+
     }
     else if (!strcmp(buf, FILTER_COMMAND))
     {
         // char *argv[] = {"2", 0};
 
-        return exec("filter", &filter, argv, fd_read, fd_write, 1, is_foreground);
+        int ret = exec("filter", &filter, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
     }
     else if (!strcmp(buf, WC_COMMAND))
     {
         // char *argv[] = {"2", 0};
-        return exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
+        int ret = exec("wc", &wc, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
     }
     else if (!strcmp(buf, SH_COMMAND))
     {
         // char *argv[] = {"2", 0};
 
-        return exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
+        int ret = exec("shell", &shell, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
+
     }
     else if (!strcmp(buf, PHYLO_COMMAND))
     {
-        return exec("phylo", &phylo, argv, fd_read, fd_write, 1, is_foreground);
+        int ret = exec("phylo", &phylo, argv, fd_read, fd_write, 1, is_foreground);
+        ask_wait_pid(is_foreground);
+        return ret;
     }
     else
     {
@@ -586,7 +598,10 @@ int pipedBuffer(char *buf)
         return 3;
     }
 
-    wait_pid();
+    // wait_pid();
+
+    pipe_close(fd);
+
     return 1;
 }
 
