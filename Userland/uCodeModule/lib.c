@@ -163,6 +163,29 @@ int atoi(const char *str)
 	return result * sign;
 }
 
+unsigned long atoul(const char *str)
+{
+	int result = 0;
+	int i = 0;
+
+	// Parse the digits and build the integer value
+	while (str[i] != '\0')
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+		{
+			result = result * 10 + (str[i] - '0');
+			i++;
+		}
+		else
+		{
+			// Stop parsing if a non-digit character is encountered
+			break;
+		}
+	}
+
+	return result;
+}
+
 /**
  * @brief
  *  Transform integer into string.
@@ -181,6 +204,28 @@ long itoa(long number, char *str)
 		str[0] = '0';
 		str[1] = number + '0';
 		str[2] = 0;
+		return digits;
+	}
+
+	str[digits] = 0;
+	for (int i = digits - 1; i >= 0; i--)
+	{
+		str[i] = (number % 10) + '0';
+		number /= 10;
+	}
+
+	return digits;
+}
+
+long ultoa(unsigned long number, char *str)
+{
+	int digits = 1;
+	for (long n = number / 10; n != 0; digits++, n /= 10);
+
+	if (digits == 1)
+	{
+		str[0] = '0' + number;
+		str[1] = '\0';
 		return digits;
 	}
 

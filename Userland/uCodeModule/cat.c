@@ -24,11 +24,10 @@ void cat(int argc, char *args[])
 
         if (c[0] == '\n' || c[1] == '\n')
         {
-            putChar('\n');
             buff[i] = 0;
-            printf("%s\n", buff);
+            printf("%s", buff);
             i = 0;
         }
 
-    } while (c[0] != 4 && c[1] != 4);
+    } while ((c[0] != 4 && c[0] != 0) || (c[1] != 4 && c[1] != 0));
 }
